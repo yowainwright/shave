@@ -1,6 +1,6 @@
 {
   "name": "shave",
-  "version": "2.5.7",
+  "version": "2.5.8",
   "description": "Shave is a javascript plugin that truncates multi-line text within a html element based on set max height",
   "main": "dist/shave.js",
   "module": "dist/shave.es.js",
@@ -30,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dollarshaveclub/shave.git"
+    "url": "git+https://github.com/yowainwright/shave.git"
   },
   "keywords": [
     "ellipsis",
@@ -49,9 +49,9 @@
   "author": "Jeff Wainwright <yowainwright@gmail.com> (jeffry.in)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dollarshaveclub/shave/issues"
+    "url": "https://github.com/yowainwright/shave/issues"
   },
-  "homepage": "https://github.com/dollarshaveclub/shave#readme",
+  "homepage": "https://github.com/yowainwright/shave#readme",
   "devDependencies": {
     "@babel/core": "^7.7.0",
     "@babel/preset-env": "^7.7.0",
