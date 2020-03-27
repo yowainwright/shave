@@ -6,14 +6,11 @@
   <a href="https://www.npmjs.com/package/shave">
     <img src="https://badge.fury.io/js/shave.svg" alt="npm" />
   </a>
-  <a href="https://github.com/dollarshaveclub/shave">
-    <img src="https://badge.fury.io/bo/shave.svg" alt="Bower" />
+  <a href="https://unpkg.com/shave@latest/dist/shave.min.js">
+    <img alt="unpkg" src="https://img.shields.io/badge/unpkg-link-blue.svg">
   </a>
-  <a href="https://travis-ci.org/dollarshaveclub/shave">
-    <img src="https://travis-ci.org/dollarshaveclub/shave.svg?branch=master" alt="Travis" />
-  </a>
-  <a href="https://greenkeeper.io/">
-    <img src="https://badges.greenkeeper.io/dollarshaveclub/shave.svg" alt="Greenkeeper" />
+   <a href="https://snyk.io/test/github/yowainwright/shave">
+    <img alt="snyk" src="https://snyk.io/test/github/yowainwright/shave/badge.svg" />
   </a>
   <a href="https://cdnjs.com/libraries/shave">
     <img src="https://img.shields.io/cdnjs/v/shave.svg" alt="CDNJS" />
@@ -23,13 +20,14 @@
   </a>
 </p>
 
-----
+---
 
 <h1 align="center">Shave ✁</h1>
 
 **Shave** is a zero dependency javascript plugin that truncates multi-line text to fit within an html element based on a set pixel number **max-height**. It then stores the _diff_ of the original text string in a hidden `<span>` element following the visible text. This means the original text remains intact!
 
 **Shave, compared to other truncation plugins:**
+
 - maintains the original text after truncation.
 - does not require other libraries
 - only requires a selector and a max height
@@ -68,6 +66,7 @@ yarn add shave
 ## Usage
 
 Add **dist/shave.js** to your html
+
 - Or, **dist/jquery.shave.js** for jQuery/Zepto as of Shave >= v2.
 
 Or as a module
@@ -83,10 +82,8 @@ import shave from 'shave';
 Basic setup
 
 ```javascript
-
-shave('selector', maxheight);
+shave("selector", maxheight);
 // shave('.shave-selector', 0) for example
-
 ```
 
 **Shave also provided options _only_ to overwrite what it uses.**
@@ -94,59 +91,49 @@ shave('selector', maxheight);
 If you'd like have custom class names and not use `.js-shave`:
 
 ```javascript
-
-shave('selector', maxheight, { classname: 'classname' });
-
+shave("selector", maxheight, { classname: "classname" });
 ```
 
 Or if you'd like to have custom characters (instead of the standard ellipsis):
 
 ```javascript
-
-shave('selector', maxheight, { character: '✁' });
-
+shave("selector", maxheight, { character: "✁" });
 ```
 
 Or both:
 
 ```javascript
-
-shave('selector', maxheight, { classname: 'classname', character: '✁' });
-
+shave("selector", maxheight, { classname: "classname", character: "✁" });
 ```
 
 Without spaces:
 
 ```javascript
-
-shave('selector', maxheight, { spaces: false });
-
+shave("selector", maxheight, { spaces: false });
 ```
 
-----
+---
 
 You can also use **shave** as a [jQuery](http://jquery.com/) or [Zepto](http://zeptojs.com/) plugin. As of Shave >= v2, use **dist/jquery.shave.js** for jQuery/Zepto.
 
 ```javascript
-
-$('selector').shave(maxheight);
-
+$("selector").shave(maxheight);
 ```
 
 And here's a _jQuery/Zepto_ example with custom options:
 
 ```javascript
-
-$('selector').shave(maxheight, { classname: 'your-css-class', character: '✁'  });
-
+$("selector").shave(maxheight, { classname: "your-css-class", character: "✁" });
 ```
 
 If you're using a non-spaced language, you can support shave by setting an option `spaces` to `false`.
 
 ```javascript
-
-$('selector').shave(maxheight, { classname: 'your-css-class', character: '✁', spaces: false });
-
+$("selector").shave(maxheight, {
+  classname: "your-css-class",
+  character: "✁",
+  spaces: false
+});
 ```
 
 ## Examples
@@ -169,6 +156,6 @@ Here are some super basic examples of shave with [window resize](http://codepen.
 
 Shave works in all modern browsers and was tested in some not so modern browsers (like Internet Explorer 8) - it works there too. 🍻
 
-----
+---
 
 [Created](https://github.com/yowainwright/truncated.js) and maintained by [Jeff Wainwright](https://github.com/yowainwright) with [Dollar Shave Club Engineering](https://github.com/dollarshaveclub).
