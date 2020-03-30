@@ -1,5 +1,5 @@
 {
-  "extends": [ "dollarshaveclub"],
+  "extends": ["dollarshaveclub"],
   "rules": {
     "indent": 2,
     "semi": [2, "never"],

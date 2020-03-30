@@ -1,9 +1,9 @@
-export default function shave (target, maxHeight, opts = {}) {
+export default function shave(target, maxHeight, opts = {}) {
   if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) throw Error('maxHeight is required')
-  let els = (typeof target === 'string') ? document.querySelectorAll(target) : target
+  let els = typeof target === 'string' ? document.querySelectorAll(target) : target
   if (!els) return
 
-  const character = opts.character || '…'
+  const character = opts.character || '&mldr;'
   const classname = opts.classname || 'js-shave'
   const spaces = typeof opts.spaces === 'boolean' ? opts.spaces : true
   const charHtml = `<span class="js-shave-char">${character}</span>`
