@@ -3,7 +3,8 @@
   "rules": {
     "indent": 2,
     "semi": [2, "never"],
-    "no-continue": 0
+    "no-continue": 0,
+    "space-before-function-paren": ["error", "never"]
   },
   "globals": {
     "document": true,

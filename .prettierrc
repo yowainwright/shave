@@ -1,5 +1,6 @@
 {
   "semi": false,
+  "spaceBeforeFunctionParen": true,
   "trailingComma": "all",
   "printWidth": 120,
   "useTabs": false,
