@@ -6,7 +6,8 @@ export default function shave(target, maxHeight, opts = {}) {
   const character = opts.character || '&mldr;'
   const classname = opts.classname || 'js-shave'
   const spaces = typeof opts.spaces === 'boolean' ? opts.spaces : true
-  const charHtml = `<span class="js-shave-char">${character}</span>`
+  const charclassname = opts.charclassname || 'js-shave-char'
+  const charHtml = `<span class="${charclassname}">${character}</span>`
 
   if (!('length' in els)) els = [els]
   for (let i = 0; i < els.length; i += 1) {
@@ -18,7 +19,7 @@ export default function shave(target, maxHeight, opts = {}) {
     // If element text has already been shaved
     if (span) {
       // Remove the ellipsis to recapture the original text
-      el.removeChild(el.querySelector('.js-shave-char'))
+      el.removeChild(el.querySelector(`.${charclassname}`))
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
     }
