@@ -1,6 +1,6 @@
 /**
   shave - Shave is a javascript plugin that truncates multi-line text within a html element based on set max height
-  @version v2.5.9
+  @version v2.5.10
   @link https://github.com/yowainwright/shave#readme
   @author Jeff Wainwright <yowainwright@gmail.com> (jeffry.in)
   @license MIT
@@ -19,7 +19,8 @@
     var character = opts.character || '&mldr;';
     var classname = opts.classname || 'js-shave';
     var spaces = typeof opts.spaces === 'boolean' ? opts.spaces : true;
-    var charHtml = "<span class=\"js-shave-char\">".concat(character, "</span>");
+    var charclassname = opts.charclassname || 'js-shave-char';
+    var charHtml = "<span class=\"".concat(charclassname, "\">").concat(character, "</span>");
     if (!('length' in els)) els = [els];
 
     for (var i = 0; i < els.length; i += 1) {
@@ -30,7 +31,7 @@
 
       if (span) {
         // Remove the ellipsis to recapture the original text
-        el.removeChild(el.querySelector('.js-shave-char'));
+        el.removeChild(el.querySelector(".".concat(charclassname)));
         el[textProp] = el[textProp]; // eslint-disable-line
         // nuke span, recombine text
       }

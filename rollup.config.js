@@ -1,16 +1,7 @@
 import babel from 'rollup-plugin-babel'
 import { uglify } from 'rollup-plugin-uglify'
 
-import {
-  author,
-  description,
-  homepage,
-  license,
-  main,
-  module,
-  name,
-  version,
-} from './package.json'
+import { author, description, homepage, license, main, module, name, version } from './package.json'
 
 const banner = `/**
   ${name} - ${description}
@@ -39,26 +30,20 @@ const uglifyOutput = {
   },
 }
 
-const ensureArray = maybeArr => Array.isArray(maybeArr) ? maybeArr : [maybeArr]
+const ensureArray = (maybeArr) => (Array.isArray(maybeArr) ? maybeArr : [maybeArr])
 
 const createConfig = ({ input, output, env } = {}) => {
-  const plugins = [
-    babel(babelSetup),
-  ]
+  const plugins = [babel(babelSetup)]
 
   if (env === 'production') plugins.push(uglify(uglifyOutput))
   return {
     input,
     plugins,
-    output: ensureArray(output).map(format =>
-      Object.assign(
-        {},
-        format,
-        {
-          banner,
-          name,
-        },
-      ),
+    output: ensureArray(output).map((format) =>
+      Object.assign({}, format, {
+        banner,
+        name,
+      }),
     ),
   }
 }
@@ -86,5 +71,12 @@ export default [
       format: 'umd',
     },
     env: 'production',
+  }),
+  createConfig({
+    input: 'src/jquery.shave.js',
+    output: {
+      file: 'dist/jquery.shave.min.js',
+      format: 'umd',
+    },
   }),
 ]
