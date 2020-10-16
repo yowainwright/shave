@@ -75,7 +75,7 @@ export default [
   createConfig({
     input: 'src/jquery.shave.js',
     output: {
-      file: 'dist/jquery.shave.min.js',
+      file: 'dist/jquery.shave.js',
       format: 'umd',
     },
   }),
