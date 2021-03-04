@@ -1869,10 +1869,10 @@ es-abstract@^1.17.0-next.1, es-abstract@^1.17.5:
     string.prototype.trimleft "^2.1.1"
     string.prototype.trimright "^2.1.1"
 
-es-check@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/es-check/-/es-check-5.2.0.tgz#c84261061c58286f14c47d9a13e111ee18710760"
-  integrity sha512-9vF1x3LXhANiXgauW+kSFNvEy4XymUddCV2a32Af/ruVmyfLHQPKkVz4bhafJsZhWxXbdiySX+cF7p4/w0ABBQ==
+es-check@5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/es-check/-/es-check-5.2.3.tgz#f0510b3d54cac8caf862149ed36bf764a5513a88"
+  integrity sha512-+KiUcqXXqHk9H05l7Cg2sGrtiUyKcgY5hslm0DSb0iv6K5V/DIiRxJhvgA75TM99xO6FAIGbZSW8bAPbZDsDow==
   dependencies:
     acorn "^6.4.1"
     caporal "1.4.0"
