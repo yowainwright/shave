@@ -1,0 +1,18 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "13:00"
+  open-pull-requests-limit: 2
+  ignore:
+  - dependency-name: es-check
+    versions:
+    - 5.2.1
+  - dependency-name: "@babel/preset-env"
+    versions:
+    - 7.13.0
+  - dependency-name: eslint-config-dollarshaveclub
+    versions:
+    - 8.0.1
