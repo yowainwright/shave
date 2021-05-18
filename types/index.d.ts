@@ -14,10 +14,8 @@ export interface Shave {
 
 export namespace Shave {
     export interface Link {
-        text: string,
-        url: string,
-        newTab?: boolean,
-        tabindex?: number,
+        linkHtml: string,
+        linkLength?: number,
     }
     export interface Options {
         classname?: string,
