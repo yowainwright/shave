@@ -39,6 +39,26 @@ QUnit.test('run shave with non-spaced languages', function(assert) {
     'there should be 2 .js-non-spaced-lang');
 });
 
+QUnit.test('run shave with read more link opening in a new tab and tabindex 1', function(assert) {
+  shave('.test-3', 50, {
+    classname: 'js-read-more-link',
+    targetLink: {
+      text: 'Read more',
+      url: 'https://www.npmjs.com/package/shave',
+      newTab: true,
+      tabindex: 1,
+    }
+  });
+  assert.equal($('.js-read-more-link').innerText, 'Read more',
+    'innerText equals option property');
+  assert.equal($('.js-read-more-link').attr('href'), 'https://www.npmjs.com/package/shave',
+    'URL equals option property');
+  assert.equal($('.js-read-more-link').attr('target'), '_blank',
+    'link target is a new tab');
+  assert.equal($('.js-read-more-link').attr('tabindex'), 1,
+    'tabindex is 1');
+});
+
 QUnit.test('run shave with jquery', function(assert) {
   $('#test-4').shave(50, { classname: 'js-jquery-shave' });
   assert.equal($('.js-jquery-shave').length, 1,
@@ -69,7 +89,7 @@ QUnit.test('run shave on a paragraph with a class', function (assert) {
 });
 
 [
-  { 
+  {
     spacesOpt: { spaces: true },
     elementId: 'test-9'
   },
