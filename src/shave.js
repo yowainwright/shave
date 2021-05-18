@@ -34,7 +34,7 @@ export default function shave(target, maxHeight, opts = {}) {
     if (span) {
       // Remove the ellipsis and link to recapture the original text
       el.removeChild(el.querySelector(`.${charclassname}`))
-      link ? el.removeChild(link) : null
+      if (link) el.removeChild(link)
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
     }
@@ -50,7 +50,7 @@ export default function shave(target, maxHeight, opts = {}) {
     const maxHeightStyle = styles.maxHeight
     styles.maxHeight = 'none'
 
-    // Adjust number of words if target link is set in options
+    // Get link word-length to adjust max word number
     const linkLength = targetLinkText.split(' ').length
 
     // If already short enough, we're done
@@ -69,14 +69,14 @@ export default function shave(target, maxHeight, opts = {}) {
       el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot)
       el.insertAdjacentHTML('beforeend', charHtml)
       // Insert target link text if set in options
-      targetLinkText ? el.insertAdjacentHTML('beforeend', targetLinkHtml) : null
+      if (targetLinkText) el.insertAdjacentHTML('beforeend', targetLinkHtml)
       if (el.offsetHeight > maxHeight) max = pivot - 1
       else min = pivot
     }
 
     el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max)
     el.insertAdjacentHTML('beforeend', charHtml)
-    targetLinkText ? el.insertAdjacentHTML('beforeend', targetLinkHtml) : null
+    if (targetLinkText) el.insertAdjacentHTML('beforeend', targetLinkHtml)
     const diff = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
 
     const shavedText = document.createTextNode(diff)
