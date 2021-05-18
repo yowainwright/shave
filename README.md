@@ -112,7 +112,7 @@ Without spaces:
 shave("selector", maxheight, { spaces: false });
 ```
 
-**Shave also provides an optional and fully accessible target link (eg. "Read more") with required text and URL as well as optional window target and tabindex.**
+**Shave also provides an optional target link (eg. "Read more") to be parsed as HTML string. It therefore supports using web-components as well. NOTE: ```js-shave-link``` class is mandatory!!!**
 
 Target Link:
 
@@ -122,10 +122,8 @@ shave(
   maxheight,
   {
     targetLink: {
-      text: "text",
-      url: "url",
-      newTab: true,
-      tabindex: "tabindex",
+      linkHtml: '<a class="js-shave-link" href="https://www.npmjs.com/package/shave" target="_blank" aria-lable="Read more" title="Read more">Read more</a>',
+      linkLength: 2
     }
   }
 );
