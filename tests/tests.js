@@ -43,20 +43,18 @@ QUnit.test('run shave with read more link opening in a new tab and tabindex 1', 
   shave('.test-3', 50, {
     classname: 'js-read-more-link',
     targetLink: {
-      text: 'Read more',
-      url: 'https://www.npmjs.com/package/shave',
-      newTab: true,
-      tabindex: 1,
+      linkHtml: '<a class="js-shave-link" href="https://www.npmjs.com/package/shave" target="_blank" aria-lable="Read more" title="Read more">Read more</a>',
+      linkLength: 2,
     }
   });
+  assert.equal($('.js-read-more-link').is('a'), true,
+    'link is parsed properly');
   assert.equal($('.js-read-more-link').innerText, 'Read more',
-    'innerText equals option property');
+    'innerText is set properly');
   assert.equal($('.js-read-more-link').attr('href'), 'https://www.npmjs.com/package/shave',
-    'URL equals option property');
+    'URL is set properly');
   assert.equal($('.js-read-more-link').attr('target'), '_blank',
-    'link target is a new tab');
-  assert.equal($('.js-read-more-link').attr('tabindex'), 1,
-    'tabindex is 1');
+    'link target is set properly');
 });
 
 QUnit.test('run shave with jquery', function(assert) {
