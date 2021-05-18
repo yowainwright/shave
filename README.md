@@ -112,6 +112,25 @@ Without spaces:
 shave("selector", maxheight, { spaces: false });
 ```
 
+**Shave also provides an optional and fully accessible target link (eg. "Read more") with required text and URL as well as optional window target and tabindex.**
+
+Target Link:
+
+```javascript
+shave(
+  "selector",
+  maxheight,
+  {
+    targetLink: {
+      text: "text",
+      url: "url",
+      newTab: true,
+      tabindex: "tabindex",
+    }
+  }
+);
+```
+
 ---
 
 You can also use **shave** as a [jQuery](http://jquery.com/) or [Zepto](http://zeptojs.com/) plugin. As of Shave >= v2, use **dist/jquery.shave.js** for jQuery/Zepto.
