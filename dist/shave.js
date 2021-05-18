@@ -38,7 +38,7 @@
       if (span) {
         // Remove the ellipsis and link to recapture the original text
         el.removeChild(el.querySelector(".".concat(charclassname)));
-        link ? el.removeChild(link) : null;
+        if (link) el.removeChild(link);
         el[textProp] = el[textProp]; // eslint-disable-line
         // nuke span, recombine text
       }
@@ -51,7 +51,7 @@
       var heightStyle = styles.height;
       styles.height = 'auto';
       var maxHeightStyle = styles.maxHeight;
-      styles.maxHeight = 'none'; // Adjust number of words if target link is set in options
+      styles.maxHeight = 'none'; // Get link word-length to adjust max word number
 
       var linkLength = targetLinkText.split(' ').length; // If already short enough, we're done
 
@@ -72,13 +72,13 @@
         el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot);
         el.insertAdjacentHTML('beforeend', charHtml); // Insert target link text if set in options
 
-        targetLinkText ? el.insertAdjacentHTML('beforeend', targetLinkHtml) : null;
+        if (targetLinkText) el.insertAdjacentHTML('beforeend', targetLinkHtml);
         if (el.offsetHeight > maxHeight) max = pivot - 1;else min = pivot;
       }
 
       el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max);
       el.insertAdjacentHTML('beforeend', charHtml);
-      targetLinkText ? el.insertAdjacentHTML('beforeend', targetLinkHtml) : null;
+      if (targetLinkText) el.insertAdjacentHTML('beforeend', targetLinkHtml);
       var diff = spaces ? " ".concat(words.slice(max).join(' ')) : words.slice(max);
       var shavedText = document.createTextNode(diff);
       var elWithShavedText = document.createElement('span');
