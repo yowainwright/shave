@@ -14,7 +14,7 @@ export default function shave(target, maxHeight, opts = {}) {
   let truncationHtml
 
   if (targetLinkText) {
-    document.createElement('a')
+    truncationHtml = document.createElement('a')
     truncationHtml.innerText = `${character} ${targetLinkText}`
     truncationHtml.setAttribute('href', targetLinkUrl)
     truncationHtml.setAttribute('target', targetLinkNewTab)
@@ -22,7 +22,7 @@ export default function shave(target, maxHeight, opts = {}) {
     truncationHtml.setAttribute('title', targetLinkText)
     truncationHtml.setAttribute('tabindex', `${targetLinkTabindex}`)
   } else {
-    document.createElement('span')
+    truncationHtml = document.createElement('span')
     truncationHtml.innerText = character
   }
   truncationHtml.classList.add(charclassname)
