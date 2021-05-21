@@ -11,21 +11,21 @@ export default function shave(target, maxHeight, opts = {}) {
   const targetLinkUrl = opts.targetLink.url || '#'
   const targetLinkTabindex = opts.targetLink.tabindex || 0
   const targetLinkNewTab = opts.targetLink.newTab ? '_blank' : '_self'
-  let truncationHtml
+  let truncationElement
 
   if (targetLinkText) {
-    truncationHtml = document.createElement('a')
-    truncationHtml.innerText = `${character} ${targetLinkText}`
-    truncationHtml.setAttribute('href', targetLinkUrl)
-    truncationHtml.setAttribute('target', targetLinkNewTab)
-    truncationHtml.setAttribute('aria-label', targetLinkText)
-    truncationHtml.setAttribute('title', targetLinkText)
-    truncationHtml.setAttribute('tabindex', `${targetLinkTabindex}`)
+    truncationElement = document.createElement('a')
+    truncationElement.innerText = `${character} ${targetLinkText}`
+    truncationElement.setAttribute('href', targetLinkUrl)
+    truncationElement.setAttribute('target', targetLinkNewTab)
+    truncationElement.setAttribute('aria-label', targetLinkText)
+    truncationElement.setAttribute('title', targetLinkText)
+    truncationElement.setAttribute('tabindex', `${targetLinkTabindex}`)
   } else {
-    truncationHtml = document.createElement('span')
-    truncationHtml.innerText = character
+    truncationElement = document.createElement('span')
+    truncationElement.innerText = character
   }
-  truncationHtml.classList.add(charclassname)
+  truncationElement.classList.add(charclassname)
 
   if (!('length' in els)) els = [els]
   for (let i = 0; i < els.length; i += 1) {
@@ -54,7 +54,7 @@ export default function shave(target, maxHeight, opts = {}) {
     styles.maxHeight = 'none'
 
     // Get max word number from characters including optional link
-    const charLength = truncationHtml.innerText.split(' ').length
+    const charLength = truncationElement.innerText.split(' ').length
 
     // If already short enough, we're done
     if (el.offsetHeight <= maxHeight) {
@@ -70,13 +70,13 @@ export default function shave(target, maxHeight, opts = {}) {
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
       el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot)
-      el.insertAdjacentHTML('beforeend', truncationHtml)
+      el.appendChild('beforeend', truncationElement)
       if (el.offsetHeight > maxHeight) max = pivot - 1
       else min = pivot
     }
 
     el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max)
-    el.insertAdjacentHTML('beforeend', truncationHtml)
+    el.insertAdjacentHTML('beforeend', truncationElement)
     const diff = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
 
     const shavedText = document.createTextNode(diff)
