@@ -7,34 +7,37 @@ export default function shave(target, maxHeight, opts = {}) {
   const classname = opts.classname || 'js-shave'
   const spaces = typeof opts.spaces === 'boolean' ? opts.spaces : true
   const charclassname = opts.charclassname || 'js-shave-char'
-  const charHtml = `<span class="${charclassname}">${character}</span>`
-  const targetLinkText = opts.targetLink.text || undefined
+  const targetLinkText = opts.targetLink.text || ''
   const targetLinkUrl = opts.targetLink.url || '#'
   const targetLinkTabindex = opts.targetLink.tabindex || 0
   const targetLinkNewTab = opts.targetLink.newTab ? '_blank' : '_self'
-  const targetLinkHtml = `
-    <a
-      class="js-shave-link"
-      href="${targetLinkUrl}"
-      target="${targetLinkNewTab}"
-      aria-lable="${targetLinkText}"
-      title="${targetLinkText}"
-      tabindex="${targetLinkTabindex}"
-    >${targetLinkText}</a>`
+  let truncationHtml
+
+  if (targetLinkText) {
+    document.createElement('a')
+    truncationHtml.innerText = `${character} ${targetLinkText}`
+    truncationHtml.setAttribute('href', targetLinkUrl)
+    truncationHtml.setAttribute('target', targetLinkNewTab)
+    truncationHtml.setAttribute('aria-label', targetLinkText)
+    truncationHtml.setAttribute('title', targetLinkText)
+    truncationHtml.setAttribute('tabindex', `${targetLinkTabindex}`)
+  } else {
+    document.createElement('span')
+    truncationHtml.innerText = character
+  }
+  truncationHtml.classList.add(charclassname)
 
   if (!('length' in els)) els = [els]
   for (let i = 0; i < els.length; i += 1) {
     const el = els[i]
     const styles = el.style
     const span = el.querySelector(`.${classname}`)
-    const link = el.querySelector('js-shave-link')
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
 
     // If element text has already been shaved
     if (span) {
-      // Remove the ellipsis and link to recapture the original text
+      // Remove the truncation element to recapture the original text
       el.removeChild(el.querySelector(`.${charclassname}`))
-      if (link) el.removeChild(link)
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
     }
@@ -50,8 +53,8 @@ export default function shave(target, maxHeight, opts = {}) {
     const maxHeightStyle = styles.maxHeight
     styles.maxHeight = 'none'
 
-    // Get link word-length to adjust max word number
-    const linkLength = targetLinkText.split(' ').length
+    // Get max word number from characters including optional link
+    const charLength = truncationHtml.innerText.split(' ').length
 
     // If already short enough, we're done
     if (el.offsetHeight <= maxHeight) {
@@ -61,22 +64,19 @@ export default function shave(target, maxHeight, opts = {}) {
     }
 
     // Binary search for number of words which can fit in allotted height
-    let max = words.length + (linkLength - 1)
+    let max = words.length + charLength
     let min = 0
     let pivot
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
       el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot)
-      el.insertAdjacentHTML('beforeend', charHtml)
-      // Insert target link text if set in options
-      if (targetLinkText) el.insertAdjacentHTML('beforeend', targetLinkHtml)
+      el.insertAdjacentHTML('beforeend', truncationHtml)
       if (el.offsetHeight > maxHeight) max = pivot - 1
       else min = pivot
     }
 
     el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max)
-    el.insertAdjacentHTML('beforeend', charHtml)
-    if (targetLinkText) el.insertAdjacentHTML('beforeend', targetLinkHtml)
+    el.insertAdjacentHTML('beforeend', truncationHtml)
     const diff = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
 
     const shavedText = document.createTextNode(diff)
