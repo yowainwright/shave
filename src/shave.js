@@ -7,7 +7,25 @@ export default function shave(target, maxHeight, opts = {}) {
   const classname = opts.classname || 'js-shave'
   const spaces = typeof opts.spaces === 'boolean' ? opts.spaces : true
   const charclassname = opts.charclassname || 'js-shave-char'
-  const charHtml = `<span class="${charclassname}">${character}</span>`
+  const targetLinkText = opts.targetLink.text || ''
+  const targetLinkUrl = opts.targetLink.url || '#'
+  const targetLinkTabindex = opts.targetLink.tabindex || 0
+  const targetLinkNewTab = opts.targetLink.newTab ? '_blank' : '_self'
+  let truncationElement
+
+  if (targetLinkText) {
+    truncationElement = document.createElement('a')
+    truncationElement.innerText = `${character} ${targetLinkText}`
+    truncationElement.setAttribute('href', targetLinkUrl)
+    truncationElement.setAttribute('target', targetLinkNewTab)
+    truncationElement.setAttribute('aria-label', targetLinkText)
+    truncationElement.setAttribute('title', targetLinkText)
+    truncationElement.setAttribute('tabindex', `${targetLinkTabindex}`)
+  } else {
+    truncationElement = document.createElement('span')
+    truncationElement.innerText = character
+  }
+  truncationElement.classList.add(charclassname)
 
   if (!('length' in els)) els = [els]
   for (let i = 0; i < els.length; i += 1) {
@@ -18,7 +36,7 @@ export default function shave(target, maxHeight, opts = {}) {
 
     // If element text has already been shaved
     if (span) {
-      // Remove the ellipsis to recapture the original text
+      // Remove the truncation element to recapture the original text
       el.removeChild(el.querySelector(`.${charclassname}`))
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
@@ -35,6 +53,9 @@ export default function shave(target, maxHeight, opts = {}) {
     const maxHeightStyle = styles.maxHeight
     styles.maxHeight = 'none'
 
+    // Get max word number from characters including optional link
+    const charLength = truncationElement.innerText.split(' ').length
+
     // If already short enough, we're done
     if (el.offsetHeight <= maxHeight) {
       styles.height = heightStyle
@@ -43,19 +64,19 @@ export default function shave(target, maxHeight, opts = {}) {
     }
 
     // Binary search for number of words which can fit in allotted height
-    let max = words.length - 1
+    let max = words.length + charLength
     let min = 0
     let pivot
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
       el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot)
-      el.insertAdjacentHTML('beforeend', charHtml)
+      el.appendChild('beforeend', truncationElement)
       if (el.offsetHeight > maxHeight) max = pivot - 1
       else min = pivot
     }
 
     el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max)
-    el.insertAdjacentHTML('beforeend', charHtml)
+    el.insertAdjacentHTML('beforeend', truncationElement)
     const diff = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
 
     const shavedText = document.createTextNode(diff)
