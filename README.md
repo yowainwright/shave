@@ -112,6 +112,23 @@ Without spaces:
 shave("selector", maxheight, { spaces: false });
 ```
 
+**Shave also provides an optional target link (eg. "Read more") to be parsed as HTML string. It therefore supports using web-components as well. NOTE: ```js-shave-link``` class is mandatory!!!**
+
+Target Link:
+
+```javascript
+shave(
+  "selector",
+  maxheight,
+  {
+    targetLink: {
+      linkHtml: '<a class="js-shave-link" href="https://www.npmjs.com/package/shave" target="_blank" aria-lable="Read more" title="Read more">Read more</a>',
+      linkLength: 2
+    }
+  }
+);
+```
+
 ---
 
 You can also use **shave** as a [jQuery](http://jquery.com/) or [Zepto](http://zeptojs.com/) plugin. As of Shave >= v2, use **dist/jquery.shave.js** for jQuery/Zepto.

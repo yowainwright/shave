@@ -8,18 +8,22 @@ export default function shave(target, maxHeight, opts = {}) {
   const spaces = typeof opts.spaces === 'boolean' ? opts.spaces : true
   const charclassname = opts.charclassname || 'js-shave-char'
   const charHtml = `<span class="${charclassname}">${character}</span>`
+  const targetLinkHtml = opts.targetLink.linkHtml || undefined
+  const targetLinkLength = opts.targetLink.linkLength || 0
 
   if (!('length' in els)) els = [els]
   for (let i = 0; i < els.length; i += 1) {
     const el = els[i]
     const styles = el.style
     const span = el.querySelector(`.${classname}`)
+    const link = el.querySelector('js-shave-link')
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
 
     // If element text has already been shaved
     if (span) {
-      // Remove the ellipsis to recapture the original text
+      // Remove the ellipsis and link to recapture the original text
       el.removeChild(el.querySelector(`.${charclassname}`))
+      if (link) el.removeChild(link)
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
     }
@@ -43,19 +47,22 @@ export default function shave(target, maxHeight, opts = {}) {
     }
 
     // Binary search for number of words which can fit in allotted height
-    let max = words.length - 1
+    let max = words.length + (targetLinkLength - 1)
     let min = 0
     let pivot
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
       el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot)
       el.insertAdjacentHTML('beforeend', charHtml)
+      // Insert target link HTML if set in options
+      if (targetLinkHtml) el.insertAdjacentHTML('beforeend', targetLinkHtml)
       if (el.offsetHeight > maxHeight) max = pivot - 1
       else min = pivot
     }
 
     el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max)
     el.insertAdjacentHTML('beforeend', charHtml)
+    if (targetLinkHtml) el.insertAdjacentHTML('beforeend', targetLinkHtml)
     const diff = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
 
     const shavedText = document.createTextNode(diff)
