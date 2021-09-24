@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,9 +24,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn
-    - run: yarn build
-    - run: yarn eslint:ci
-    - run: yarn test
+    - run: npm i pnpm -g
+    - run: pnpm i
+    - run: pnpm run build
+    - run: pnpm run eslint:ci
+    - run: pnpm run test
       env:
         CI: true
