@@ -1,17 +1,24 @@
-export default function shave(target, maxHeight, opts = {}) {
+export type Opts = {
+  character?: string
+  classname?: string
+  spaces?: boolean
+  charclassname?: string
+}
+
+export default function shave(target: string | NodeList, maxHeight: number, opts: Opts) {
   if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) throw Error('maxHeight is required')
-  let els = typeof target === 'string' ? document.querySelectorAll(target) : target
+  const els =
+    typeof target === 'string' ? [...document.querySelectorAll(target)] : 'length' in target ? [...target] : [target]
   if (!els) return
 
-  const character = opts.character || '&mldr;'
-  const classname = opts.classname || 'js-shave'
-  const spaces = typeof opts.spaces === 'boolean' ? opts.spaces : true
-  const charclassname = opts.charclassname || 'js-shave-char'
+  const character = opts?.character || '&mldr;'
+  const classname = opts?.classname || 'js-shave'
+  const spaces = typeof opts?.spaces === 'boolean' ? opts.spaces : true
+  const charclassname = opts?.charclassname || 'js-shave-char'
   const charHtml = `<span class="${charclassname}">${character}</span>`
 
-  if (!('length' in els)) els = [els]
   for (let i = 0; i < els.length; i += 1) {
-    const el = els[i]
+    const el = els[i] as HTMLElement
     const styles = el.style
     const span = el.querySelector(`.${classname}`)
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
@@ -25,7 +32,7 @@ export default function shave(target, maxHeight, opts = {}) {
     }
 
     const fullText = el[textProp]
-    const words = spaces ? fullText.split(' ') : fullText
+    const words: any = spaces ? fullText.split(' ') : fullText
     // If 0 or 1 words, we're done
     if (words.length < 2) continue
 
@@ -56,7 +63,7 @@ export default function shave(target, maxHeight, opts = {}) {
 
     el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max)
     el.insertAdjacentHTML('beforeend', charHtml)
-    const diff = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
+    const diff: string = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
 
     const shavedText = document.createTextNode(diff)
     const elWithShavedText = document.createElement('span')
