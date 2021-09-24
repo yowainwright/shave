@@ -25,5 +25,6 @@
     "downlevelIteration": true
   },
   "include": ["src"],
-  "exclude": ["dist/**", "*.js"]
+  "exclude": ["dist/**", "*.js"],
+  "types": ["jquery", "node", "zepto", "rollup"]
 }

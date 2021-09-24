@@ -6,8 +6,10 @@ specifiers:
   '@rollup/plugin-commonjs': ^20.0.0
   '@rollup/plugin-node-resolve': ^13.0.5
   '@rollup/plugin-typescript': ^8.2.5
+  '@types/jquery': ^3.5.6
   '@types/node': ^16.9.6
   '@types/rollup': ^0.54.0
+  '@types/zepto': ^1.0.32
   '@typescript-eslint/eslint-plugin': ^4.31.2
   '@typescript-eslint/parser': ^4.31.2
   babel-core: ^7.0.0-bridge.0
@@ -31,6 +33,10 @@ specifiers:
   rollup-plugin-uglify: ^6.0.1
   tslib: ^2.3.1
   typescript: ^4.0.2
+
+dependencies:
+  '@types/jquery': 3.5.6
+  '@types/zepto': 1.0.32
 
 devDependencies:
   '@babel/core': 7.15.5
@@ -1310,6 +1316,12 @@ packages:
     resolution: {integrity: sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw==}
     dev: true
 
+  /@types/jquery/3.5.6:
+    resolution: {integrity: sha512-SmgCQRzGPId4MZQKDj9Hqc6kSXFNWZFHpELkyK8AQhf8Zr6HKfCzFv9ZC1Fv3FyQttJZOlap3qYb12h61iZAIg==}
+    dependencies:
+      '@types/sizzle': 2.3.3
+    dev: false
+
   /@types/json-schema/7.0.9:
     resolution: {integrity: sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==}
     dev: true
@@ -1349,9 +1361,17 @@ packages:
       rollup: 2.57.0
     dev: true
 
+  /@types/sizzle/2.3.3:
+    resolution: {integrity: sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==}
+    dev: false
+
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: true
+
+  /@types/zepto/1.0.32:
+    resolution: {integrity: sha512-RkN8UwjyrL7zx2jyrXJ60tP5RppFZbQEnFJa5Hd+yB633n2wCthYX9iThyloC4MS9CEdEkoMswU1NHbRSAPt+g==}
+    dev: false
 
   /@typescript-eslint/eslint-plugin/4.31.2_3815fab247b4312be6d1f55eb1f81298:
     resolution: {integrity: sha512-w63SCQ4bIwWN/+3FxzpnWrDjQRXVEGiTt9tJTRptRXeFvdZc/wLiz3FQUwNQ2CVoRGI6KUWMNUj/pk63noUfcA==}

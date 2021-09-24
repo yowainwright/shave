@@ -99,10 +99,12 @@ function shave(target, maxHeight, opts) {
                 ? words.slice(0, pivot).join(' ')
                 : words.slice(0, pivot);
             el.insertAdjacentHTML('beforeend', charHtml);
-            if (el.offsetHeight > maxHeight)
+            if (el.offsetHeight > maxHeight) {
                 max = pivot - 1;
-            else
+            }
+            else {
                 min = pivot;
+            }
         }
         el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max);
         el.insertAdjacentHTML('beforeend', charHtml);
