@@ -54,11 +54,13 @@
     }
 
     function shave(target, maxHeight, opts) {
-        if (typeof maxHeight === 'undefined' || isNaN(maxHeight))
+        if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
             throw Error('maxHeight is required');
+        }
         var els = typeof target === 'string' ? __spreadArray([], __read(document.querySelectorAll(target)), false) : 'length' in target ? __spreadArray([], __read(target), false) : [target];
-        if (!els)
+        if (!els.length) {
             return;
+        }
         var character = (opts === null || opts === void 0 ? void 0 : opts.character) || '&mldr;';
         var classname = (opts === null || opts === void 0 ? void 0 : opts.classname) || 'js-shave';
         var spaces = typeof (opts === null || opts === void 0 ? void 0 : opts.spaces) === 'boolean' ? opts.spaces : true;
@@ -79,8 +81,9 @@
             var fullText = el[textProp];
             var words = spaces ? fullText.split(' ') : fullText;
             // If 0 or 1 words, we're done
-            if (words.length < 2)
+            if (words.length < 2) {
                 continue;
+            }
             // Temporarily remove any CSS height for text height calculation
             var heightStyle = styles.height;
             styles.height = 'auto';
@@ -98,7 +101,9 @@
             var pivot = void 0;
             while (min < max) {
                 pivot = (min + max + 1) >> 1; // eslint-disable-line no-bitwise
-                el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot);
+                el[textProp] = spaces
+                    ? words.slice(0, pivot).join(' ')
+                    : words.slice(0, pivot);
                 el.insertAdjacentHTML('beforeend', charHtml);
                 if (el.offsetHeight > maxHeight)
                     max = pivot - 1;
@@ -107,7 +112,9 @@
             }
             el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max);
             el.insertAdjacentHTML('beforeend', charHtml);
-            var diff = spaces ? " " + words.slice(max).join(' ') : words.slice(max);
+            var diff = spaces
+                ? " " + words.slice(max).join(' ')
+                : words.slice(max);
             var shavedText = document.createTextNode(diff);
             var elWithShavedText = document.createElement('span');
             elWithShavedText.classList.add(classname);

@@ -1,7 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
   "plugins": ["prettier", "json", "filenames", "import", "@typescript-eslint"],
-  "extends": ["plugin:@typescript-eslint/recommended", "prettier/@typescript-eslint", "plugin:prettier/recommended"],
+  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
@@ -21,7 +21,7 @@
     "no-const-assign": 1,
     "no-var": 1,
     "prefer-const": 1,
-    "@typescript-eslint/camelcase": [1],
+    "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/prefer-optional-chain": 1,
     "@typescript-eslint/no-var-requires": 0
   }

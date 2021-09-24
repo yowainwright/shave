@@ -5,11 +5,15 @@ export type Opts = {
   charclassname?: string
 }
 
-export default function shave(target: string | NodeList, maxHeight: number, opts: Opts) {
-  if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) throw Error('maxHeight is required')
+export default function shave(target: string | NodeList, maxHeight: number, opts: Opts): void {
+  if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
+    throw Error('maxHeight is required')
+  }
   const els =
     typeof target === 'string' ? [...document.querySelectorAll(target)] : 'length' in target ? [...target] : [target]
-  if (!els) return
+  if (!els.length) {
+    return
+  }
 
   const character = opts?.character || '&mldr;'
   const classname = opts?.classname || 'js-shave'
@@ -32,9 +36,11 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     }
 
     const fullText = el[textProp]
-    const words: any = spaces ? fullText.split(' ') : fullText
+    const words: string | string[] = spaces ? fullText.split(' ') : fullText
     // If 0 or 1 words, we're done
-    if (words.length < 2) continue
+    if (words.length < 2) {
+      continue
+    }
 
     // Temporarily remove any CSS height for text height calculation
     const heightStyle = styles.height
@@ -55,15 +61,19 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     let pivot
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
-      el[textProp] = spaces ? words.slice(0, pivot).join(' ') : words.slice(0, pivot)
+      el[textProp] = spaces
+        ? ((words.slice(0, pivot) as string[]).join(' ') as string)
+        : (words as string).slice(0, pivot)
       el.insertAdjacentHTML('beforeend', charHtml)
-      if (el.offsetHeight > maxHeight) max = pivot - 1
-      else min = pivot
+      if (el.offsetHeight > maxHeight) {max = pivot - 1}
+      else {min = pivot}
     }
 
-    el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max)
+    el[textProp] = spaces ? ((words.slice(0, max) as string[]).join(' ') as string) : (words as string).slice(0, max)
     el.insertAdjacentHTML('beforeend', charHtml)
-    const diff: string = spaces ? ` ${words.slice(max).join(' ')}` : words.slice(max)
+    const diff: string = spaces
+      ? ` ${(words.slice(max) as string[]).join(' ') as string}`
+      : (words as string).slice(max)
 
     const shavedText = document.createTextNode(diff)
     const elWithShavedText = document.createElement('span')
