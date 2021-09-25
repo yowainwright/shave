@@ -1,6 +1,6 @@
 /**
   shave - Shave is a javascript plugin that truncates multi-line text within a html element based on set max height
-  @version v3.0.0
+  @version v3.0.0-beta.0
   @link https://github.com/yowainwright/shave#readme
   @author Jeff Wainwright <yowainwright@gmail.com> (jeffry.in)
   @license MIT
@@ -47,18 +47,35 @@ function __spreadArray(to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 }
 
+function generateArrayOfNodes(target) {
+    if (typeof target === 'string') {
+        return __spreadArray([], __read(document.querySelectorAll(target)), false);
+    }
+    else if ('length' in target) {
+        return __spreadArray([], __read(target), false);
+    }
+    else {
+        return [target];
+    }
+}
 function shave(target, maxHeight, opts) {
+    if (opts === void 0) { opts = {}; }
     if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
         throw Error('maxHeight is required');
     }
-    var els = typeof target === 'string' ? __spreadArray([], __read(document.querySelectorAll(target)), false) : 'length' in target ? __spreadArray([], __read(target), false) : [target];
+    var els = generateArrayOfNodes(target);
     if (!els.length) {
         return;
     }
-    var character = (opts === null || opts === void 0 ? void 0 : opts.character) || '&mldr;';
-    var classname = (opts === null || opts === void 0 ? void 0 : opts.classname) || 'js-shave';
-    var spaces = typeof (opts === null || opts === void 0 ? void 0 : opts.spaces) === 'boolean' ? opts.spaces : true;
-    var charclassname = (opts === null || opts === void 0 ? void 0 : opts.charclassname) || 'js-shave-char';
+    var _a = opts.character, character = _a === void 0 ? '&mldr;' : _a, _b = opts.classname, classname = _b === void 0 ? 'js-shave' : _b, _c = opts.spaces, initialSpaces = _c === void 0 ? true : _c, _d = opts.charclassname, charclassname = _d === void 0 ? 'js-shave-char' : _d;
+    /**
+     * @notes
+     * the initialSpaces + spaces variable definition below fixes
+     * a previous bug where spaces being a boolean type wasn't clear
+     * meaning people were using (a string, in example—which is truthy)
+     * hence, doing it this way is a non-breaking change
+     */
+    var spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true;
     var charHtml = "<span class=\"" + charclassname + "\">" + character + "</span>";
     for (var i = 0; i < els.length; i += 1) {
         var el = els[i];

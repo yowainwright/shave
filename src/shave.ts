@@ -5,20 +5,41 @@ export type Opts = {
   charclassname?: string
 }
 
-export default function shave(target: string | NodeList, maxHeight: number, opts: Opts): void {
+function generateArrayOfNodes(target: string | NodeList): Array<Node> {
+  if (typeof target === 'string') {
+    return [...document.querySelectorAll(target)]
+  } else if ('length' in target) {
+    return [...target]
+  } else {
+    return [target]
+  }
+}
+
+export default function shave(target: string | NodeList, maxHeight: number, opts: Opts = {}): void {
   if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
     throw Error('maxHeight is required')
   }
-  const els =
-    typeof target === 'string' ? [...document.querySelectorAll(target)] : 'length' in target ? [...target] : [target]
+  const els = generateArrayOfNodes(target)
+
   if (!els.length) {
     return
   }
 
-  const character = opts?.character || '&mldr;'
-  const classname = opts?.classname || 'js-shave'
-  const spaces = typeof opts?.spaces === 'boolean' ? opts.spaces : true
-  const charclassname = opts?.charclassname || 'js-shave-char'
+  const {
+    character = '&mldr;',
+    classname = 'js-shave',
+    spaces: initialSpaces = true,
+    charclassname = 'js-shave-char',
+  } = opts
+
+  /**
+   * @notes
+   * the initialSpaces + spaces variable definition below fixes
+   * a previous bug where spaces being a boolean type wasn't clear
+   * meaning people were using (a string, in example—which is truthy)
+   * hence, doing it this way is a non-breaking change
+   */
+  const spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true
   const charHtml = `<span class="${charclassname}">${character}</span>`
 
   for (let i = 0; i < els.length; i += 1) {
@@ -65,8 +86,11 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
         ? ((words.slice(0, pivot) as string[]).join(' ') as string)
         : (words as string).slice(0, pivot)
       el.insertAdjacentHTML('beforeend', charHtml)
-      if (el.offsetHeight > maxHeight) {max = pivot - 1}
-      else {min = pivot}
+      if (el.offsetHeight > maxHeight) {
+        max = pivot - 1
+      } else {
+        min = pivot
+      }
     }
 
     el[textProp] = spaces ? ((words.slice(0, max) as string[]).join(' ') as string) : (words as string).slice(0, max)

@@ -4,4 +4,4 @@ export declare type Opts = {
     spaces?: boolean;
     charclassname?: string;
 };
-export default function shave(target: string | NodeList, maxHeight: number, opts: Opts): void;
+export default function shave(target: string | NodeList, maxHeight: number, opts?: Opts): void;
