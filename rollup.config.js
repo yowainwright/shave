@@ -1,7 +1,8 @@
-import babel from 'rollup-plugin-babel'
+import { author, description, homepage, license, name, version } from './package.json'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import typescript from '@rollup/plugin-typescript'
 import { uglify } from 'rollup-plugin-uglify'
-
-import { author, description, homepage, license, main, module, name, version } from './package.json'
 
 const banner = `/**
   ${name} - ${description}
@@ -11,72 +12,29 @@ const banner = `/**
   @license ${license}
 **/`
 
-const babelSetup = {
-  babelrc: false,
-  presets: [['@babel/preset-env', { modules: false }]],
-  exclude: 'node_modules/**',
-}
-
-const uglifyOutput = {
-  output: {
-    comments: (node, comment) => {
-      const text = comment.value
-      const type = comment.type
-      if (type === 'comment2') {
-        // multiline comment
-        return /@preserve|@license|@cc_on/i.test(text)
-      }
-    },
-  },
-}
-
-const ensureArray = (maybeArr) => (Array.isArray(maybeArr) ? maybeArr : [maybeArr])
-
-const createConfig = ({ input, output, env } = {}) => {
-  const plugins = [babel(babelSetup)]
-
-  if (env === 'production') plugins.push(uglify(uglifyOutput))
-  return {
-    input,
-    plugins,
-    output: ensureArray(output).map((format) =>
-      Object.assign({}, format, {
-        banner,
-        name,
-      }),
-    ),
-  }
-}
-
-export default [
-  createConfig({
-    input: 'src/shave.js',
-    output: [
-      { file: main, format: 'umd' },
-      { file: module, format: 'es' },
-    ],
-  }),
-  createConfig({
-    input: 'src/shave.js',
-    output: {
-      file: 'dist/shave.min.js',
-      format: 'umd',
-    },
-    env: 'production',
-  }),
-  createConfig({
-    input: 'src/jquery.shave.js',
-    output: {
-      file: 'dist/jquery.shave.min.js',
-      format: 'umd',
-    },
-    env: 'production',
-  }),
-  createConfig({
-    input: 'src/jquery.shave.js',
-    output: {
-      file: 'dist/jquery.shave.js',
-      format: 'umd',
-    },
-  }),
+const plugins = [
+  resolve(),
+  commonjs(),
+  typescript({ tsconfig: false, lib: ['esnext', 'dom', 'dom.iterable'], target: 'es5', downlevelIteration: true }),
 ]
+
+const inputs = ['shave', 'jquery.shave']
+const esRollups = inputs.map((name) => ({
+  input: `src/${name}.ts`,
+  output: { banner, name, file: `dist/${name}.es.js`, format: 'es' },
+  plugins,
+}))
+
+const umdRollups = inputs.map((name) => ({
+  input: `src/${name}.ts`,
+  output: { banner, name, file: `dist/${name}.js`, format: 'umd' },
+  plugins,
+}))
+
+const minRollups = inputs.map((name) => ({
+  input: `src/${name}.ts`,
+  output: { banner, name, file: `dist/${name}.min.js`, format: 'umd' },
+  plugins: [...plugins, uglify()],
+}))
+
+export default [...esRollups, ...umdRollups, ...minRollups]
