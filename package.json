@@ -55,7 +55,7 @@
   },
   "homepage": "https://github.com/yowainwright/shave#readme",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
     "@rollup/plugin-typescript": "^8.2.5",
     "@types/jquery": "^3.5.6",
