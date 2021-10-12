@@ -62,7 +62,7 @@
     "@types/node": "^16.9.6",
     "@types/rollup": "^0.54.0",
     "@types/zepto": "^1.0.32",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^4.31.2",
     "conventional-changelog-cli": "^2.0.11",
     "es-check": "6.0.0",
