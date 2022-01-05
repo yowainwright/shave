@@ -1,8 +1,13 @@
+export type Link = {
+  [key: string]: string | number | boolean
+}
+
 export type Opts = {
   character?: string
   classname?: string
   spaces?: boolean
   charclassname?: string
+  link?: Link
 }
 
 function generateArrayOfNodes(target: string | NodeList): Array<Node> {
@@ -30,6 +35,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     classname = 'js-shave',
     spaces: initialSpaces = true,
     charclassname = 'js-shave-char',
+    link = {},
   } = opts
 
   /**
@@ -40,7 +46,14 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
    * hence, doing it this way is a non-breaking change
    */
   const spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true
-  const charHtml = `<span class="${charclassname}">${character}</span>`
+  // assign attributes to a span or anchor element
+  const isLink = Object.keys(link).length > 0
+  const shavedTextElType = isLink ? 'a' : 'span'
+  const textContent = link && link.textContent ? link.textContent : character
+  const shavedTextEl = Object.assign(
+    document.createElement(shavedTextElType),
+    isLink ? { ...link, textContent } : { className: charclassname, textContent },
+  )
 
   for (let i = 0; i < els.length; i += 1) {
     const el = els[i] as HTMLElement
@@ -89,7 +102,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
       el[textProp] = spaces
         ? ((words.slice(0, pivot) as string[]).join(' ') as string)
         : (words as string).slice(0, pivot)
-      el.insertAdjacentHTML('beforeend', charHtml)
+      el.insertAdjacentElement('beforeend', shavedTextEl)
       if (el.offsetHeight > maxHeight) {
         max = pivot - 1
       } else {
@@ -98,7 +111,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     }
 
     el[textProp] = spaces ? ((words.slice(0, max) as string[]).join(' ') as string) : (words as string).slice(0, max)
-    el.insertAdjacentHTML('beforeend', charHtml)
+    el.insertAdjacentElement('beforeend', shavedTextEl)
     const diff: string = spaces
       ? ` ${(words.slice(max) as string[]).join(' ') as string}`
       : (words as string).slice(max)
