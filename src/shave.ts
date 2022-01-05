@@ -46,14 +46,27 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
    * hence, doing it this way is a non-breaking change
    */
   const spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true
-  // assign attributes to a span or anchor element
-  const isLink = Object.keys(link).length > 0
+
+  /**
+   * @note create a span or anchor element and assign properties to it
+   */
+  // JSON.stringify is used to support IE8+
+  const isLink = JSON.stringify(link) !== '{}'
   const shavedTextElType = isLink ? 'a' : 'span'
   const textContent = isLink && link.textContent ? link.textContent : character
-  const shavedTextEl = Object.assign(
-    document.createElement(shavedTextElType),
-    isLink ? { ...link, textContent } : { className: charclassname, textContent },
-  )
+  const shavedTextEl = document.createElement(shavedTextElType)
+  const shavedTextElAttributes = {
+    textContent,
+    className: charclassname,
+  }
+  if (isLink) {
+    for (const property in link) {
+      shavedTextElAttributes[property] = link[property]
+    }
+  }
+  for (const property in shavedTextElAttributes) {
+    shavedTextEl[property] = shavedTextElAttributes[property]
+  }
 
   for (let i = 0; i < els.length; i += 1) {
     const el = els[i] as HTMLElement

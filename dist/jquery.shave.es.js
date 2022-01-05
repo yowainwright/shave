@@ -1,6 +1,6 @@
 /**
   shave - Shave is a javascript plugin that truncates multi-line text within a html element based on set max height
-  @version v3.0.0-beta.0
+  @version v3.1.0
   @link https://github.com/yowainwright/shave#readme
   @author Jeff Wainwright <yowainwright@gmail.com> (jeffry.in)
   @license MIT
@@ -67,7 +67,7 @@ function shave(target, maxHeight, opts) {
     if (!els.length) {
         return;
     }
-    var _a = opts.character, character = _a === void 0 ? '&mldr;' : _a, _b = opts.classname, classname = _b === void 0 ? 'js-shave' : _b, _c = opts.spaces, initialSpaces = _c === void 0 ? true : _c, _d = opts.charclassname, charclassname = _d === void 0 ? 'js-shave-char' : _d;
+    var _a = opts.character, character = _a === void 0 ? '&mldr;' : _a, _b = opts.classname, classname = _b === void 0 ? 'js-shave' : _b, _c = opts.spaces, initialSpaces = _c === void 0 ? true : _c, _d = opts.charclassname, charclassname = _d === void 0 ? 'js-shave-char' : _d, _e = opts.link, link = _e === void 0 ? {} : _e;
     /**
      * @notes
      * the initialSpaces + spaces variable definition below fixes
@@ -76,7 +76,26 @@ function shave(target, maxHeight, opts) {
      * hence, doing it this way is a non-breaking change
      */
     var spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true;
-    var charHtml = "<span class=\"" + charclassname + "\">" + character + "</span>";
+    /**
+     * @note create a span or anchor element and assign properties to it
+     */
+    // JSON.stringify is used to support IE8+
+    var isLink = JSON.stringify(link) !== '{}';
+    var shavedTextElType = isLink ? 'a' : 'span';
+    var textContent = isLink && link.textContent ? link.textContent : character;
+    var shavedTextEl = document.createElement(shavedTextElType);
+    var shavedTextElAttributes = {
+        textContent: textContent,
+        className: charclassname,
+    };
+    if (isLink) {
+        for (var property in link) {
+            shavedTextElAttributes[property] = link[property];
+        }
+    }
+    for (var property in shavedTextElAttributes) {
+        shavedTextEl[property] = shavedTextElAttributes[property];
+    }
     for (var i = 0; i < els.length; i += 1) {
         var el = els[i];
         var styles = el.style;
@@ -85,7 +104,11 @@ function shave(target, maxHeight, opts) {
         // If element text has already been shaved
         if (span) {
             // Remove the ellipsis to recapture the original text
-            el.removeChild(el.querySelector("." + charclassname));
+            var charList = el.querySelectorAll("." + charclassname);
+            for (var i_1 = 0; i_1 < charList.length; i_1++) {
+                var char = charList[i_1];
+                char.parentNode.removeChild(char);
+            }
             el[textProp] = el[textProp]; // eslint-disable-line
             // nuke span, recombine text
         }
@@ -115,7 +138,7 @@ function shave(target, maxHeight, opts) {
             el[textProp] = spaces
                 ? words.slice(0, pivot).join(' ')
                 : words.slice(0, pivot);
-            el.insertAdjacentHTML('beforeend', charHtml);
+            el.insertAdjacentElement('beforeend', shavedTextEl);
             if (el.offsetHeight > maxHeight) {
                 max = pivot - 1;
             }
@@ -124,7 +147,7 @@ function shave(target, maxHeight, opts) {
             }
         }
         el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max);
-        el.insertAdjacentHTML('beforeend', charHtml);
+        el.insertAdjacentElement('beforeend', shavedTextEl);
         var diff = spaces
             ? " " + words.slice(max).join(' ')
             : words.slice(max);
