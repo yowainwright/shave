@@ -49,7 +49,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
   // assign attributes to a span or anchor element
   const isLink = Object.keys(link).length > 0
   const shavedTextElType = isLink ? 'a' : 'span'
-  const textContent = link && link.textContent ? link.textContent : character
+  const textContent = isLink && link.textContent ? link.textContent : character
   const shavedTextEl = Object.assign(
     document.createElement(shavedTextElType),
     isLink ? { ...link, textContent } : { className: charclassname, textContent },
