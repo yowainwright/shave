@@ -60,8 +60,8 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     className: charclassname,
   }
   if (isLink) {
-    for (const property in link) {
-      shavedTextElAttributes[property] = link[property]
+    for (const linkProperty in link) {
+      shavedTextElAttributes[linkProperty] = link[linkProperty]
     }
   }
   for (const property in shavedTextElAttributes) {

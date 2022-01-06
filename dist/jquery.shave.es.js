@@ -89,8 +89,8 @@ function shave(target, maxHeight, opts) {
         className: charclassname,
     };
     if (isLink) {
-        for (var property in link) {
-            shavedTextElAttributes[property] = link[property];
+        for (var linkProperty in link) {
+            shavedTextElAttributes[linkProperty] = link[linkProperty];
         }
     }
     for (var property in shavedTextElAttributes) {
