@@ -56,6 +56,15 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
         const char = charList[i]
         char.parentNode.removeChild(char)
       }
+      // innerText could not get the invisible element (such as 'display: none;'),so it special treatment is required.
+      if (textProp === 'innerText') {
+        const elWithShavedTextList = el.querySelectorAll(`.${classname}`)
+        for (let i = 0; i < elWithShavedTextList.length; i++) {
+          const elWithShavedText = elWithShavedTextList[i] as HTMLElement
+          elWithShavedText.style.display = null
+          elWithShavedText.style.fontSize = '0px'
+        }
+      }
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
     }
