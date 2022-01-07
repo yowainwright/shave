@@ -70,11 +70,7 @@ import shave from 'shave';
 
 | `selector` | `maxheight`  | `options` | 
 | :--------: | :----------: | :------: |
-| `string` | `number`  | - **`character`:** a `string`
-- **`classname`:** a `string`
-- **`spaces`:** a `boolean`
-- **`charclassname`:** a `string`
-- **`link`:** an `object` of anchor tag attributes |
+| `string` | `number`  | **`character`:** string<br>**`charclassname`:** string<br>**`classname`:** string<br>**`spaces`:** boolean<br>**`link`:** object |
 
 ## Syntax
 
