@@ -68,23 +68,13 @@ import shave from 'shave';
 
 ## Arguments
 
-### `selector`
-
-- a `string`.
-
-### `maxheight`
-
-- a `number`.
-
-### `options`
-
-- **`character`:** a `string`
+| `selector` | `maxheight`  | `options` | 
+| :--------: | :----------: | :------: |
+| `string` | `number`  | - **`character`:** a `string`
 - **`classname`:** a `string`
 - **`spaces`:** a `boolean`
 - **`charclassname`:** a `string`
-- **`link`:** an `object` of anchor tag attributes
-
-
+- **`link`:** an `object` of anchor tag attributes |
 
 ## Syntax
 
