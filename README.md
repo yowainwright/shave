@@ -68,9 +68,13 @@ import shave from 'shave';
 
 ## Arguments
 
+```javascript
+shave("selector", maxheight, { options });
+```
+
 | `selector` | `maxheight`  | `options` | 
 | :--------: | :----------: | :------: |
-| `string` | `number`  | **`character`:** string<br>**`charclassname`:** string<br>**`classname`:** string<br>**`spaces`:** boolean<br>**`link`:** object |
+| `string` | `number`  | **`character`:** string<br>**`charclassname`:** string<br>**`classname`:** string<br>**`spaces`:** boolean<br>**`link`:** object consisting of `a` element attributes and `textContent` |
 
 ## Syntax
 
