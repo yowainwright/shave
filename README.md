@@ -198,8 +198,6 @@ shave("selector", 50, { link: { href: 'https://www.google.com', textContent: 'Re
 
 [Codepen example](http://codepen.io/yowainwright/pen/wzVgMp) with a non-spaced language.
 
-[Codepen example](http://codepen.io/yowainwright/pen/wzVgMp) with a link.
-
 ## Notes
 
 `text-overflow: ellipsis` is the way to go when truncating text to a single line. Shave does something very similar to `text-overflow: ellipsis` but for _multiple lines_ when [line-clamp](https://caniuse.com/#feat=css-line-clamp) is not supported. Shave bypasses being a `line-clamp` polyfill by only accepting a max-height number. This keeps shave a fast and light weight utility.
