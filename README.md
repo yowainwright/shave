@@ -68,13 +68,30 @@ import shave from 'shave';
 
 ## Arguments
 
+Argument structure is as follows:
+
 ```javascript
 shave("selector", maxheight, { options });
 ```
 
-| `selector` | `maxheight`  | `options` | 
-| :--------: | :----------: | :------: |
-| `string` | `number`  | **`character`:** string<br>**`charclassname`:** string<br>**`classname`:** string<br>**`spaces`:** boolean<br>**`link`:** object consisting of `a` element attributes and `textContent` |
+Argument type breakdown:
+
+| argument | type  | required | description | example |
+| :--------: | :----------: | :------: | :------: | :------: |
+| `"selector"` | `string`  | yes | used to select items to shave | `".js-is-shaved"` |
+| `maxheight` | `number`  | yes | used to specify the maximum height | `50` |
+| `"options"` | `object`  | no | use to modify how items are shaved | `{ character: "..." }` |
+
+Options `object` breakdown:
+
+| options | `type` | `default` | `description` |
+| :--------: | :------: | :------: | :------: |
+| **character:** | `string` | `"…"` | character to use for ellipsis |
+| **charclassname:** | `string` | `'js-shave-char'` | class name to use for ellipsis element |
+| **classname:** |  `string` | `'js-shave'` | class to add to the element |
+| **spaces:** | `boolean` | `false` | if true, spaces will be preserved** |
+| **link:** | `object` | `undefined` | an object accepting any link accociated |
+
 
 ## Syntax
 
