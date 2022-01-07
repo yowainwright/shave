@@ -26,6 +26,8 @@
 
 **Shave** is a zero dependency javascript plugin that truncates multi-line text to fit within an html element based on a set pixel number **max-height**. It then stores the _diff_ of the original text string in a hidden `<span>` element following the visible text. This means the original text remains intact!
 
+---
+
 **Shave, compared to other truncation plugins:**
 
 - maintains the original text after truncation.
@@ -33,34 +35,23 @@
 - only requires a selector and a max height
 - is very lightweight; `~1.5kb` unminified
 - allows for custom ellipsis strings and class names but doesn't over complicate
+- **news!** provides ellipsis link functionality
 - is fast and capable of truncating text within lots of elements [quickly](http://codepen.io/pwfisher/full/ozVAyr/)
 - is additive. It will play nice with other javascript libraries and more truncation features can easily be built with it.
 - supports non-spaced languages ([Non-ascii](https://en.wikipedia.org/wiki/ASCII)).
 
 ## Installing from a package manager
 
-npm
-
 ```sh
-
-npm install shave --save
-
+npm i shave -D
 ```
 
-bower
-
-```sh
-
-bower install shave --save
-
+```
+yarn add shave -D
 ```
 
-yarn
-
-```sh
-
-yarn add shave
-
+```
+pnpm i shave -D
 ```
 
 ## Usage
@@ -71,11 +62,29 @@ Add **dist/shave.js** to your html
 
 Or as a module
 
-```sh
-
+```javascript
 import shave from 'shave';
-
 ```
+
+## Arguments
+
+### `selector`
+
+- a `string`.
+
+### `maxheight`
+
+- a `number`.
+
+### `options`
+
+- **`character`:** a `string`
+- **`classname`:** a `string`
+- **`spaces`:** a `boolean`
+- **`charclassname`:** a `string`
+- **`link`:** an `object` of anchor tag attributes
+
+
 
 ## Syntax
 
@@ -112,6 +121,17 @@ Without spaces:
 shave("selector", maxheight, { spaces: false });
 ```
 
+With an `<a>` (link) tag:
+
+```javascript
+/** 
+ * @notes
+ * - provide your desired link attributes here!
+ * @note link attributes trump the character option and className of the ellipsis element 
+ */
+shave("selector", maxheight, { link: LinkObject });
+```
+
 ---
 
 You can also use **shave** as a [jQuery](http://jquery.com/) or [Zepto](http://zeptojs.com/) plugin. As of Shave >= v2, use **dist/jquery.shave.js** for jQuery/Zepto.
@@ -136,6 +156,33 @@ $("selector").shave(maxheight, {
 });
 ```
 
+With an `<a>` (link) tag:
+
+```javascript
+/** 
+ * @notes
+ * - provide your desired link attributes here!
+ * @note link attributes trump the character option and className of the ellipsis element 
+ */
+$("selector").shave(maxheight, { link: LinkObject });
+```
+
+## Prefer Link Functionality
+
+The **shave** plugin provides a **link** option—an `<a>` element which replaces the default `<span>` element. 
+As **any** functionality that is needed without an `href` attribute can be made using the default `<span>` element, the `<a>` is only rendered if the `href` attribute is provided.
+
+Any attributes that can be used for an `<a>` element can be added to the link object when invoking **shave**. 
+Additionally `textContent` can be added to replace the default `character` option.
+
+Here's a more in-depth example than the basic example(s) above:
+
+```javascript
+shave("selector", 50, { link: { href: 'https://www.google.com', textContent: 'Read More here' } });
+```
+
+> **note:** if an `href` is not specified, the link will not be created!
+
 ## Examples
 
 [Codepen example](http://codepen.io/yowainwright/pen/5f471214df90f43c7996c5914c88e858/) with plain javascript.
@@ -143,6 +190,8 @@ $("selector").shave(maxheight, {
 [Codepen example](http://codepen.io/yowainwright/pen/c35ad7a281bc58ce6f89d2adb94c5d14/) with jQuery.
 
 [Codepen example](http://codepen.io/yowainwright/pen/wzVgMp) with a non-spaced language.
+
+[Codepen example](http://codepen.io/yowainwright/pen/wzVgMp) with a link.
 
 ## Notes
 

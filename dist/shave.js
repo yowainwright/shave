@@ -1,6 +1,6 @@
 /**
   shave - Shave is a javascript plugin that truncates multi-line text within a html element based on set max height
-  @version v3.1.0
+  @version v4.0.0
   @link https://github.com/yowainwright/shave#readme
   @author Jeff Wainwright <yowainwright@gmail.com> (jeffry.in)
   @license MIT
@@ -83,10 +83,12 @@
          */
         var spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true;
         /**
-         * @note create a span or anchor element and assign properties to it
+         * @notes
+         * - create a span or anchor element and assign properties to it
+         * - JSON.stringify is used to support IE8+
+         * - if link.href is not provided, link object properties are ignored
          */
-        // JSON.stringify is used to support IE8+
-        var isLink = JSON.stringify(link) !== '{}';
+        var isLink = link && JSON.stringify(link) !== '{}' && link.href;
         var shavedTextElType = isLink ? 'a' : 'span';
         var textContent = isLink && link.textContent ? link.textContent : character;
         var shavedTextEl = document.createElement(shavedTextElType);

@@ -48,10 +48,12 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
   const spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true
 
   /**
-   * @note create a span or anchor element and assign properties to it
+   * @notes
+   * - create a span or anchor element and assign properties to it
+   * - JSON.stringify is used to support IE8+
+   * - if link.href is not provided, link object properties are ignored
    */
-  // JSON.stringify is used to support IE8+
-  const isLink = JSON.stringify(link) !== '{}'
+  const isLink = link && JSON.stringify(link) !== '{}' && link.href
   const shavedTextElType = isLink ? 'a' : 'span'
   const textContent = isLink && link.textContent ? link.textContent : character
   const shavedTextEl = document.createElement(shavedTextElType)
