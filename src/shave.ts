@@ -73,17 +73,13 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
   for (let i = 0; i < els.length; i += 1) {
     const el = els[i] as HTMLElement
     const styles = el.style
-    const span = el.querySelector(`.${classname}`)
+    const span = el.querySelector('.' + classname)
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
 
     // If element text has already been shaved
     if (span) {
       // Remove the ellipsis to recapture the original text
-      const charList = el.querySelectorAll(`.${charclassname}`)
-      for (let i = 0; i < charList.length; i++) {
-        const char = charList[i]
-        char.parentNode.removeChild(char)
-      }
+      el.removeChild(el.querySelector('.' + charclassname))
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
     }

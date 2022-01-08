@@ -106,16 +106,12 @@
         for (var i = 0; i < els.length; i += 1) {
             var el = els[i];
             var styles = el.style;
-            var span = el.querySelector("." + classname);
+            var span = el.querySelector('.' + classname);
             var textProp = el.textContent === undefined ? 'innerText' : 'textContent';
             // If element text has already been shaved
             if (span) {
                 // Remove the ellipsis to recapture the original text
-                var charList = el.querySelectorAll("." + charclassname);
-                for (var i_1 = 0; i_1 < charList.length; i_1++) {
-                    var char = charList[i_1];
-                    char.parentNode.removeChild(char);
-                }
+                el.removeChild(el.querySelector('.' + charclassname));
                 el[textProp] = el[textProp]; // eslint-disable-line
                 // nuke span, recombine text
             }
