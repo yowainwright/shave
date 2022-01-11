@@ -96,13 +96,13 @@
             textContent: textContent,
             className: charclassname,
         };
-        if (isLink) {
-            for (var linkProperty in link) {
-                shavedTextElAttributes[linkProperty] = link[linkProperty];
-            }
-        }
         for (var property in shavedTextElAttributes) {
             shavedTextEl[property] = shavedTextElAttributes[property];
+        }
+        if (isLink) {
+            for (var linkProperty in link) {
+                shavedTextEl[linkProperty] = link[linkProperty];
+            }
         }
         for (var i = 0; i < els.length; i += 1) {
             var el = els[i];

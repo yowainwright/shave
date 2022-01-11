@@ -68,7 +68,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
 
   if (isLink) {
     for (const linkProperty in link) {
-      shavedTextElAttributes[linkProperty] = link[linkProperty]
+      shavedTextEl[linkProperty] = link[linkProperty]
     }
   }
 
