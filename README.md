@@ -26,6 +26,19 @@
 
 **Shave** is a zero dependency javascript plugin that truncates multi-line text to fit within an html element based on a set pixel number **max-height**. It then stores the _diff_ of the original text string in a hidden `<span>` element following the visible text. This means the original text remains intact!
 
+## V4 Beta, Link support 
+
+Version `4.0.0-beta.0` is beta released with support for links!
+There are no official breaking changes, but because html attributes are added differently than in previous versions, the new feature is added as a major release. 
+
+To use today:
+
+```sh
+npm i shave@4.0.0-beta.0
+```
+
+Reade more about using `Link` below.
+
 ---
 
 **Shave, compared to other truncation plugins:**
@@ -35,7 +48,7 @@
 - only requires a selector and a max height
 - is very lightweight; `~1.5kb` unminified
 - allows for custom ellipsis strings and class names but doesn't over complicate
-- **news!** provides ellipsis link functionality
+- **new!** provides ellipsis link functionality
 - is fast and capable of truncating text within lots of elements [quickly](http://codepen.io/pwfisher/full/ozVAyr/)
 - is additive. It will play nice with other javascript libraries and more truncation features can easily be built with it.
 - supports non-spaced languages ([Non-ascii](https://en.wikipedia.org/wiki/ASCII)).
