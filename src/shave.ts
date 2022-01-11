@@ -61,13 +61,15 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     textContent,
     className: charclassname,
   }
+
+  for (const property in shavedTextElAttributes) {
+    shavedTextEl[property] = shavedTextElAttributes[property]
+  }
+
   if (isLink) {
     for (const linkProperty in link) {
       shavedTextElAttributes[linkProperty] = link[linkProperty]
     }
-  }
-  for (const property in shavedTextElAttributes) {
-    shavedTextEl[property] = shavedTextElAttributes[property]
   }
 
   for (let i = 0; i < els.length; i += 1) {
