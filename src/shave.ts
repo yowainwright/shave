@@ -1,8 +1,13 @@
+export type Link = {
+  [key: string]: string | number | boolean
+}
+
 export type Opts = {
   character?: string
   classname?: string
   spaces?: boolean
   charclassname?: string
+  link?: Link
 }
 
 function generateArrayOfNodes(target: string | NodeList): Array<Node> {
@@ -30,6 +35,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     classname = 'js-shave',
     spaces: initialSpaces = true,
     charclassname = 'js-shave-char',
+    link = {},
   } = opts
 
   /**
@@ -40,22 +46,42 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
    * hence, doing it this way is a non-breaking change
    */
   const spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true
-  const charHtml = `<span class="${charclassname}">${character}</span>`
+
+  /**
+   * @notes
+   * - create a span or anchor element and assign properties to it
+   * - JSON.stringify is used to support IE8+
+   * - if link.href is not provided, link object properties are ignored
+   */
+  const isLink = link && JSON.stringify(link) !== '{}' && link.href
+  const shavedTextElType = isLink ? 'a' : 'span'
+  const textContent = isLink && link.textContent ? link.textContent : character
+  const shavedTextEl = document.createElement(shavedTextElType)
+  const shavedTextElAttributes = {
+    textContent,
+    className: charclassname,
+  }
+
+  for (const property in shavedTextElAttributes) {
+    shavedTextEl[property] = shavedTextElAttributes[property]
+  }
+
+  if (isLink) {
+    for (const linkProperty in link) {
+      shavedTextEl[linkProperty] = link[linkProperty]
+    }
+  }
 
   for (let i = 0; i < els.length; i += 1) {
     const el = els[i] as HTMLElement
     const styles = el.style
-    const span = el.querySelector(`.${classname}`)
+    const span = el.querySelector('.' + classname)
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
 
     // If element text has already been shaved
     if (span) {
       // Remove the ellipsis to recapture the original text
-      const charList = el.querySelectorAll(`.${charclassname}`)
-      for (let i = 0; i < charList.length; i++) {
-        const char = charList[i]
-        char.parentNode.removeChild(char)
-      }
+      el.removeChild(el.querySelector('.' + charclassname))
       el[textProp] = el[textProp] // eslint-disable-line
       // nuke span, recombine text
     }
@@ -89,7 +115,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
       el[textProp] = spaces
         ? ((words.slice(0, pivot) as string[]).join(' ') as string)
         : (words as string).slice(0, pivot)
-      el.insertAdjacentHTML('beforeend', charHtml)
+      el.insertAdjacentElement('beforeend', shavedTextEl)
       if (el.offsetHeight > maxHeight) {
         max = pivot - 1
       } else {
@@ -98,7 +124,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
     }
 
     el[textProp] = spaces ? ((words.slice(0, max) as string[]).join(' ') as string) : (words as string).slice(0, max)
-    el.insertAdjacentHTML('beforeend', charHtml)
+    el.insertAdjacentElement('beforeend', shavedTextEl)
     const diff: string = spaces
       ? ` ${(words.slice(max) as string[]).join(' ') as string}`
       : (words as string).slice(max)

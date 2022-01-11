@@ -26,6 +26,8 @@
 
 **Shave** is a zero dependency javascript plugin that truncates multi-line text to fit within an html element based on a set pixel number **max-height**. It then stores the _diff_ of the original text string in a hidden `<span>` element following the visible text. This means the original text remains intact!
 
+---
+
 **Shave, compared to other truncation plugins:**
 
 - maintains the original text after truncation.
@@ -33,34 +35,23 @@
 - only requires a selector and a max height
 - is very lightweight; `~1.5kb` unminified
 - allows for custom ellipsis strings and class names but doesn't over complicate
+- **news!** provides ellipsis link functionality
 - is fast and capable of truncating text within lots of elements [quickly](http://codepen.io/pwfisher/full/ozVAyr/)
 - is additive. It will play nice with other javascript libraries and more truncation features can easily be built with it.
 - supports non-spaced languages ([Non-ascii](https://en.wikipedia.org/wiki/ASCII)).
 
 ## Installing from a package manager
 
-npm
-
 ```sh
-
-npm install shave --save
-
+npm i shave -D
 ```
 
-bower
-
-```sh
-
-bower install shave --save
-
+```
+yarn add shave -D
 ```
 
-yarn
-
-```sh
-
-yarn add shave
-
+```
+pnpm i shave -D
 ```
 
 ## Usage
@@ -71,11 +62,36 @@ Add **dist/shave.js** to your html
 
 Or as a module
 
-```sh
-
+```javascript
 import shave from 'shave';
-
 ```
+
+## Arguments
+
+Argument structure is as follows:
+
+```javascript
+shave("selector", maxheight, { options });
+```
+
+Argument type breakdown:
+
+| argument | type  | required | description | example |
+| :--------: | :----------: | :------: | :------: | :------: |
+| `"selector"` | `string`  | yes | used to select items to shave | `".js-is-shaved"` |
+| `maxheight` | `number`  | yes | used to specify the maximum height | `50` |
+| `"options"` | `object`  | no | use to modify how items are shaved | `{ character: "..." }` |
+
+Options `object` breakdown:
+
+| options | `type` | `default` | `description` |
+| :--------: | :------: | :------: | :------: |
+| **character:** | `string` | `"…"` | character to use for ellipsis |
+| **charclassname:** | `string` | `'js-shave-char'` | class name to use for ellipsis element |
+| **classname:** |  `string` | `'js-shave'` | class to add to the element |
+| **spaces:** | `boolean` | `false` | if true, spaces will be preserved** |
+| **link:** | `object` | `undefined` | an object accepting any link accociated |
+
 
 ## Syntax
 
@@ -112,6 +128,17 @@ Without spaces:
 shave("selector", maxheight, { spaces: false });
 ```
 
+With an `<a>` (link) tag:
+
+```javascript
+/** 
+ * @notes
+ * - provide your desired link attributes here!
+ * @note link attributes trump the character option and className of the ellipsis element 
+ */
+shave("selector", maxheight, { link: LinkObject });
+```
+
 ---
 
 You can also use **shave** as a [jQuery](http://jquery.com/) or [Zepto](http://zeptojs.com/) plugin. As of Shave >= v2, use **dist/jquery.shave.js** for jQuery/Zepto.
@@ -135,6 +162,33 @@ $("selector").shave(maxheight, {
   spaces: false
 });
 ```
+
+With an `<a>` (link) tag:
+
+```javascript
+/** 
+ * @notes
+ * - provide your desired link attributes here!
+ * @note link attributes trump the character option and className of the ellipsis element 
+ */
+$("selector").shave(maxheight, { link: LinkObject });
+```
+
+## Prefer Link Functionality
+
+The **shave** plugin provides a **link** option—an `<a>` element which replaces the default `<span>` element. 
+As **any** functionality that is needed without an `href` attribute can be made using the default `<span>` element, the `<a>` is only rendered if the `href` attribute is provided.
+
+Any attributes that can be used for an `<a>` element can be added to the link object when invoking **shave**. 
+Additionally `textContent` can be added to replace the default `character` option.
+
+Here's a more in-depth example than the basic example(s) above:
+
+```javascript
+shave("selector", 50, { link: { href: 'https://www.google.com', textContent: 'Read More here' } });
+```
+
+> **note:** if an `href` is not specified, the link will not be created!
 
 ## Examples
 

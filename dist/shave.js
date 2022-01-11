@@ -1,6 +1,6 @@
 /**
   shave - Shave is a javascript plugin that truncates multi-line text within a html element based on set max height
-  @version v3.0.0
+  @version v4.0.0-beta.0
   @link https://github.com/yowainwright/shave#readme
   @author Jeff Wainwright <yowainwright@gmail.com> (jeffry.in)
   @license MIT
@@ -73,7 +73,7 @@
         if (!els.length) {
             return;
         }
-        var _a = opts.character, character = _a === void 0 ? '&mldr;' : _a, _b = opts.classname, classname = _b === void 0 ? 'js-shave' : _b, _c = opts.spaces, initialSpaces = _c === void 0 ? true : _c, _d = opts.charclassname, charclassname = _d === void 0 ? 'js-shave-char' : _d;
+        var _a = opts.character, character = _a === void 0 ? '&mldr;' : _a, _b = opts.classname, classname = _b === void 0 ? 'js-shave' : _b, _c = opts.spaces, initialSpaces = _c === void 0 ? true : _c, _d = opts.charclassname, charclassname = _d === void 0 ? 'js-shave-char' : _d, _e = opts.link, link = _e === void 0 ? {} : _e;
         /**
          * @notes
          * the initialSpaces + spaces variable definition below fixes
@@ -82,20 +82,37 @@
          * hence, doing it this way is a non-breaking change
          */
         var spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true;
-        var charHtml = "<span class=\"" + charclassname + "\">" + character + "</span>";
+        /**
+         * @notes
+         * - create a span or anchor element and assign properties to it
+         * - JSON.stringify is used to support IE8+
+         * - if link.href is not provided, link object properties are ignored
+         */
+        var isLink = link && JSON.stringify(link) !== '{}' && link.href;
+        var shavedTextElType = isLink ? 'a' : 'span';
+        var textContent = isLink && link.textContent ? link.textContent : character;
+        var shavedTextEl = document.createElement(shavedTextElType);
+        var shavedTextElAttributes = {
+            textContent: textContent,
+            className: charclassname,
+        };
+        for (var property in shavedTextElAttributes) {
+            shavedTextEl[property] = shavedTextElAttributes[property];
+        }
+        if (isLink) {
+            for (var linkProperty in link) {
+                shavedTextEl[linkProperty] = link[linkProperty];
+            }
+        }
         for (var i = 0; i < els.length; i += 1) {
             var el = els[i];
             var styles = el.style;
-            var span = el.querySelector("." + classname);
+            var span = el.querySelector('.' + classname);
             var textProp = el.textContent === undefined ? 'innerText' : 'textContent';
             // If element text has already been shaved
             if (span) {
                 // Remove the ellipsis to recapture the original text
-                var charList = el.querySelectorAll("." + charclassname);
-                for (var i_1 = 0; i_1 < charList.length; i_1++) {
-                    var char = charList[i_1];
-                    char.parentNode.removeChild(char);
-                }
+                el.removeChild(el.querySelector('.' + charclassname));
                 el[textProp] = el[textProp]; // eslint-disable-line
                 // nuke span, recombine text
             }
@@ -125,7 +142,7 @@
                 el[textProp] = spaces
                     ? words.slice(0, pivot).join(' ')
                     : words.slice(0, pivot);
-                el.insertAdjacentHTML('beforeend', charHtml);
+                el.insertAdjacentElement('beforeend', shavedTextEl);
                 if (el.offsetHeight > maxHeight) {
                     max = pivot - 1;
                 }
@@ -134,7 +151,7 @@
                 }
             }
             el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max);
-            el.insertAdjacentHTML('beforeend', charHtml);
+            el.insertAdjacentElement('beforeend', shavedTextEl);
             var diff = spaces
                 ? " " + words.slice(max).join(' ')
                 : words.slice(max);
