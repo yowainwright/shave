@@ -1,6 +1,6 @@
 {
   "name": "shave",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Shave is a javascript plugin that truncates multi-line text within a html element based on set max height",
   "main": "dist/shave.js",
   "module": "dist/shave.es.js",
@@ -22,8 +22,8 @@
     "chore:pr": "git add . && git commit -m '[chore] updates changelog' --no-verify && git push origin chore-changelog -f",
     "chore:setup-changelog": "git checkout master && git pull",
     "chore": "pnpm run chore:delete-changelog-branch && pnpm run chore:branch && pnpm run chore:changelog && pnpm run chore:pr && pnpm run chore:setup-next-work",
-    "eslint": "eslint . --fix",
-    "eslint:ci": "eslint .",
+    "lint": "eslint . --fix && rome format src/*.ts rollup.config.js tests/*.js scripts/*.js",
+    "lint:ci": "eslint .",
     "postpublish": "git tag $npm_package_version && git push origin --tags && pnpm run chore",
     "prepush": "pnpm run build && pnpm test && pnpm run eslint:ci",
     "test": "pnpm run test:acceptance && pnpm run test:es-check",
@@ -67,12 +67,11 @@
     "conventional-changelog-cli": "^2.0.11",
     "es-check": "6.2.1",
     "eslint": "8.10.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "node-qunit-phantomjs": "^2.0.0",
     "rollup": "^2.45.2",
     "rollup-plugin-uglify": "^6.0.1",
+    "rome": "^0.4.2-next",
     "tslib": "^2.3.1",
     "typescript": "^4.0.2"
   }

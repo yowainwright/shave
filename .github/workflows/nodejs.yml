@@ -27,7 +27,7 @@ jobs:
     - run: npm i pnpm -g
     - run: pnpm i --no-frozen-lockfile
     - run: pnpm run build
-    - run: pnpm run eslint:ci
+    - run: pnpm run lint:ci
     - run: pnpm run test
       env:
         CI: true
