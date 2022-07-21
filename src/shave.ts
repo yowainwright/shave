@@ -31,7 +31,7 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
   }
 
   const {
-    character = '&mldr;',
+    character = '…',
     classname = 'js-shave',
     spaces: initialSpaces = true,
     charclassname = 'js-shave-char',
@@ -55,22 +55,6 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
    */
   const isLink = link && JSON.stringify(link) !== '{}' && link.href
   const shavedTextElType = isLink ? 'a' : 'span'
-  const textContent = isLink && link.textContent ? link.textContent : character
-  const shavedTextEl = document.createElement(shavedTextElType)
-  const shavedTextElAttributes = {
-    textContent,
-    className: charclassname,
-  }
-
-  for (const property in shavedTextElAttributes) {
-    shavedTextEl[property] = shavedTextElAttributes[property]
-  }
-
-  if (isLink) {
-    for (const linkProperty in link) {
-      shavedTextEl[linkProperty] = link[linkProperty]
-    }
-  }
 
   for (let i = 0; i < els.length; i += 1) {
     const el = els[i] as HTMLElement
@@ -104,6 +88,24 @@ export default function shave(target: string | NodeList, maxHeight: number, opts
       styles.height = heightStyle
       styles.maxHeight = maxHeightStyle
       continue
+    }
+
+    const textContent = isLink && link.textContent ? link.textContent : character
+    const shavedTextEl = document.createElement(shavedTextElType)
+    const shavedTextElAttributes = {
+      className: charclassname,
+      textContent,
+    }
+
+    for (const property in shavedTextElAttributes) {
+      shavedTextEl[property] = shavedTextElAttributes[property]
+      shavedTextEl.textContent = character;
+    }
+
+    if (isLink) {
+      for (const linkProperty in link) {
+        shavedTextEl[linkProperty] = link[linkProperty]
+      }
     }
 
     // Binary search for number of words which can fit in allotted height
