@@ -10,7 +10,7 @@
     "src",
     "types"
   ],
-  "types": "types/index.d.ts",
+  "types": "types/shave.d.ts",
   "scripts": {
     "build": "rollup -c rollup.config.js && pnpm run build:types",
     "build:release": "pnpm test",
