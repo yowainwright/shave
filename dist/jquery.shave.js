@@ -1,6 +1,6 @@
 /**
   shave - Shave is a javascript plugin that truncates multi-line text within a html element based on set max height
-  @version v4.0.0
+  @version v5.0.0
   @link https://github.com/yowainwright/shave#readme
   @author Jeff Wainwright <yowainwright@gmail.com> (jeffry.in)
   @license MIT
@@ -10,7 +10,7 @@
     factory();
 })((function () { 'use strict';
 
-    /*! *****************************************************************************
+    /******************************************************************************
     Copyright (c) Microsoft Corporation.
 
     Permission to use, copy, modify, and/or distribute this software for any
@@ -72,7 +72,7 @@
         if (!els.length) {
             return;
         }
-        var _a = opts.character, character = _a === void 0 ? '&mldr;' : _a, _b = opts.classname, classname = _b === void 0 ? 'js-shave' : _b, _c = opts.spaces, initialSpaces = _c === void 0 ? true : _c, _d = opts.charclassname, charclassname = _d === void 0 ? 'js-shave-char' : _d, _e = opts.link, link = _e === void 0 ? {} : _e;
+        var _a = opts.character, character = _a === void 0 ? '…' : _a, _b = opts.classname, classname = _b === void 0 ? 'js-shave' : _b, _c = opts.spaces, initialSpaces = _c === void 0 ? true : _c, _d = opts.charclassname, charclassname = _d === void 0 ? 'js-shave-char' : _d, _e = opts.link, link = _e === void 0 ? {} : _e;
         /**
          * @notes
          * the initialSpaces + spaces variable definition below fixes
@@ -89,20 +89,6 @@
          */
         var isLink = link && JSON.stringify(link) !== '{}' && link.href;
         var shavedTextElType = isLink ? 'a' : 'span';
-        var textContent = isLink && link.textContent ? link.textContent : character;
-        var shavedTextEl = document.createElement(shavedTextElType);
-        var shavedTextElAttributes = {
-            textContent: textContent,
-            className: charclassname,
-        };
-        for (var property in shavedTextElAttributes) {
-            shavedTextEl[property] = shavedTextElAttributes[property];
-        }
-        if (isLink) {
-            for (var linkProperty in link) {
-                shavedTextEl[linkProperty] = link[linkProperty];
-            }
-        }
         for (var i = 0; i < els.length; i += 1) {
             var el = els[i];
             var styles = el.style;
@@ -132,6 +118,21 @@
                 styles.maxHeight = maxHeightStyle;
                 continue;
             }
+            var textContent = isLink && link.textContent ? link.textContent : character;
+            var shavedTextEl = document.createElement(shavedTextElType);
+            var shavedTextElAttributes = {
+                className: charclassname,
+                textContent: textContent,
+            };
+            for (var property in shavedTextElAttributes) {
+                shavedTextEl[property] = shavedTextElAttributes[property];
+                shavedTextEl.textContent = character;
+            }
+            if (isLink) {
+                for (var linkProperty in link) {
+                    shavedTextEl[linkProperty] = link[linkProperty];
+                }
+            }
             // Binary search for number of words which can fit in allotted height
             var max = words.length - 1;
             var min = 0;
@@ -152,7 +153,7 @@
             el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max);
             el.insertAdjacentElement('beforeend', shavedTextEl);
             var diff = spaces
-                ? " " + words.slice(max).join(' ')
+                ? " ".concat(words.slice(max).join(' '))
                 : words.slice(max);
             var shavedText = document.createTextNode(diff);
             var elWithShavedText = document.createElement('span');

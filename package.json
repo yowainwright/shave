@@ -1,6 +1,6 @@
 {
   "name": "shave",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Shave is a javascript plugin that truncates multi-line text within a html element based on set max height",
   "main": "dist/shave.js",
   "module": "dist/shave.es.js",
@@ -10,25 +10,28 @@
     "src",
     "types"
   ],
-  "types": "types/index.d.ts",
+  "types": "types/shave.d.ts",
   "scripts": {
     "build": "rollup -c rollup.config.js && pnpm run build:types",
-    "build:release": "pnpm run build && pnpm run test",
+    "build:release": "pnpm test",
     "build:types": "tsc",
-    "chore:delete-changelog-branch": "if git show-ref --quiet refs/heads/chore-changelog; then git branch -D chore-changelog; fi",
-    "chore:branch": "git checkout -b chore-changelog",
-    "chore:changelog": "conventional-changelog -p eslint -i CHANGELOG.md -s -r 0",
-    "chore:setup-next-work": "git checkout master && pnpm run chore:delete-changelog-branch",
-    "chore:pr": "git add . && git commit -m '[chore] updates changelog' --no-verify && git push origin chore-changelog -f",
-    "chore:setup-changelog": "git checkout master && git pull",
-    "chore": "pnpm run chore:delete-changelog-branch && pnpm run chore:branch && pnpm run chore:changelog && pnpm run chore:pr && pnpm run chore:setup-next-work",
+    "commit": "git-cz",
+    "commit-msg": "commitlint --edit $1",
     "eslint": "eslint . --fix",
     "eslint:ci": "eslint .",
-    "postpublish": "git tag $npm_package_version && git push origin --tags && pnpm run chore",
-    "prepush": "pnpm run build && pnpm test && pnpm run eslint:ci",
+    "format": "prettier --write src/*.ts rollup.config.js tests/*.js scripts/*.js",
+    "husky-setup": "(path-exists .husky/commit-msg) || (husky install && pnpm husky-setup:commit-msg && pnpm husky-setup:post-merge && pnpm husky-setup:pre-commit)",
+    "husky-setup:commit-msg": "npx husky add .husky/commit-msg 'pnpm run commit-msg'",
+    "husky-setup:post-merge": "npx husky add .husky/post-merge 'pnpm run setup'",
+    "husky-setup:pre-commit": "npx husky add .husky/pre-commit 'pnpm run pre-commit'",
+    "pre-commit": "pnpm run build && pnpm run test && eslint",
+    "prepare": "is-ci || pnpm husky-setup",
+    "prepublishOnly": "pnpm build && pnpm run test",
+    "setup": "pnpm install --reporter=silent && pnpm build",
     "test": "pnpm run test:acceptance && pnpm run test:es-check",
     "test:acceptance": "node ./scripts/acceptance.js --coverage",
-    "test:es-check": "es-check es5 dist/shave.min.js dist/shave.js dist/jquery.shave.js dist/jquery.shave.min.js"
+    "test:es-check": "es-check es5 dist/shave.min.js dist/shave.js dist/jquery.shave.js dist/jquery.shave.min.js",
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -55,6 +58,9 @@
   },
   "homepage": "https://github.com/yowainwright/shave#readme",
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@commitlint/prompt-cli": "^17.0.3",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
     "@rollup/plugin-typescript": "^8.2.5",
@@ -64,16 +70,36 @@
     "@types/zepto": "^1.0.32",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "conventional-changelog-cli": "^2.0.11",
     "es-check": "6.2.1",
     "eslint": "8.20.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^8.0.1",
+    "is-ci": "^3.0.1",
     "node-qunit-phantomjs": "^2.0.0",
-    "rollup": "^1.32.1",
+    "path-exists-cli": "^2.0.0",
+    "prettier": "^2.6.2",
+    "release-it": "^14.14.3",
+    "rollup": "^2.77.0",
     "rollup-plugin-uglify": "^6.0.1",
     "tslib": "^2.3.1",
     "typescript": "^4.0.2"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "header-max-length": [
+        2,
+        "always",
+        120
+      ]
+    }
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    }
   }
 }
