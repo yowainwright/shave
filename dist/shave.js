@@ -11,7 +11,7 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.shave = factory());
 })(this, (function () { 'use strict';
 
-    /*! *****************************************************************************
+    /******************************************************************************
     Copyright (c) Microsoft Corporation.
 
     Permission to use, copy, modify, and/or distribute this software for any
@@ -153,7 +153,7 @@
             el[textProp] = spaces ? words.slice(0, max).join(' ') : words.slice(0, max);
             el.insertAdjacentElement('beforeend', shavedTextEl);
             var diff = spaces
-                ? " " + words.slice(max).join(' ')
+                ? " ".concat(words.slice(max).join(' '))
                 : words.slice(max);
             var shavedText = document.createTextNode(diff);
             var elWithShavedText = document.createElement('span');
