@@ -28,7 +28,7 @@
     "prepare": "is-ci || pnpm husky-setup",
     "prepublishOnly": "pnpm build && pnpm run test",
     "setup": "pnpm install --reporter=silent && pnpm build",
-    "test": "pnpm run build && pnpm run test:acceptance && pnpm run test:es-check",
+    "test": "pnpm run test:acceptance && pnpm run test:es-check",
     "test:acceptance": "node ./scripts/acceptance.js --coverage",
     "test:es-check": "es-check es5 dist/shave.min.js dist/shave.js dist/jquery.shave.js dist/jquery.shave.min.js",
     "release": "release-it"
