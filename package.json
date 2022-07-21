@@ -15,13 +15,23 @@
     "build": "rollup -c rollup.config.js && pnpm run build:types",
     "build:release": "pnpm test",
     "build:types": "tsc",
+    "commit": "git-cz",
+    "commit-msg": "commitlint --edit $1",
     "eslint": "eslint . --fix",
     "eslint:ci": "eslint .",
     "format": "prettier --write src/*.ts rollup.config.js tests/*.js scripts/*.js",
+    "husky-setup": "if [[ ! -n '/.husky/commit-msg' ]]; then (husky install && pnpm husky-setup:commit-msg && pnpm husky-setup:post-merge && pnpm husky-setup:pre-commit); fi",
+    "husky-setup:commit-msg": "npx husky add .husky/commit-msg 'pnpm run commit-msg'",
+    "husky-setup:post-merge": "npx husky add .husky/post-merge 'pnpm run setup'",
+    "husky-setup:pre-commit": "npx husky add .husky/pre-commit 'pnpm run pre-commit'",
+    "pre-commit": "pnpm run build && pnpm run test",
     "prepush": "pnpm run build && pnpm test && pnpm run eslint:ci",
+    "prepublishOnly": "pnpm build && pnpm run test",
+    "setup": "pnpm install --reporter=silent && pnpm build",
     "test": "pnpm run build && pnpm run test:acceptance && pnpm run test:es-check",
     "test:acceptance": "node ./scripts/acceptance.js --coverage",
-    "test:es-check": "es-check es5 dist/shave.min.js dist/shave.js dist/jquery.shave.js dist/jquery.shave.min.js"
+    "test:es-check": "es-check es5 dist/shave.min.js dist/shave.js dist/jquery.shave.js dist/jquery.shave.min.js",
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -48,6 +58,9 @@
   },
   "homepage": "https://github.com/yowainwright/shave#readme",
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@commitlint/prompt-cli": "^17.0.3",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
     "@rollup/plugin-typescript": "^8.2.5",
@@ -64,10 +77,27 @@
     "husky": "^8.0.1",
     "node-qunit-phantomjs": "^2.0.0",
     "prettier": "^2.6.2",
-    "release-it": "^14.14.0",
+    "release-it": "^14.14.3",
     "rollup": "^2.77.0",
     "rollup-plugin-uglify": "^6.0.1",
     "tslib": "^2.3.1",
     "typescript": "^4.0.2"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "header-max-length": [
+        2,
+        "always",
+        120
+      ]
+    }
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    }
   }
 }
