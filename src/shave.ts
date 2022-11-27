@@ -10,7 +10,7 @@ export type Opts = {
   link?: Link
 }
 
-function generateArrayOfNodes(target: string | NodeList): Array<Node> {
+function generateArrayOfNodes(target: string | NodeList | Node): Array<Node> {
   if (typeof target === 'string') {
     return [...document.querySelectorAll(target)]
   } else if ('length' in target) {
@@ -20,7 +20,7 @@ function generateArrayOfNodes(target: string | NodeList): Array<Node> {
   }
 }
 
-export default function shave(target: string | NodeList, maxHeight: number, opts: Opts = {}): void {
+export default function shave(target: string | NodeList | Node, maxHeight: number, opts: Opts = {}): void {
   if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
     throw Error('maxHeight is required')
   }
