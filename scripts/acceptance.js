@@ -1,3 +1,3 @@
-const qunit = require('node-qunit-phantomjs')
+import qunit from 'node-qunit-phantomjs'
 
 qunit('tests/index.html')

@@ -11,3 +11,4 @@ updates:
         versions:
           - 7.32.0
         update-types: ["version-update:semver-patch"]
+      - dependency-name: rollup
