@@ -1,6 +1,6 @@
 {
   "name": "shave",
-  "version": "4.0.0",
+  "version": "5.0.1",
   "description": "Shave is a javascript plugin that truncates multi-line text within a html element based on set max height",
   "main": "dist/shave.js",
   "module": "dist/shave.es.js",
@@ -98,11 +98,6 @@
         "always",
         120
       ]
-    }
-  },
-  "release-it": {
-    "github": {
-      "release": true
     }
   }
 }
