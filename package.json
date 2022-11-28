@@ -99,5 +99,10 @@
         120
       ]
     }
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release-it commit"
+    }
   }
 }
