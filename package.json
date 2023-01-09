@@ -65,7 +65,7 @@
     "@commitlint/prompt-cli": "^17.3.0",
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
-    "@rollup/plugin-typescript": "^10.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@types/jquery": "^3.5.14",
     "@types/node": "^18.11.9",
     "@types/rollup": "^0.54.0",
