@@ -82,7 +82,7 @@
     "path-exists-cli": "^2.0.0",
     "prettier": "^2.8.0",
     "release-it": "^15.5.0",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.0.7",
     "rollup": "^2",
     "rollup-plugin-uglify": "^6.0.4",
     "tslib": "^2.4.1",
