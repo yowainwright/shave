@@ -36,6 +36,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     spaces: initialSpaces = true,
     charclassname = 'js-shave-char',
     link = {},
+    persistHtml = false,
   } = opts
 
   /**
@@ -62,12 +63,17 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     const span = el.querySelector('.' + classname)
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
 
+    if( persistHtml ) {
+      textProp = 'innerHTML';
+    }
+
     // If element text has already been shaved
     if (span) {
-      // Remove the ellipsis to recapture the original text
-      el.removeChild(el.querySelector('.' + charclassname))
-      el[textProp] = el[textProp] // eslint-disable-line
-      // nuke span, recombine text
+      // Reset the element to its original form
+      el.innerHTML = el.savedContent;
+    } else {
+      // Cache the original content
+      el.savedContent = el[textProp];
     }
 
     const fullText = el[textProp]
