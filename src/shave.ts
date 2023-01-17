@@ -61,7 +61,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     const el = els[i] as HTMLElement
     const styles = el.style
     const span = el.querySelector('.' + classname)
-    const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
+    let textProp = el.textContent === undefined ? 'innerText' : 'textContent'
 
     if( persistHtml ) {
       textProp = 'innerHTML';
