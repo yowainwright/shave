@@ -86,7 +86,7 @@
     "rollup": "^2",
     "rollup-plugin-uglify": "^6.0.4",
     "tslib": "^2.4.1",
-    "typescript": "^4.9.3"
+    "typescript": "^5.0.2"
   },
   "commitlint": {
     "extends": [
