@@ -34,7 +34,7 @@ devDependencies:
     version: 0.54.0
   '@types/zepto':
     specifier: ^1.0.32
-    version: 1.0.32
+    version: 1.0.33
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.44.0
     version: 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.45.0)(typescript@5.1.6)
@@ -754,8 +754,8 @@ packages:
     resolution: {integrity: sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==}
     dev: true
 
-  /@types/zepto@1.0.32:
-    resolution: {integrity: sha512-RkN8UwjyrL7zx2jyrXJ60tP5RppFZbQEnFJa5Hd+yB633n2wCthYX9iThyloC4MS9CEdEkoMswU1NHbRSAPt+g==}
+  /@types/zepto@1.0.33:
+    resolution: {integrity: sha512-fougBKgq9TOyUEoHw6WXGObBu+q0VZH/0oyL0qZbN7JfKJAo1WIP2usMefiEiGXwJo/v/g9+fC9Lv7Z+k9Y40Q==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.45.0)(typescript@5.1.6):
