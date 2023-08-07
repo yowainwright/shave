@@ -22,7 +22,7 @@ devDependencies:
     version: 15.1.0(rollup@2.79.1)
   '@rollup/plugin-typescript':
     specifier: ^11.0.0
-    version: 11.1.2(rollup@2.79.1)(tslib@2.4.1)(typescript@5.1.6)
+    version: 11.1.2(rollup@2.79.1)(tslib@2.6.1)(typescript@5.1.6)
   '@types/jquery':
     specifier: ^3.5.14
     version: 3.5.14
@@ -82,7 +82,7 @@ devDependencies:
     version: 6.0.4(rollup@2.79.1)
   tslib:
     specifier: ^2.4.1
-    version: 2.4.1
+    version: 2.6.1
   typescript:
     specifier: ^5.0.2
     version: 5.1.6
@@ -694,7 +694,7 @@ packages:
       rollup: 2.79.1
     dev: true
 
-  /@rollup/plugin-typescript@11.1.2(rollup@2.79.1)(tslib@2.4.1)(typescript@5.1.6):
+  /@rollup/plugin-typescript@11.1.2(rollup@2.79.1)(tslib@2.6.1)(typescript@5.1.6):
     resolution: {integrity: sha512-0ghSOCMcA7fl1JM+0gYRf+Q/HWyg+zg7/gDSc+fRLmlJWcW5K1I+CLRzaRhXf4Y3DRyPnnDo4M2ktw+a6JcDEg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -710,7 +710,7 @@ packages:
       '@rollup/pluginutils': 5.0.2(rollup@2.79.1)
       resolve: 1.22.1
       rollup: 2.79.1
-      tslib: 2.4.1
+      tslib: 2.6.1
       typescript: 5.1.6
     dev: true
 
@@ -1161,7 +1161,7 @@ packages:
     resolution: {integrity: sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w==}
     engines: {node: '>=4'}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.6.1
     dev: true
 
   /async-each@1.0.6:
@@ -5343,7 +5343,7 @@ packages:
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.6.1
     dev: true
 
   /safe-buffer@5.1.2:
@@ -5940,8 +5940,8 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
-  /tslib@2.4.1:
-    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
+  /tslib@2.6.1:
+    resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
     dev: true
 
   /tsutils@3.21.0(typescript@5.1.6):
