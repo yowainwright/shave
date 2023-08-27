@@ -1,8 +1,9 @@
-import { author, description, homepage, license, name, version } from './package.json'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript'
 import { uglify } from 'rollup-plugin-uglify'
+const json = require('./package.json')
+const { author, description, homepage, license, name, version } = json
 
 const banner = `/**
   ${name} - ${description}
