@@ -114,9 +114,10 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     let pivot
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
+      const wordItems = words.slice(0, pivot);
       el[textProp] = spaces
-        ? ((words.slice(0, pivot) as string[]).join(' ') as string)
-        : (words as string).slice(0, pivot)
+        ? (wordItems as string[]).join(' ') as string
+        : wordItems as string;
       el.insertAdjacentElement('beforeend', shavedTextEl)
       if (el.offsetHeight > maxHeight) {
         max = pivot - 1
@@ -124,13 +125,13 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
         min = pivot
       }
     }
-
-    el[textProp] = spaces ? ((words.slice(0, max) as string[]).join(' ') as string) : (words as string).slice(0, max)
+    const wordeItems = words.slice(0, max)
+    el[textProp] = spaces ? ((wordeItems as string[]).join(' ') as string) : wordeItems as string
     el.insertAdjacentElement('beforeend', shavedTextEl)
+    const diffItems = words.slice(max)
     const diff: string = spaces
-      ? ` ${(words.slice(max) as string[]).join(' ') as string}`
-      : (words as string).slice(max)
-
+      ? ' ' + (diffItems as string[]).join(' ')
+      : diffItems as string;
     const shavedText = document.createTextNode(diff)
     const elWithShavedText = document.createElement('span')
     elWithShavedText.classList.add(classname)
