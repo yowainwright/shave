@@ -13,7 +13,7 @@ devDependencies:
     version: 18.6.2
   '@commitlint/prompt-cli':
     specifier: ^18.4.4
-    version: 18.6.0(@types/node@20.11.19)(typescript@5.3.3)
+    version: 18.6.1(@types/node@20.11.19)(typescript@5.3.3)
   '@rollup/plugin-commonjs':
     specifier: ^25.0.7
     version: 25.0.7(rollup@4.9.4)
@@ -157,18 +157,6 @@ packages:
       ajv: 8.12.0
     dev: true
 
-  /@commitlint/ensure@18.6.0:
-    resolution: {integrity: sha512-xY07NmOBJ7JuhX3tic021PaeLepZARIQyqpAQoNQZoml1keBFfB6MbA7XlWZv0ebbarUFE4yhKxOPw+WFv7/qw==}
-    engines: {node: '>=v18'}
-    dependencies:
-      '@commitlint/types': 18.6.1
-      lodash.camelcase: 4.3.0
-      lodash.kebabcase: 4.1.1
-      lodash.snakecase: 4.1.1
-      lodash.startcase: 4.4.0
-      lodash.upperfirst: 4.3.1
-    dev: true
-
   /@commitlint/ensure@18.6.1:
     resolution: {integrity: sha512-BPm6+SspyxQ7ZTsZwXc7TRQL5kh5YWt3euKmEIBZnocMFkJevqs3fbLRb8+8I/cfbVcAo4mxRlpTPfz8zX7SnQ==}
     engines: {node: '>=v18'}
@@ -212,26 +200,6 @@ packages:
       '@commitlint/types': 18.6.1
     dev: true
 
-  /@commitlint/load@18.6.0(@types/node@20.11.19)(typescript@5.3.3):
-    resolution: {integrity: sha512-RRssj7TmzT0bowoEKlgwg8uQ7ORXWkw7lYLsZZBMi9aInsJuGNLNWcMxJxRZbwxG3jkCidGUg85WmqJvRjsaDA==}
-    engines: {node: '>=v18'}
-    dependencies:
-      '@commitlint/config-validator': 18.6.1
-      '@commitlint/execute-rule': 18.6.1
-      '@commitlint/resolve-extends': 18.6.1
-      '@commitlint/types': 18.6.1
-      chalk: 4.1.2
-      cosmiconfig: 8.3.6(typescript@5.3.3)
-      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.11.19)(cosmiconfig@8.3.6)(typescript@5.3.3)
-      lodash.isplainobject: 4.0.6
-      lodash.merge: 4.6.2
-      lodash.uniq: 4.5.0
-      resolve-from: 5.0.0
-    transitivePeerDependencies:
-      - '@types/node'
-      - typescript
-    dev: true
-
   /@commitlint/load@18.6.1(@types/node@20.11.19)(typescript@5.3.3):
     resolution: {integrity: sha512-p26x8734tSXUHoAw0ERIiHyW4RaI4Bj99D8YgUlVV9SedLf8hlWAfyIFhHRIhfPngLlCe0QYOdRKYFt8gy56TA==}
     engines: {node: '>=v18'}
@@ -266,12 +234,12 @@ packages:
       conventional-commits-parser: 5.0.0
     dev: true
 
-  /@commitlint/prompt-cli@18.6.0(@types/node@20.11.19)(typescript@5.3.3):
-    resolution: {integrity: sha512-N+a8cdk0Y72TKV3nHO5Rkqd7+9gh6xwlPry7CzGdOIy7VQ4AuxeuIT1bYKDlWN00aacbcyOTEOVCsg6tw5zexQ==}
+  /@commitlint/prompt-cli@18.6.1(@types/node@20.11.19)(typescript@5.3.3):
+    resolution: {integrity: sha512-bowdGsKH1X+PgiZTbJsJaMPvUiN+1CjpH9pRGbsK/G2HcO9smVCU8f3Cf1PFOcK6ICOVb+W1lQnypTivQ4Jnvg==}
     engines: {node: '>=v18'}
     hasBin: true
     dependencies:
-      '@commitlint/prompt': 18.6.0(@types/node@20.11.19)(typescript@5.3.3)
+      '@commitlint/prompt': 18.6.1(@types/node@20.11.19)(typescript@5.3.3)
       execa: 5.1.1
       inquirer: 6.5.2
     transitivePeerDependencies:
@@ -279,13 +247,13 @@ packages:
       - typescript
     dev: true
 
-  /@commitlint/prompt@18.6.0(@types/node@20.11.19)(typescript@5.3.3):
-    resolution: {integrity: sha512-fFeUKQryczq55VG0t7o6GEIvbPNQGDhtWnBTB65SJ4KgozSmTOE1Ns9jQsOnzfq6V3rr9ln+4NCskmDf/hcFBg==}
+  /@commitlint/prompt@18.6.1(@types/node@20.11.19)(typescript@5.3.3):
+    resolution: {integrity: sha512-8AUAM2HuBmctBMrRKZzez87StGdVW8XNwiCRcX+iTeA0a/0rggc4gWOkwbnGqy69rm7J0vsd1jCCaJOAOWKBPw==}
     engines: {node: '>=v18'}
     dependencies:
-      '@commitlint/ensure': 18.6.0
-      '@commitlint/load': 18.6.0(@types/node@20.11.19)(typescript@5.3.3)
-      '@commitlint/types': 18.6.0
+      '@commitlint/ensure': 18.6.1
+      '@commitlint/load': 18.6.1(@types/node@20.11.19)(typescript@5.3.3)
+      '@commitlint/types': 18.6.1
       chalk: 4.1.2
       inquirer: 6.5.2
     transitivePeerDependencies:
@@ -336,13 +304,6 @@ packages:
     engines: {node: '>=v18'}
     dependencies:
       find-up: 5.0.0
-    dev: true
-
-  /@commitlint/types@18.6.0:
-    resolution: {integrity: sha512-oavoKLML/eJa2rJeyYSbyGAYzTxQ6voG5oeX3OrxpfrkRWhJfm4ACnhoRf5tgiybx2MZ+EVFqC1Lw3W8/uwpZA==}
-    engines: {node: '>=v18'}
-    dependencies:
-      chalk: 4.1.2
     dev: true
 
   /@commitlint/types@18.6.1:
