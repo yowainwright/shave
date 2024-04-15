@@ -13,7 +13,7 @@ devDependencies:
     version: 19.1.0
   '@commitlint/prompt-cli':
     specifier: ^19.0.3
-    version: 19.2.0(@types/node@20.12.2)(typescript@5.4.4)
+    version: 19.2.2(@types/node@20.12.2)(typescript@5.4.4)
   '@rollup/plugin-commonjs':
     specifier: ^25.0.7
     version: 25.0.7(rollup@4.9.4)
@@ -230,12 +230,12 @@ packages:
       conventional-commits-parser: 5.0.0
     dev: true
 
-  /@commitlint/prompt-cli@19.2.0(@types/node@20.12.2)(typescript@5.4.4):
-    resolution: {integrity: sha512-DNiR+U25L7+wA0yollpXaiB7Tu7NPf6WXx5yTxnM2HJew1nw98Zf+7Dt0mfkdb+f/OeAgR3hYGZfsuXbyfjJTg==}
+  /@commitlint/prompt-cli@19.2.2(@types/node@20.12.2)(typescript@5.4.4):
+    resolution: {integrity: sha512-04u4uyjrbvgKdsXgz8aKNMLwq2WZRSvgi+GSU/g1PdvtTLDZQmuHolnJyQWrCAbRd5779PxJ4r571tpfQ+R0Bg==}
     engines: {node: '>=v18'}
     hasBin: true
     dependencies:
-      '@commitlint/prompt': 19.2.0(@types/node@20.12.2)(typescript@5.4.4)
+      '@commitlint/prompt': 19.2.2(@types/node@20.12.2)(typescript@5.4.4)
       execa: 8.0.1
       inquirer: 9.2.15
     transitivePeerDependencies:
@@ -243,8 +243,8 @@ packages:
       - typescript
     dev: true
 
-  /@commitlint/prompt@19.2.0(@types/node@20.12.2)(typescript@5.4.4):
-    resolution: {integrity: sha512-bhPftma1IVQP5Y8St0ZssDMi1WJFju6Oz1lKZiQauEbCcHzQjRk3OHygGvNt8EXvvDTETV1jncPOjErgYSQTbQ==}
+  /@commitlint/prompt@19.2.2(@types/node@20.12.2)(typescript@5.4.4):
+    resolution: {integrity: sha512-ib+5XYws/g4VkP+4IkfH+kTJRbiInPMaq9vjPzfgQvBR3o7KWEQBk4P6ZsZK7VdGANcNXTKo667FNsfyQLPZgg==}
     engines: {node: '>=v18'}
     dependencies:
       '@commitlint/ensure': 19.0.3
