@@ -13,7 +13,7 @@ devDependencies:
     version: 19.2.2
   '@commitlint/prompt-cli':
     specifier: ^19.0.3
-    version: 19.2.2(@types/node@20.12.8)(typescript@5.4.5)
+    version: 19.3.1(@types/node@20.12.8)(typescript@5.4.5)
   '@rollup/plugin-commonjs':
     specifier: ^25.0.7
     version: 25.0.7(rollup@4.9.4)
@@ -230,21 +230,21 @@ packages:
       conventional-commits-parser: 5.0.0
     dev: true
 
-  /@commitlint/prompt-cli@19.2.2(@types/node@20.12.8)(typescript@5.4.5):
-    resolution: {integrity: sha512-04u4uyjrbvgKdsXgz8aKNMLwq2WZRSvgi+GSU/g1PdvtTLDZQmuHolnJyQWrCAbRd5779PxJ4r571tpfQ+R0Bg==}
+  /@commitlint/prompt-cli@19.3.1(@types/node@20.12.8)(typescript@5.4.5):
+    resolution: {integrity: sha512-IdZv3NhiG+khoPmHfhEIGVIo6GUTMVLT+ACvRJgOb0cLqqN+/bzJEgwXdh8RaF+Ze86/1WESvi377wSKbqQ9XQ==}
     engines: {node: '>=v18'}
     hasBin: true
     dependencies:
-      '@commitlint/prompt': 19.2.2(@types/node@20.12.8)(typescript@5.4.5)
+      '@commitlint/prompt': 19.3.1(@types/node@20.12.8)(typescript@5.4.5)
       execa: 8.0.1
-      inquirer: 9.2.15
+      inquirer: 9.2.19
     transitivePeerDependencies:
       - '@types/node'
       - typescript
     dev: true
 
-  /@commitlint/prompt@19.2.2(@types/node@20.12.8)(typescript@5.4.5):
-    resolution: {integrity: sha512-ib+5XYws/g4VkP+4IkfH+kTJRbiInPMaq9vjPzfgQvBR3o7KWEQBk4P6ZsZK7VdGANcNXTKo667FNsfyQLPZgg==}
+  /@commitlint/prompt@19.3.1(@types/node@20.12.8)(typescript@5.4.5):
+    resolution: {integrity: sha512-HmKyDgDag2xA/4jNLxP1rVJ4ePbGs1ZVrBl2hEeF55RvfnIRIcAklVytOD7ETphlWna8n88HlWupr82OUYvekg==}
     engines: {node: '>=v18'}
     dependencies:
       '@commitlint/ensure': 19.0.3
@@ -399,13 +399,6 @@ packages:
 
   /@jridgewell/sourcemap-codec@1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
-    dev: true
-
-  /@ljharb/through@2.3.12:
-    resolution: {integrity: sha512-ajo/heTlG3QgC8EGP6APIejksVAYt4ayz4tqoP3MolFELzcH1x1fzwEYRJTPO0IELutZ5HQ0c26/GqAYy79u3g==}
-    engines: {node: '>= 0.4'}
-    dependencies:
-      call-bind: 1.0.7
     dev: true
 
   /@ljharb/through@2.3.13:
@@ -2501,13 +2494,6 @@ packages:
       web-streams-polyfill: 3.3.2
     dev: true
 
-  /figures@3.2.0:
-    resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
-    engines: {node: '>=8'}
-    dependencies:
-      escape-string-regexp: 1.0.5
-    dev: true
-
   /file-entry-cache@6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -3232,27 +3218,6 @@ packages:
   /ini@4.1.1:
     resolution: {integrity: sha512-QQnnxNyfvmHFIsj7gkPcYymR8Jdw/o7mp5ZFihxn6h8Ci6fh3Dx4E1gPjpQEpIuPo9XVNY/ZUwh4BPMjGyL01g==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-    dev: true
-
-  /inquirer@9.2.15:
-    resolution: {integrity: sha512-vI2w4zl/mDluHt9YEQ/543VTCwPKWiHzKtm9dM2V0NdFcqEexDAjUHzO1oA60HRNaVifGXXM1tRRNluLVHa0Kg==}
-    engines: {node: '>=18'}
-    dependencies:
-      '@ljharb/through': 2.3.12
-      ansi-escapes: 4.3.2
-      chalk: 5.3.0
-      cli-cursor: 3.1.0
-      cli-width: 4.1.0
-      external-editor: 3.1.0
-      figures: 3.2.0
-      lodash: 4.17.21
-      mute-stream: 1.0.0
-      ora: 5.4.1
-      run-async: 3.0.0
-      rxjs: 7.8.1
-      string-width: 4.2.3
-      strip-ansi: 6.0.1
-      wrap-ansi: 6.2.0
     dev: true
 
   /inquirer@9.2.19:
