@@ -25,7 +25,7 @@ devDependencies:
     version: 11.1.6(rollup@4.9.4)(tslib@2.6.2)(typescript@5.4.5)
   '@types/jquery':
     specifier: ^3.5.29
-    version: 3.5.29
+    version: 3.5.30
   '@types/node':
     specifier: ^20.10.8
     version: 20.12.8
@@ -775,8 +775,8 @@ packages:
     resolution: {integrity: sha512-1m0bIFVc7eJWyve9S0RnuRgcQqF/Xd5QsUZAZeQFr1Q3/p9JWoQQEqmVy+DPTNpGXwhgIetAoYF8JSc33q29QA==}
     dev: true
 
-  /@types/jquery@3.5.29:
-    resolution: {integrity: sha512-oXQQC9X9MOPRrMhPHHOsXqeQDnWeCDT3PelUIg/Oy8FAbzSZtFHRjc7IpbfFVmpLtJ+UOoywpRsuO5Jxjybyeg==}
+  /@types/jquery@3.5.30:
+    resolution: {integrity: sha512-nbWKkkyb919DOUxjmRVk8vwtDb0/k8FKncmUKFi+NY+QXqWltooxTrswvz4LspQwxvLdvzBN1TImr6cw3aQx2A==}
     dependencies:
       '@types/sizzle': 2.3.8
     dev: true
