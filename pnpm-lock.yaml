@@ -42,8 +42,8 @@ devDependencies:
     specifier: ^6.18.1
     version: 6.21.0(eslint@8.57.0)(typescript@5.4.5)
   es-check:
-    specifier: 7.1.1
-    version: 7.1.1
+    specifier: 7.2.1
+    version: 7.2.1
   eslint:
     specifier: 8.57.0
     version: 8.57.0
@@ -1027,12 +1027,6 @@ packages:
     hasBin: true
     dev: true
 
-  /acorn@8.8.2:
-    resolution: {integrity: sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-    dev: true
-
   /agent-base@7.1.0:
     resolution: {integrity: sha512-o/zjMZRhJxny7OyEF+Op8X+efiELC7k7yOjMzgfzVqOzXqkBkWI79YoTdOtsuWd5BWhAGAuOY/Xa6xpiaWXiNg==}
     engines: {node: '>= 14'}
@@ -1635,9 +1629,9 @@ packages:
       delayed-stream: 1.0.0
     dev: true
 
-  /commander@10.0.0:
-    resolution: {integrity: sha512-zS5PnTI22FIRM6ylNW8G4Ap0IEOyk62fhLSD0+uHRT9McRCLGpkVNvao4bjimpK/GShynyQkFFxHhwMcETmduA==}
-    engines: {node: '>=14'}
+  /commander@12.0.0:
+    resolution: {integrity: sha512-MwVNWlYjDTtOjX5PiD7o5pK0UrFU/OYgcJfjjK4RaHZETNtjJqrZa9Y9ds88+A+f+d5lv+561eZ+yCKoS3gbAA==}
+    engines: {node: '>=18'}
     dev: true
 
   /commander@2.9.0:
@@ -2080,16 +2074,16 @@ packages:
     resolution: {integrity: sha512-wd6JXUmyHmt8T5a2xreUwKcGPq6f1f+WwIJkijUqiGcJz1qqnZgP6XIK+QyIWU5lT7imeNxUll48bziG+TSYcA==}
     dev: true
 
-  /es-check@7.1.1:
-    resolution: {integrity: sha512-rgwR2wdJp437Exq28Emwc4x5+Qn6ORDliN9daWo0wTCg5jOQxJsIZieqxVi4AfDEIN4OwMwYhld9b13mnRocUQ==}
+  /es-check@7.2.1:
+    resolution: {integrity: sha512-4sxU2OZ1aYYRRX2ajL3hDDBaY96Yr/OcH6MTRerIuOSyil6SQYQQ0b48uqVfYGRCiI0NgJbtY6Sbmf75oPaTeQ==}
     engines: {node: '>= 4'}
     hasBin: true
     dependencies:
-      acorn: 8.8.2
-      commander: 10.0.0
+      acorn: 8.11.3
+      commander: 12.0.0
       fast-glob: 3.3.2
       supports-color: 8.1.1
-      winston: 3.11.0
+      winston: 3.13.0
     dev: true
 
   /es-define-property@1.0.0:
@@ -6032,8 +6026,8 @@ packages:
       execa: 5.1.1
     dev: true
 
-  /winston-transport@4.6.0:
-    resolution: {integrity: sha512-wbBA9PbPAHxKiygo7ub7BYRiKxms0tpfU2ljtWzb3SjRjv5yl6Ozuy/TkXf00HTAt+Uylo3gSkNwzc4ME0wiIg==}
+  /winston-transport@4.7.0:
+    resolution: {integrity: sha512-ajBj65K5I7denzer2IYW6+2bNIVqLGDHqDw3Ow8Ohh+vdW+rv4MZ6eiDvHoKhfJFZ2auyN8byXieDDJ96ViONg==}
     engines: {node: '>= 12.0.0'}
     dependencies:
       logform: 2.6.0
@@ -6041,8 +6035,8 @@ packages:
       triple-beam: 1.4.1
     dev: true
 
-  /winston@3.11.0:
-    resolution: {integrity: sha512-L3yR6/MzZAOl0DsysUXHVjOwv8mKZ71TrA/41EIduGpOOV5LQVodqN+QdQ6BS6PJ/RdIshZhq84P/fStEZkk7g==}
+  /winston@3.13.0:
+    resolution: {integrity: sha512-rwidmA1w3SE4j0E5MuIufFhyJPBDG7Nu71RkZor1p2+qHvJSZ9GYDA81AyleQcZbh/+V6HjeBdfnTZJm9rSeQQ==}
     engines: {node: '>= 12.0.0'}
     dependencies:
       '@colors/colors': 1.6.0
@@ -6055,7 +6049,7 @@ packages:
       safe-stable-stringify: 2.4.3
       stack-trace: 0.0.10
       triple-beam: 1.4.1
-      winston-transport: 4.6.0
+      winston-transport: 4.7.0
     dev: true
 
   /wrap-ansi@6.2.0:
