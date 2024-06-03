@@ -8,6 +8,7 @@ export type Opts = {
   spaces?: boolean
   charclassname?: string
   link?: Link
+  delimiters?: string
 }
 
 function generateArrayOfNodes(target: string | NodeList | Node): Array<Node> {
@@ -36,6 +37,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     spaces: initialSpaces = true,
     charclassname = 'js-shave-char',
     link = {},
+    delimiters = ' ',
   } = opts
 
   /**
@@ -71,7 +73,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     }
 
     const fullText = el[textProp]
-    const words: string | string[] = spaces ? fullText.split(' ') : fullText
+    const words: string | string[] = spaces ? fullText.split(new RegExp('(?=[' + delimiters + ']+)|(?<=[' + delimiters + ']+)', 'g')) : fullText;
     // If 0 or 1 words, we're done
     if (words.length < 2) {
       continue
@@ -116,7 +118,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
       const wordItems = words.slice(0, pivot);
       el[textProp] = spaces
-        ? (wordItems as string[]).join(' ') as string
+        ? (wordItems as string[]).join('') as string
         : wordItems as string;
       el.insertAdjacentElement('beforeend', shavedTextEl)
       if (el.offsetHeight > maxHeight) {
@@ -126,11 +128,15 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
       }
     }
     const wordeItems = words.slice(0, max)
-    el[textProp] = spaces ? ((wordeItems as string[]).join(' ') as string) : wordeItems as string
+    // This removes trailing delimiters from the array before reconstructing the string.
+    while (wordeItems.length > 0 && wordeItems[wordeItems.length - 1].match(new RegExp('[' + delimiters + ']+', 'g'))) {
+        wordeItems.pop();
+    }
+    el[textProp] = spaces ? ((wordeItems as string[]).join('') as string) : wordeItems as string
     el.insertAdjacentElement('beforeend', shavedTextEl)
     const diffItems = words.slice(max)
     const diff: string = spaces
-      ? ' ' + (diffItems as string[]).join(' ')
+      ? ' ' + (diffItems as string[]).join('')
       : diffItems as string;
     const shavedText = document.createTextNode(diff)
     const elWithShavedText = document.createElement('span')
