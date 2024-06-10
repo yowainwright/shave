@@ -22,7 +22,7 @@ devDependencies:
     version: 15.2.3(rollup@4.9.4)
   '@rollup/plugin-typescript':
     specifier: ^11.1.6
-    version: 11.1.6(rollup@4.9.4)(tslib@2.6.2)(typescript@5.4.5)
+    version: 11.1.6(rollup@4.9.4)(tslib@2.6.3)(typescript@5.4.5)
   '@types/jquery':
     specifier: ^3.5.29
     version: 3.5.30
@@ -82,7 +82,7 @@ devDependencies:
     version: 6.0.4(rollup@4.9.4)
   tslib:
     specifier: ^2.6.2
-    version: 2.6.2
+    version: 2.6.3
   typescript:
     specifier: ^5.3.3
     version: 5.4.5
@@ -616,7 +616,7 @@ packages:
       rollup: 4.9.4
     dev: true
 
-  /@rollup/plugin-typescript@11.1.6(rollup@4.9.4)(tslib@2.6.2)(typescript@5.4.5):
+  /@rollup/plugin-typescript@11.1.6(rollup@4.9.4)(tslib@2.6.3)(typescript@5.4.5):
     resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -632,7 +632,7 @@ packages:
       '@rollup/pluginutils': 5.1.0(rollup@4.9.4)
       resolve: 1.22.8
       rollup: 4.9.4
-      tslib: 2.6.2
+      tslib: 2.6.3
       typescript: 5.4.5
     dev: true
 
@@ -1219,7 +1219,7 @@ packages:
     resolution: {integrity: sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w==}
     engines: {node: '>=4'}
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: true
 
   /async-each@1.0.6:
@@ -5226,7 +5226,7 @@ packages:
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: true
 
   /safe-array-concat@1.0.1:
@@ -5683,7 +5683,7 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     dependencies:
       '@pkgr/core': 0.1.0
-      tslib: 2.6.2
+      tslib: 2.6.3
     dev: true
 
   /text-extensions@2.4.0:
@@ -5773,8 +5773,8 @@ packages:
       typescript: 5.4.5
     dev: true
 
-  /tslib@2.6.2:
-    resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
+  /tslib@2.6.3:
+    resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
     dev: true
 
   /tunnel-agent@0.6.0:
