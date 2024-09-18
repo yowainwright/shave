@@ -21,7 +21,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "es6",
+    "target": "es5",
     "downlevelIteration": true
   },
   "include": ["src"],

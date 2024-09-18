@@ -6,5 +6,4 @@ package-lock.json
 .DS_Store
 .dccache
 dist
-.husky
 types
