@@ -16,7 +16,7 @@ importers:
         version: 19.5.0
       '@commitlint/prompt-cli':
         specifier: ^19.5.0
-        version: 19.5.0(@types/node@22.8.1)(typescript@5.6.2)
+        version: 19.6.0(@types/node@22.8.1)(typescript@5.6.2)
       '@rollup/plugin-commonjs':
         specifier: ^28.0.0
         version: 28.0.0(rollup@4.21.3)
@@ -153,13 +153,13 @@ packages:
     resolution: {integrity: sha512-cZ/IxfAlfWYhAQV0TwcbdR1Oc0/r0Ik1GEessDJ3Lbuma/MRO8FRQX76eurcXtmhJC//rj52ZSZuXUg0oIX0Fw==}
     engines: {node: '>=v18'}
 
-  '@commitlint/prompt-cli@19.5.0':
-    resolution: {integrity: sha512-JmKTe9NR6qMRQ4H/zHFRMwI+MK3lDSDN7WNT+U/43SEVlgX+Vsb4gi4nlpW02y9BWcex8mXJWFlilOE6XXc8Hg==}
+  '@commitlint/prompt-cli@19.6.0':
+    resolution: {integrity: sha512-SPgI1CE7P2utglCUzo1DTr26xEP5dG3xJcxjygcDvQzzjlUp+mIPq+SJ65KyHCxDKf4GCAosh+lEZOTBWKKEoA==}
     engines: {node: '>=v18'}
     hasBin: true
 
-  '@commitlint/prompt@19.5.0':
-    resolution: {integrity: sha512-1PF/m4vGNDg2fVkGddYrpwVTVme8lQyYgZaBDaapw0sXcORx5RrKIxJuW+63DDp/YX6AOmLcyGtoA1pV9WwenA==}
+  '@commitlint/prompt@19.6.0':
+    resolution: {integrity: sha512-hkFRhbsfEJ4LxQhXu8hJjNc8tgLufP8pH+cxI6WSywJrOJ39ySHsRUx3qJToNax1B1KgJWSpSKQI1KlbE17KXw==}
     engines: {node: '>=v18'}
 
   '@commitlint/read@19.5.0':
@@ -3132,16 +3132,16 @@ snapshots:
       conventional-changelog-angular: 7.0.0
       conventional-commits-parser: 5.0.0
 
-  '@commitlint/prompt-cli@19.5.0(@types/node@22.8.1)(typescript@5.6.2)':
+  '@commitlint/prompt-cli@19.6.0(@types/node@22.8.1)(typescript@5.6.2)':
     dependencies:
-      '@commitlint/prompt': 19.5.0(@types/node@22.8.1)(typescript@5.6.2)
+      '@commitlint/prompt': 19.6.0(@types/node@22.8.1)(typescript@5.6.2)
       inquirer: 9.3.6
       tinyexec: 0.3.0
     transitivePeerDependencies:
       - '@types/node'
       - typescript
 
-  '@commitlint/prompt@19.5.0(@types/node@22.8.1)(typescript@5.6.2)':
+  '@commitlint/prompt@19.6.0(@types/node@22.8.1)(typescript@5.6.2)':
     dependencies:
       '@commitlint/ensure': 19.5.0
       '@commitlint/load': 19.5.0(@types/node@22.8.1)(typescript@5.6.2)
