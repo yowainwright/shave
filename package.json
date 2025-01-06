@@ -73,7 +73,7 @@
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
     "es-check": "7.2.1",
-    "eslint": "8.57.0",
+    "eslint": "9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.6",
