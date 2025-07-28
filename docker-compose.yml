@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  shave-tests:
+    build: .
+    container_name: shave-tests
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./dist:/app/dist
+    ports:
+      - "8080:8080"
+    environment:
+      - CI=false
+    command: pnpm test:e2e
