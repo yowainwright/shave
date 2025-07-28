@@ -11,11 +11,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node-version: [20.x]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [18.x, 20.x, 24.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -31,16 +32,32 @@ jobs:
           run_install: false
       - name: Get pnpm store directory
         id: pnpm-cache
+        shell: bash
         run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-      - uses: actions/cache@v3
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+      - name: Get Playwright version
+        id: playwright-version
+        shell: bash
+        run: |
+          PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
+          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        name: Setup Playwright cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
       - run: pnpm i --no-frozen-lockfile
+      - name: Install Playwright Browsers
+        run: pnpm playwright install --with-deps
       - run: pnpm run build
       - run: pnpm run eslint:ci
       - run: pnpm run test
