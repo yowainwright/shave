@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import shave from '../../src/shave'
 
-// Define proper types for mock elements
 interface MockElement {
   style: {
     height: string
@@ -39,37 +38,34 @@ describe('shave function', () => {
     })
 
     it('should handle null target', () => {
-      // The function checks target type, so null should throw
       expect(() => shave(null as unknown as string, 50)).toThrow()
     })
 
     it('should handle undefined target', () => {
-      // The function checks target type, so undefined should throw
       expect(() => shave(undefined as unknown as string, 50)).toThrow()
     })
   })
 
   describe('generateArrayOfNodes', () => {
     it('should accept string selector', () => {
-      // Mock document.querySelectorAll with proper mock elements
       const mockElement: MockElement = {
         style: { height: '', maxHeight: '' },
-        offsetHeight: 10, // Short enough to not need shaving
+        offsetHeight: 10,
         textContent: 'Test',
         querySelector: vi.fn().mockReturnValue(null),
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
-      
+
       expect(() => shave('.test', 50)).not.toThrow()
       expect(document.querySelectorAll).toHaveBeenCalledWith('.test')
-      
+
       vi.restoreAllMocks()
     })
 
     it('should accept NodeList', () => {
-      const nodeList = document.querySelectorAll('div') // Empty NodeList
+      const nodeList = document.querySelectorAll('div')
       expect(() => shave(nodeList, 50)).not.toThrow()
     })
 
@@ -89,7 +85,7 @@ describe('shave function', () => {
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
-      
+
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
       vi.spyOn(document, 'createElement').mockImplementation((tag) => {
         const mockCreatedElement: Partial<MockElement> = {
@@ -100,12 +96,11 @@ describe('shave function', () => {
         }
         return mockCreatedElement as unknown as HTMLElement
       })
-      
+
       shave('.test', 50)
-      
-      // Should create elements with default classnames
+
       expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
-      
+
       vi.restoreAllMocks()
     })
 
@@ -122,8 +117,8 @@ describe('shave function', () => {
     })
 
     it('should accept link option', () => {
-      expect(() => shave('.test', 50, { 
-        link: { href: 'http://example.com', target: '_blank' } 
+      expect(() => shave('.test', 50, {
+        link: { href: 'http://example.com', target: '_blank' }
       })).not.toThrow()
     })
 
@@ -142,7 +137,7 @@ describe('shave function', () => {
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
-      
+
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
       vi.spyOn(document, 'createElement').mockImplementation((tag) => {
         const mockCreatedElement: Partial<MockElement> = {
@@ -154,12 +149,11 @@ describe('shave function', () => {
         return mockCreatedElement as unknown as HTMLElement
       })
       vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
-      
+
       shave('.test', 50, { delimiter: '\n' })
-      
-      // Should have processed the element
+
       expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
-      
+
       vi.restoreAllMocks()
     })
 
@@ -172,7 +166,7 @@ describe('shave function', () => {
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
-      
+
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
       vi.spyOn(document, 'createElement').mockImplementation(() => {
         const mockCreatedElement: Partial<MockElement> = {
@@ -184,11 +178,11 @@ describe('shave function', () => {
         return mockCreatedElement as unknown as HTMLElement
       })
       vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
-      
+
       shave('.test', 50, { delimiter: '\n' })
-      
+
       expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
-      
+
       vi.restoreAllMocks()
     })
 
@@ -201,7 +195,7 @@ describe('shave function', () => {
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
-      
+
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
       vi.spyOn(document, 'createElement').mockImplementation(() => {
         const mockCreatedElement: Partial<MockElement> = {
@@ -213,12 +207,11 @@ describe('shave function', () => {
         return mockCreatedElement as unknown as HTMLElement
       })
       vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
-      
-      // Test without delimiter (should use spaces)
+
       shave('.test', 50)
-      
+
       expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
-      
+
       vi.restoreAllMocks()
     })
 
@@ -231,7 +224,7 @@ describe('shave function', () => {
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
-      
+
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
       vi.spyOn(document, 'createElement').mockImplementation(() => {
         const mockCreatedElement: Partial<MockElement> = {
@@ -243,11 +236,11 @@ describe('shave function', () => {
         return mockCreatedElement as unknown as HTMLElement
       })
       vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
-      
+
       shave('.test', 50, { delimiter: '|' })
-      
+
       expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
-      
+
       vi.restoreAllMocks()
     })
 
@@ -260,34 +253,32 @@ describe('shave function', () => {
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
-      
+
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
-      
+
       shave('.test', 50, { delimiter: '|' })
-      
-      // Should not have processed the element since there's only one part
+
       expect(mockElement.insertAdjacentElement).not.toHaveBeenCalled()
-      
+
       vi.restoreAllMocks()
     })
 
     it('should not process element that already fits within maxHeight', () => {
       const mockElement: MockElement = {
         style: { height: '', maxHeight: '' },
-        offsetHeight: 30, // Smaller than maxHeight
+        offsetHeight: 30,
         textContent: 'Line one\nLine two',
         querySelector: vi.fn().mockReturnValue(null),
         removeChild: vi.fn(),
         insertAdjacentElement: vi.fn()
       }
-      
+
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
-      
+
       shave('.test', 50, { delimiter: '\n' })
-      
-      // Should not have processed since element already fits
+
       expect(mockElement.insertAdjacentElement).not.toHaveBeenCalled()
-      
+
       vi.restoreAllMocks()
     })
   })

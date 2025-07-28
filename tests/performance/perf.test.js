@@ -1,9 +1,3 @@
-/**
- * Performance regression test to ensure delimiter feature doesn't impact performance
- * for users not using the feature
- */
-
-// Create old version of shave function (without delimiter support) for comparison
 function shaveOld(target, maxHeight, opts = {}) {
   if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
     throw Error('maxHeight is required')
@@ -50,7 +44,7 @@ function shaveOld(target, maxHeight, opts = {}) {
 
     const fullText = el[textProp]
     const words = spaces ? fullText.split(' ') : fullText
-    
+
     if (words.length < 2) {
       continue
     }
@@ -119,29 +113,27 @@ function shaveOld(target, maxHeight, opts = {}) {
   }
 }
 
-// Performance test utilities
 function createTestElements(count, wordsPerElement = 50) {
   const elements = []
   const container = document.createElement('div')
   container.style.cssText = 'position: absolute; top: -9999px; width: 200px; font-family: Arial; font-size: 14px; line-height: 1.4;'
   document.body.appendChild(container)
-  
+
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div')
     el.className = `perf-test-${i}`
     el.style.cssText = 'width: 200px; font-family: Arial; font-size: 14px; line-height: 1.4;'
-    
-    // Generate text with specified number of words
+
     const words = []
     for (let j = 0; j < wordsPerElement; j++) {
       words.push(`word${j}`)
     }
     el.textContent = words.join(' ')
-    
+
     container.appendChild(el)
     elements.push(el)
   }
-  
+
   return { elements, container }
 }
 
@@ -152,11 +144,10 @@ function cleanupTestElements(container) {
 }
 
 function benchmark(name, fn, iterations = 1) {
-  // Warm up
   for (let i = 0; i < 3; i++) {
     fn()
   }
-  
+
   const times = []
   for (let i = 0; i < iterations; i++) {
     const start = performance.now()
@@ -164,40 +155,33 @@ function benchmark(name, fn, iterations = 1) {
     const end = performance.now()
     times.push(end - start)
   }
-  
+
   const avg = times.reduce((a, b) => a + b, 0) / times.length
   const min = Math.min(...times)
   const max = Math.max(...times)
-  
+
   return { name, avg, min, max, times }
 }
 
-// Test scenarios
 const testScenarios = [
   { elements: 10, words: 20, height: 50, description: 'Small test (10 elements, 20 words each)' },
   { elements: 50, words: 30, height: 60, description: 'Medium test (50 elements, 30 words each)' },
   { elements: 100, words: 50, height: 80, description: 'Large test (100 elements, 50 words each)' },
 ]
 
-// Main performance test function
 async function runPerformanceTests() {
   console.log('🚀 Starting performance regression test...\n')
-  
-  // Import the new shave function
   const shaveModule = await import('../../dist/shave.mjs')
   const shaveNew = shaveModule.default
-  
+
   const results = []
-  
+
   for (const scenario of testScenarios) {
     console.log(`📊 Running scenario: ${scenario.description}`)
-    
-    // Test old implementation
     const { elements: oldElements, container: oldContainer } = createTestElements(scenario.elements, scenario.words)
     const oldResult = benchmark(
       `Old (${scenario.description})`,
       () => {
-        // Reset elements before each test
         oldElements.forEach((el, i) => {
           el.innerHTML = ''
           el.className = `perf-test-${i}`
@@ -211,13 +195,11 @@ async function runPerformanceTests() {
       },
       10
     )
-    
-    // Test new implementation (without delimiter - should have same performance)
+
     const { elements: newElements, container: newContainer } = createTestElements(scenario.elements, scenario.words)
     const newResult = benchmark(
       `New (${scenario.description})`,
       () => {
-        // Reset elements before each test
         newElements.forEach((el, i) => {
           el.innerHTML = ''
           el.className = `perf-test-${i}`
@@ -231,13 +213,11 @@ async function runPerformanceTests() {
       },
       10
     )
-    
-    // Test new implementation with delimiter (to show it works)
+
     const { elements: delimiterElements, container: delimiterContainer } = createTestElements(scenario.elements, scenario.words)
     const delimiterResult = benchmark(
       `New with delimiter (${scenario.description})`,
       () => {
-        // Reset elements with newline-separated content
         delimiterElements.forEach((el, i) => {
           el.innerHTML = ''
           el.className = `perf-test-${i}`
@@ -251,48 +231,47 @@ async function runPerformanceTests() {
       },
       10
     )
-    
+
     cleanupTestElements(oldContainer)
-    cleanupTestElements(newContainer) 
+    cleanupTestElements(newContainer)
     cleanupTestElements(delimiterContainer)
-    
+
     results.push({ oldResult, newResult, delimiterResult, scenario })
-    
+
     const regression = ((newResult.avg - oldResult.avg) / oldResult.avg) * 100
     const regressionColor = regression > 5 ? '🔴' : regression > 0 ? '🟡' : '🟢'
-    
+
     console.log(`  Old implementation: ${oldResult.avg.toFixed(2)}ms (avg)`)
     console.log(`  New implementation: ${newResult.avg.toFixed(2)}ms (avg)`)
     console.log(`  New with delimiter: ${delimiterResult.avg.toFixed(2)}ms (avg)`)
     console.log(`  ${regressionColor} Performance change: ${regression > 0 ? '+' : ''}${regression.toFixed(2)}%\n`)
   }
-  
-  // Summary
+
   console.log('📈 Performance Test Summary:')
   console.log('=' .repeat(50))
-  
+
   let totalRegression = 0
   let maxRegression = -Infinity
   let hasSignificantRegression = false
-  
+
   results.forEach(({ oldResult, newResult, delimiterResult, scenario }) => {
     const regression = ((newResult.avg - oldResult.avg) / oldResult.avg) * 100
     totalRegression += regression
     maxRegression = Math.max(maxRegression, regression)
-    
+
     if (regression > 5) {
       hasSignificantRegression = true
     }
-    
+
     console.log(`${scenario.description}:`)
     console.log(`  Regression: ${regression > 0 ? '+' : ''}${regression.toFixed(2)}%`)
     console.log(`  Old: ${oldResult.avg.toFixed(2)}ms, New: ${newResult.avg.toFixed(2)}ms, Delimiter: ${delimiterResult.avg.toFixed(2)}ms`)
   })
-  
+
   const avgRegression = totalRegression / results.length
   console.log(`\nAverage regression: ${avgRegression > 0 ? '+' : ''}${avgRegression.toFixed(2)}%`)
   console.log(`Maximum regression: ${maxRegression > 0 ? '+' : ''}${maxRegression.toFixed(2)}%`)
-  
+
   if (hasSignificantRegression) {
     console.log('\n❌ SIGNIFICANT PERFORMANCE REGRESSION DETECTED (>5%)')
     throw new Error('Performance regression test failed')
@@ -301,15 +280,12 @@ async function runPerformanceTests() {
   } else {
     console.log('\n✅ No significant performance regression detected')
   }
-  
+
   return results
 }
 
-// Run the test if this file is executed directly
 if (typeof window !== 'undefined' && window.document) {
-  // Browser environment
   window.runPerformanceTests = runPerformanceTests
 } else {
-  // Node environment - export for use in tests
   module.exports = { runPerformanceTests, benchmark, createTestElements, cleanupTestElements }
 }

@@ -10,8 +10,6 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Set up JSDOM environment
 const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
   url: 'http://localhost',
   pretendToBeVisual: true,
@@ -21,26 +19,20 @@ const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
 global.window = dom.window;
 global.document = dom.window.document;
 global.performance = performance;
-
-// Mock offsetHeight for testing
 Object.defineProperty(dom.window.HTMLElement.prototype, 'offsetHeight', {
   get: function() {
-    // Simulate text height based on content length
     const textLength = this.textContent?.length || 0;
     const wordsCount = (this.textContent?.split(' ').length || 1);
-    // Rough approximation: 14px font size, 1.4 line height, ~8 chars per word
-    const approxLines = Math.ceil((wordsCount * 8) / 25); // ~25 chars per line at 200px width
+    const approxLines = Math.ceil((wordsCount * 8) / 25);
     return approxLines * 14 * 1.4;
   },
   configurable: true
 });
 
-// Load the new shave implementation
 const shaveModulePath = path.resolve(__dirname, '../../dist/shave.mjs');
 const shaveModule = await import(shaveModulePath);
 const shaveNew = shaveModule.default;
 
-// Old shave implementation (without delimiter support)
 function shaveOld(target, maxHeight, opts = {}) {
   if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
     throw Error('maxHeight is required')
@@ -87,7 +79,7 @@ function shaveOld(target, maxHeight, opts = {}) {
 
     const fullText = el[textProp]
     const words = spaces ? fullText.split(' ') : fullText
-    
+
     if (words.length < 2) {
       continue
     }
@@ -156,28 +148,27 @@ function shaveOld(target, maxHeight, opts = {}) {
   }
 }
 
-// Test utilities
 function createTestElements(count, wordsPerElement = 50) {
   const elements = []
   const container = document.createElement('div')
   container.style.cssText = 'position: absolute; top: -9999px; width: 200px; font-family: Arial; font-size: 14px; line-height: 1.4;'
   document.body.appendChild(container)
-  
+
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div')
     el.className = `perf-test-${i}`
     el.style.cssText = 'width: 200px; font-family: Arial; font-size: 14px; line-height: 1.4;'
-    
+
     const words = []
     for (let j = 0; j < wordsPerElement; j++) {
       words.push(`word${j}`)
     }
     el.textContent = words.join(' ')
-    
+
     container.appendChild(el)
     elements.push(el)
   }
-  
+
   return { elements, container }
 }
 
@@ -192,7 +183,7 @@ function benchmark(name, fn, iterations = 10) {
   for (let i = 0; i < 3; i++) {
     fn()
   }
-  
+
   const times = []
   for (let i = 0; i < iterations; i++) {
     const start = performance.now()
@@ -200,15 +191,14 @@ function benchmark(name, fn, iterations = 10) {
     const end = performance.now()
     times.push(end - start)
   }
-  
+
   const avg = times.reduce((a, b) => a + b, 0) / times.length
   const min = Math.min(...times)
   const max = Math.max(...times)
-  
+
   return { name, avg, min, max, times }
 }
 
-// Test scenarios
 const testScenarios = [
   { elements: 10, words: 20, height: 50, description: 'Small test (10 elements, 20 words each)' },
   { elements: 50, words: 30, height: 60, description: 'Medium test (50 elements, 30 words each)' },
@@ -217,13 +207,12 @@ const testScenarios = [
 
 async function runNodePerformanceTests() {
   console.log('🚀 Starting Node.js performance regression test...\n')
-  
+
   const results = []
-  
+
   for (const scenario of testScenarios) {
     console.log(`📊 Running scenario: ${scenario.description}`)
-    
-    // Test old implementation
+
     const { elements: oldElements, container: oldContainer } = createTestElements(scenario.elements, scenario.words)
     const oldResult = benchmark(
       `Old (${scenario.description})`,
@@ -241,8 +230,7 @@ async function runNodePerformanceTests() {
       },
       10
     )
-    
-    // Test new implementation (without delimiter)
+
     const { elements: newElements, container: newContainer } = createTestElements(scenario.elements, scenario.words)
     const newResult = benchmark(
       `New (${scenario.description})`,
@@ -260,8 +248,7 @@ async function runNodePerformanceTests() {
       },
       10
     )
-    
-    // Test new implementation with delimiter
+
     const { elements: delimiterElements, container: delimiterContainer } = createTestElements(scenario.elements, scenario.words)
     const delimiterResult = benchmark(
       `New with delimiter (${scenario.description})`,
@@ -279,48 +266,47 @@ async function runNodePerformanceTests() {
       },
       10
     )
-    
+
     cleanupTestElements(oldContainer)
-    cleanupTestElements(newContainer) 
+    cleanupTestElements(newContainer)
     cleanupTestElements(delimiterContainer)
-    
+
     results.push({ oldResult, newResult, delimiterResult, scenario })
-    
+
     const regression = ((newResult.avg - oldResult.avg) / oldResult.avg) * 100
     const regressionColor = regression > 5 ? '🔴' : regression > 0 ? '🟡' : '🟢'
-    
+
     console.log(`  Old implementation: ${oldResult.avg.toFixed(2)}ms (avg)`)
     console.log(`  New implementation: ${newResult.avg.toFixed(2)}ms (avg)`)
     console.log(`  New with delimiter: ${delimiterResult.avg.toFixed(2)}ms (avg)`)
     console.log(`  ${regressionColor} Performance change: ${regression > 0 ? '+' : ''}${regression.toFixed(2)}%\n`)
   }
-  
-  // Summary
+
   console.log('📈 Performance Test Summary:')
   console.log('='.repeat(50))
-  
+
   let totalRegression = 0
   let maxRegression = -Infinity
   let hasSignificantRegression = false
-  
+
   results.forEach(({ oldResult, newResult, delimiterResult, scenario }) => {
     const regression = ((newResult.avg - oldResult.avg) / oldResult.avg) * 100
     totalRegression += regression
     maxRegression = Math.max(maxRegression, regression)
-    
+
     if (regression > 5) {
       hasSignificantRegression = true
     }
-    
+
     console.log(`${scenario.description}:`)
     console.log(`  Regression: ${regression > 0 ? '+' : ''}${regression.toFixed(2)}%`)
     console.log(`  Old: ${oldResult.avg.toFixed(2)}ms, New: ${newResult.avg.toFixed(2)}ms, Delimiter: ${delimiterResult.avg.toFixed(2)}ms`)
   })
-  
+
   const avgRegression = totalRegression / results.length
   console.log(`\nAverage regression: ${avgRegression > 0 ? '+' : ''}${avgRegression.toFixed(2)}%`)
   console.log(`Maximum regression: ${maxRegression > 0 ? '+' : ''}${maxRegression.toFixed(2)}%`)
-  
+
   if (hasSignificantRegression) {
     console.log('\n❌ SIGNIFICANT PERFORMANCE REGRESSION DETECTED (>5%)')
     process.exit(1)
@@ -329,9 +315,8 @@ async function runNodePerformanceTests() {
   } else {
     console.log('\n✅ No significant performance regression detected')
   }
-  
+
   return results
 }
 
-// Run the test
 runNodePerformanceTests().catch(console.error);
