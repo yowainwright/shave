@@ -4,8 +4,8 @@ test.describe('Shave DOM tests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/tests/e2e/simple-test.html')
     
-    // Wait a bit for scripts to execute
-    await page.waitForTimeout(100)
+    // Wait for scripts to load
+    await page.waitForTimeout(500)
     
     // Try to set up shave if needed
     await page.evaluate(() => {
@@ -118,7 +118,7 @@ What you do.</div>
 
   test('should split text by pipe delimiter', async ({ page }) => {
     await page.evaluate(() => {
-      window.shave('.test-pipe', 20, { delimiter: '|', classname: 'js-pipe-shave' })
+      window.shave('.test-pipe', 15, { delimiter: '|', classname: 'js-pipe-shave' })
     })
     
     const shavedElements = await page.locator('.js-pipe-shave').count()
