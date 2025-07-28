@@ -8,6 +8,7 @@ export type Opts = {
   spaces?: boolean
   charclassname?: string
   link?: Link
+  delimiter?: string
 }
 
 function generateArrayOfNodes(target: string | NodeList | Node): Array<Node> {
@@ -36,6 +37,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     spaces: initialSpaces = true,
     charclassname = 'js-shave-char',
     link = {},
+    delimiter,
   } = opts
 
   /**
@@ -71,7 +73,16 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     }
 
     const fullText = el[textProp]
-    const words: string | string[] = spaces ? fullText.split(' ') : fullText
+    let words: string | string[]
+    
+    // Fast path: use existing logic when no custom delimiter is provided
+    if (!delimiter) {
+      words = spaces ? fullText.split(' ') : fullText
+    } else {
+      // Custom delimiter path: only split when delimiter is specified
+      words = fullText.split(delimiter)
+    }
+    
     // If 0 or 1 words, we're done
     if (words.length < 2) {
       continue
@@ -115,9 +126,11 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
       const wordItems = words.slice(0, pivot);
-      el[textProp] = spaces
-        ? (wordItems as string[]).join(' ') as string
-        : wordItems as string;
+      el[textProp] = delimiter
+        ? (wordItems as string[]).join(delimiter) as string
+        : spaces
+          ? (wordItems as string[]).join(' ') as string
+          : wordItems as string;
       el.insertAdjacentElement('beforeend', shavedTextEl)
       if (el.offsetHeight > maxHeight) {
         max = pivot - 1
@@ -126,12 +139,18 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
       }
     }
     const wordeItems = words.slice(0, max)
-    el[textProp] = spaces ? ((wordeItems as string[]).join(' ') as string) : wordeItems as string
+    el[textProp] = delimiter
+      ? ((wordeItems as string[]).join(delimiter) as string)
+      : spaces 
+        ? ((wordeItems as string[]).join(' ') as string) 
+        : wordeItems as string
     el.insertAdjacentElement('beforeend', shavedTextEl)
     const diffItems = words.slice(max)
-    const diff: string = spaces
-      ? ' ' + (diffItems as string[]).join(' ')
-      : diffItems as string;
+    const diff: string = delimiter
+      ? delimiter + (diffItems as string[]).join(delimiter)
+      : spaces
+        ? ' ' + (diffItems as string[]).join(' ')
+        : diffItems as string;
     const shavedText = document.createTextNode(diff)
     const elWithShavedText = document.createElement('span')
     elWithShavedText.classList.add(classname)

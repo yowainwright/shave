@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shave Performance Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #005a87;
+        }
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shave Performance Regression Test</h1>
+    <p>This test compares the performance of the current implementation (with delimiter support) against the previous version to ensure no performance regression for users not using the delimiter feature.</p>
+    
+    <div class="test-container">
+        <button id="runTest" class="button">Run Performance Test</button>
+        <div id="status"></div>
+        <div id="results" class="result"></div>
+    </div>
+
+    <script type="module">
+        import '../performance/perf.test.js';
+        
+        document.getElementById('runTest').addEventListener('click', async () => {
+            const button = document.getElementById('runTest');
+            const status = document.getElementById('status');
+            const results = document.getElementById('results');
+            
+            button.disabled = true;
+            status.innerHTML = '<div class="loading">Running performance tests...</div>';
+            results.textContent = '';
+            
+            try {
+                // Capture console output
+                const originalLog = console.log;
+                let output = '';
+                console.log = (...args) => {
+                    output += args.join(' ') + '\n';
+                    originalLog(...args);
+                };
+                
+                await window.runPerformanceTests();
+                
+                console.log = originalLog;
+                status.innerHTML = '<div style="color: green;">✅ Performance test completed successfully!</div>';
+                results.textContent = output;
+                
+            } catch (error) {
+                status.innerHTML = '<div style="color: red;">❌ Performance test failed: ' + error.message + '</div>';
+                results.textContent = 'Error: ' + error.message;
+            } finally {
+                button.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

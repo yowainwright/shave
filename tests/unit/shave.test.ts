@@ -126,5 +126,169 @@ describe('shave function', () => {
         link: { href: 'http://example.com', target: '_blank' } 
       })).not.toThrow()
     })
+
+    it('should accept delimiter option', () => {
+      expect(() => shave('.test', 50, { delimiter: '\n' })).not.toThrow()
+    })
+  })
+
+  describe('delimiter functionality', () => {
+    it('should split text by custom delimiter', () => {
+      const mockElement: MockElement = {
+        style: { height: '', maxHeight: '' },
+        offsetHeight: 100,
+        textContent: 'Line one\nLine two\nLine three',
+        querySelector: vi.fn().mockReturnValue(null),
+        removeChild: vi.fn(),
+        insertAdjacentElement: vi.fn()
+      }
+      
+      vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
+      vi.spyOn(document, 'createElement').mockImplementation((tag) => {
+        const mockCreatedElement: Partial<MockElement> = {
+          classList: { add: vi.fn() },
+          style: { display: '', height: '', maxHeight: '' },
+          appendChild: vi.fn(),
+          textContent: ''
+        }
+        return mockCreatedElement as unknown as HTMLElement
+      })
+      vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
+      
+      shave('.test', 50, { delimiter: '\n' })
+      
+      // Should have processed the element
+      expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
+      
+      vi.restoreAllMocks()
+    })
+
+    it('should handle newline delimiter for multiline text', () => {
+      const mockElement: MockElement = {
+        style: { height: '', maxHeight: '' },
+        offsetHeight: 100,
+        textContent: 'I am a cow.\nHear me moo!',
+        querySelector: vi.fn().mockReturnValue(null),
+        removeChild: vi.fn(),
+        insertAdjacentElement: vi.fn()
+      }
+      
+      vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
+      vi.spyOn(document, 'createElement').mockImplementation(() => {
+        const mockCreatedElement: Partial<MockElement> = {
+          classList: { add: vi.fn() },
+          style: { display: '', height: '', maxHeight: '' },
+          appendChild: vi.fn(),
+          textContent: ''
+        }
+        return mockCreatedElement as unknown as HTMLElement
+      })
+      vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
+      
+      shave('.test', 50, { delimiter: '\n' })
+      
+      expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
+      
+      vi.restoreAllMocks()
+    })
+
+    it('should use default space splitting when delimiter is not provided', () => {
+      const mockElement: MockElement = {
+        style: { height: '', maxHeight: '' },
+        offsetHeight: 100,
+        textContent: 'word1 word2 word3',
+        querySelector: vi.fn().mockReturnValue(null),
+        removeChild: vi.fn(),
+        insertAdjacentElement: vi.fn()
+      }
+      
+      vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
+      vi.spyOn(document, 'createElement').mockImplementation(() => {
+        const mockCreatedElement: Partial<MockElement> = {
+          classList: { add: vi.fn() },
+          style: { display: '', height: '', maxHeight: '' },
+          appendChild: vi.fn(),
+          textContent: ''
+        }
+        return mockCreatedElement as unknown as HTMLElement
+      })
+      vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
+      
+      // Test without delimiter (should use spaces)
+      shave('.test', 50)
+      
+      expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
+      
+      vi.restoreAllMocks()
+    })
+
+    it('should handle custom delimiters like pipes', () => {
+      const mockElement: MockElement = {
+        style: { height: '', maxHeight: '' },
+        offsetHeight: 100,
+        textContent: 'item1|item2|item3|item4',
+        querySelector: vi.fn().mockReturnValue(null),
+        removeChild: vi.fn(),
+        insertAdjacentElement: vi.fn()
+      }
+      
+      vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
+      vi.spyOn(document, 'createElement').mockImplementation(() => {
+        const mockCreatedElement: Partial<MockElement> = {
+          classList: { add: vi.fn() },
+          style: { display: '', height: '', maxHeight: '' },
+          appendChild: vi.fn(),
+          textContent: ''
+        }
+        return mockCreatedElement as unknown as HTMLElement
+      })
+      vi.spyOn(document, 'createTextNode').mockReturnValue({} as Text)
+      
+      shave('.test', 50, { delimiter: '|' })
+      
+      expect(mockElement.insertAdjacentElement).toHaveBeenCalled()
+      
+      vi.restoreAllMocks()
+    })
+
+    it('should skip processing when text has less than 2 parts after splitting', () => {
+      const mockElement: MockElement = {
+        style: { height: '', maxHeight: '' },
+        offsetHeight: 100,
+        textContent: 'single-item',
+        querySelector: vi.fn().mockReturnValue(null),
+        removeChild: vi.fn(),
+        insertAdjacentElement: vi.fn()
+      }
+      
+      vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
+      
+      shave('.test', 50, { delimiter: '|' })
+      
+      // Should not have processed the element since there's only one part
+      expect(mockElement.insertAdjacentElement).not.toHaveBeenCalled()
+      
+      vi.restoreAllMocks()
+    })
+
+    it('should not process element that already fits within maxHeight', () => {
+      const mockElement: MockElement = {
+        style: { height: '', maxHeight: '' },
+        offsetHeight: 30, // Smaller than maxHeight
+        textContent: 'Line one\nLine two',
+        querySelector: vi.fn().mockReturnValue(null),
+        removeChild: vi.fn(),
+        insertAdjacentElement: vi.fn()
+      }
+      
+      vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
+      
+      shave('.test', 50, { delimiter: '\n' })
+      
+      // Should not have processed since element already fits
+      expect(mockElement.insertAdjacentElement).not.toHaveBeenCalled()
+      
+      vi.restoreAllMocks()
+    })
   })
 })
