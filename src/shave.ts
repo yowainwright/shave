@@ -140,7 +140,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
   }
 }
 
-function updateTextProp (delimiter: string, spaces: boolean, wordItems: string | string[]): string {
+export function updateTextProp (delimiter: string, spaces: boolean, wordItems: string | string[]): string {
   const isArray = Array.isArray(wordItems)
   if (delimiter && isArray) return (wordItems).join(delimiter)
   if (spaces && isArray) return (wordItems).join(' ')
