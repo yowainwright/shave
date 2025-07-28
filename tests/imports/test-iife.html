@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IIFE Import Test</title>
+</head>
+<body>
+  <h1>IIFE Import Test</h1>
+  <div id="test-result">Testing...</div>
+  
+  <script src="../../dist/shave.global.js"></script>
+  <script>
+    // Test that shave is available globally
+    const testResult = document.getElementById('test-result');
+    
+    console.log('Testing IIFE/browser import...');
+    
+    if (typeof shave !== 'function') {
+      testResult.textContent = '❌ IIFE import failed: shave is not a function';
+      testResult.style.color = 'red';
+      console.error('❌ IIFE import failed: shave is not a function, got:', typeof shave);
+    } else {
+      // Test basic functionality
+      try {
+        // Create a test element
+        const testElement = document.createElement('div');
+        testElement.style.width = '200px';
+        testElement.textContent = 'This is a very long text that should be truncated when the shave function is applied to it.';
+        document.body.appendChild(testElement);
+        
+        // Apply shave
+        shave(testElement, 50);
+        
+        testResult.textContent = '✅ IIFE import test passed';
+        testResult.style.color = 'green';
+        console.log('✅ IIFE import test passed');
+      } catch (error) {
+        testResult.textContent = '❌ IIFE functionality test failed: ' + error.message;
+        testResult.style.color = 'red';
+        console.error('❌ IIFE functionality test failed:', error);
+      }
+    }
+  </script>
+</body>
+</html>

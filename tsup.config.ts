@@ -27,11 +27,13 @@ export default defineConfig([
     },
     outExtension({ format }) {
       if (format === 'esm') return { js: '.mjs' }
-      if (format === 'cjs') return { js: '.js' }
+      if (format === 'cjs') return { js: '.cjs' }
       if (format === 'iife') return { js: '.global.js' }
       return { js: '.js' }
     },
     globalName: 'shave',
+    // Ensure CommonJS has proper default export
+    cjsInterop: true,
     // For IIFE/UMD builds, we want to export the function directly
     footer({ format }) {
       if (format === 'iife') {
@@ -61,7 +63,7 @@ export default defineConfig([
     },
     outExtension({ format }) {
       if (format === 'esm') return { js: '.mjs' }
-      if (format === 'cjs') return { js: '.js' }
+      if (format === 'cjs') return { js: '.cjs' }
       if (format === 'iife') return { js: '.global.js' }
       return { js: '.js' }
     },

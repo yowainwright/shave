@@ -13,3 +13,5 @@ types
 .specstory/.project.json
 # SpecStory explanation file
 .specstory/.what-is-this.md
+playwright-report
+test-results

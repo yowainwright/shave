@@ -2,7 +2,7 @@
   "name": "shave",
   "version": "5.0.4",
   "description": "Shave is a javascript plugin that truncates multi-line text within a html element based on set max height",
-  "main": "dist/shave.js",
+  "main": "dist/shave.cjs",
   "module": "dist/shave.mjs",
   "type": "module",
   "unpkg": "dist/shave.global.js",
@@ -12,6 +12,16 @@
     "types"
   ],
   "types": "dist/shave.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/shave.d.ts",
+      "import": "./dist/shave.mjs",
+      "require": "./dist/shave.cjs",
+      "default": "./dist/shave.mjs"
+    },
+    "./dist/*": "./dist/*",
+    "./src/*": "./src/*"
+  },
   "scripts": {
     "build": "pnpm clean && pnpm build:dist",
     "build:dist": "tsup",
@@ -29,13 +39,18 @@
     "prepare": "is-ci || pnpm husky-setup",
     "prepublishOnly": "pnpm build && pnpm run test",
     "setup": "pnpm install --reporter=silent && pnpm build",
-    "test": "pnpm run test:unit && pnpm run test:e2e",
+    "test": "pnpm run test:unit && pnpm run test:e2e && pnpm run test:imports",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:unit:ui": "vitest --ui",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:es-check": "es-check es5 dist/shave.global.js dist/jquery.shave.global.js",
+    "test:perf": "node tests/performance/perf-node.test.js",
+    "test:imports": "pnpm run test:imports:esm && pnpm run test:imports:cjs && pnpm run test:imports:iife",
+    "test:imports:esm": "node tests/imports/test-esm.mjs",
+    "test:imports:cjs": "node tests/imports/test-cjs.cjs",
+    "test:imports:iife": "node tests/imports/test-iife.cjs",
     "release": "release-it"
   },
   "repository": {
@@ -88,6 +103,7 @@
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
     "jquery": "^3.7.1",
+    "jsdom": "^26.1.0",
     "path-exists-cli": "^2.0.0",
     "playwright": "^1.54.1",
     "prettier": "^3.5.3",

@@ -8,6 +8,7 @@ export type Opts = {
   spaces?: boolean
   charclassname?: string
   link?: Link
+  delimiter?: string
 }
 
 function generateArrayOfNodes(target: string | NodeList | Node): Array<Node> {
@@ -36,6 +37,7 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     spaces: initialSpaces = true,
     charclassname = 'js-shave-char',
     link = {},
+    delimiter,
   } = opts
 
   /**
@@ -61,29 +63,24 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     const styles = el.style
     const span = el.querySelector('.' + classname)
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
-
-    // If element text has already been shaved
     if (span) {
-      // Remove the ellipsis to recapture the original text
       el.removeChild(el.querySelector('.' + charclassname))
       el[textProp] = el[textProp] // eslint-disable-line
-      // nuke span, recombine text
     }
 
     const fullText = el[textProp]
-    const words: string | string[] = spaces ? fullText.split(' ') : fullText
-    // If 0 or 1 words, we're done
-    if (words.length < 2) {
-      continue
-    }
+    let words: string | string[]
 
-    // Temporarily remove any CSS height for text height calculation
+    if (!delimiter) words = spaces ? fullText.split(' ') : fullText
+    else words = fullText.split(delimiter)
+
+    if (words.length < 2) continue
+
     const heightStyle = styles.height
     styles.height = 'auto'
     const maxHeightStyle = styles.maxHeight
     styles.maxHeight = 'none'
 
-    // If already short enough, we're done
     if (el.offsetHeight <= maxHeight) {
       styles.height = heightStyle
       styles.maxHeight = maxHeightStyle
@@ -108,16 +105,13 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
       }
     }
 
-    // Binary search for number of words which can fit in allotted height
     let max = words.length - 1
     let min = 0
     let pivot
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
       const wordItems = words.slice(0, pivot);
-      el[textProp] = spaces
-        ? (wordItems as string[]).join(' ') as string
-        : wordItems as string;
+      el[textProp] = updateTextProp(delimiter, spaces, wordItems)
       el.insertAdjacentElement('beforeend', shavedTextEl)
       if (el.offsetHeight > maxHeight) {
         max = pivot - 1
@@ -126,20 +120,30 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
       }
     }
     const wordeItems = words.slice(0, max)
-    el[textProp] = spaces ? ((wordeItems as string[]).join(' ') as string) : wordeItems as string
+    el[textProp] = updateTextProp(delimiter, spaces, wordeItems)
     el.insertAdjacentElement('beforeend', shavedTextEl)
-    const diffItems = words.slice(max)
-    const diff: string = spaces
-      ? ' ' + (diffItems as string[]).join(' ')
-      : diffItems as string;
+    const diffItems = words.slice(max);
+    const isArray = Array.isArray(diffItems)
+    let diff = '';
+    if (delimiter && isArray) diff = delimiter + diffItems.join(delimiter)
+    else if (spaces && isArray) diff = ' ' + diffItems.join(' ')
+    else if (isArray) diff = diffItems.join('')
+    else diff = diffItems
     const shavedText = document.createTextNode(diff)
     const elWithShavedText = document.createElement('span')
     elWithShavedText.classList.add(classname)
     elWithShavedText.style.display = 'none'
     elWithShavedText.appendChild(shavedText)
     el.insertAdjacentElement('beforeend', elWithShavedText)
-
     styles.height = heightStyle
     styles.maxHeight = maxHeightStyle
   }
+}
+
+export function updateTextProp (delimiter: string, spaces: boolean, wordItems: string | string[]): string {
+  const isArray = Array.isArray(wordItems)
+  if (delimiter && isArray) return (wordItems).join(delimiter)
+  if (spaces && isArray) return (wordItems).join(' ')
+  if (isArray) return wordItems.join('')
+  return wordItems
 }
