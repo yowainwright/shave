@@ -16,6 +16,9 @@ export default defineConfig({
     command: 'npx http-server . -p 8080 -c-1',
     port: 8080,
     reuseExistingServer: !process.env.CI,
+    timeout: 30 * 1000,
+    stdout: 'ignore',
+    stderr: 'ignore',
   },
 
   projects: [
