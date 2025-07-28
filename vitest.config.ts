@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    exclude: ['**/node_modules/**', '**/dist/**', '.git/**', '**/e2e/**'],
+    exclude: ['**/node_modules/**', '**/dist/**', '.git/**', '**/e2e/**', '**/performance/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
