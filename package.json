@@ -88,7 +88,7 @@
     "@rollup/plugin-typescript": "^12.1.2",
     "@swc/core": "^1.11.22",
     "@types/jquery": "^3.5.32",
-    "@types/node": "^22.14.1",
+    "@types/node": "^24.2.1",
     "@types/rollup": "^0.54.0",
     "@types/zepto": "^1.0.36",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
