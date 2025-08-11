@@ -64,10 +64,10 @@ importers:
         version: 8.57.0
       eslint-config-prettier:
         specifier: ^10.1.2
-        version: 10.1.2(eslint@8.57.0)
+        version: 10.1.8(eslint@8.57.0)
       eslint-plugin-prettier:
         specifier: ^5.2.6
-        version: 5.2.6(eslint-config-prettier@10.1.2(eslint@8.57.0))(eslint@8.57.0)(prettier@3.5.3)
+        version: 5.2.6(eslint-config-prettier@10.1.8(eslint@8.57.0))(eslint@8.57.0)(prettier@3.5.3)
       happy-dom:
         specifier: ^18.0.1
         version: 18.0.1
@@ -1014,6 +1014,7 @@ packages:
   '@swc/core@1.11.22':
     resolution: {integrity: sha512-mjPYbqq8XjwqSE0hEPT9CzaJDyxql97LgK4iyvYlwVSQhdN1uK0DBG4eP9PxYzCS2MUGAXB34WFLegdUj5HGpg==}
     engines: {node: '>=10'}
+    deprecated: It has a bug. See https://github.com/swc-project/swc/issues/10413
     peerDependencies:
       '@swc/helpers': '>=0.5.17'
     peerDependenciesMeta:
@@ -1627,8 +1628,8 @@ packages:
     engines: {node: '>=6.0'}
     hasBin: true
 
-  eslint-config-prettier@10.1.2:
-    resolution: {integrity: sha512-Epgp/EofAUeEpIdZkW60MHKvPyru1ruQJxPL+WIycnaPApuseK0Zpkrh/FwL9oIpQvIhJwV7ptOy0DWUjTlCiA==}
+  eslint-config-prettier@10.1.8:
+    resolution: {integrity: sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
@@ -2885,6 +2886,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
@@ -4792,18 +4794,18 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-config-prettier@10.1.2(eslint@8.57.0):
+  eslint-config-prettier@10.1.8(eslint@8.57.0):
     dependencies:
       eslint: 8.57.0
 
-  eslint-plugin-prettier@5.2.6(eslint-config-prettier@10.1.2(eslint@8.57.0))(eslint@8.57.0)(prettier@3.5.3):
+  eslint-plugin-prettier@5.2.6(eslint-config-prettier@10.1.8(eslint@8.57.0))(eslint@8.57.0)(prettier@3.5.3):
     dependencies:
       eslint: 8.57.0
       prettier: 3.5.3
       prettier-linter-helpers: 1.0.0
       synckit: 0.11.4
     optionalDependencies:
-      eslint-config-prettier: 10.1.2(eslint@8.57.0)
+      eslint-config-prettier: 10.1.8(eslint@8.57.0)
 
   eslint-scope@7.2.2:
     dependencies:
