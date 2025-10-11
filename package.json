@@ -98,7 +98,7 @@
     "eslint": "8.57.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
-    "happy-dom": "^18.0.1",
+    "happy-dom": "^20.0.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
