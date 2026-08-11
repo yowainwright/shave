@@ -1,0 +1,12 @@
+{
+  "lockfile": true,
+  "targets": [
+    {
+      "manager": "pnpm",
+      "files": [
+        "package.json"
+      ],
+      "mode": "precise"
+    }
+  ]
+}

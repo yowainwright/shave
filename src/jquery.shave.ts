@@ -1,8 +1,10 @@
 import shave, { Opts } from './shave'
 
+interface PluginCollection extends ArrayLike<Node> {}
+
 interface Plugin {
   fn: {
-    shave: (maxHeight: number, opts?: Opts) => void
+    shave(this: PluginCollection, maxHeight: number, opts?: Opts): PluginCollection
   }
 }
 
@@ -17,7 +19,7 @@ declare global {
 if (typeof window !== 'undefined') {
   const plugin = window.$ || window.jQuery || window.Zepto
   if (plugin) {
-    plugin.fn.shave = function shavePlugin(maxHeight, opts) {
+    plugin.fn.shave = function shavePlugin(this: PluginCollection, maxHeight, opts) {
       shave(this, maxHeight, opts)
       return this
     }

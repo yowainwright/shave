@@ -2,15 +2,15 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "./types",
+    "declarationDir": "./dist",
     "checkJs": false,
     "allowJs": false,
     "declaration": true,
     "esModuleInterop": true,
     "importHelpers": true,
     "lib": ["esnext", "dom", "dom.iterable"],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "noEmit": false,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -19,12 +19,12 @@
     "preserveConstEnums": true,
     "removeComments": false,
     "resolveJsonModule": true,
+    "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "es5",
-    "downlevelIteration": true
+    "target": "esnext"
   },
   "include": ["src"],
   "exclude": ["dist/**", "*.js"],
-  "types": ["jquery", "node", "zepto", "rollup"]
+  "types": ["jquery", "node", "zepto"]
 }

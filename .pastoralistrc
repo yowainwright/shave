@@ -1,0 +1,60 @@
+{
+  "appendix": {
+    "ajv@8.18.0": {
+      "dependents": {
+        "shave": "ajv (required by @commitlint/config-validator)"
+      },
+      "ledger": {
+        "addedDate": "2026-08-11T08:35:35.242Z"
+      }
+    },
+    "fast-uri@3.1.5": {
+      "dependents": {
+        "shave": "fast-uri (required by ajv)"
+      },
+      "ledger": {
+        "addedDate": "2026-08-11T08:35:35.242Z"
+      }
+    },
+    "ip-address@10.3.1": {
+      "dependents": {
+        "shave": "ip-address (required by socks)"
+      },
+      "ledger": {
+        "addedDate": "2026-08-11T08:35:35.242Z"
+      }
+    },
+    "js-yaml@^4.0.0@4.3.1": {
+      "dependents": {
+        "shave": "js-yaml@^4.0.0 (required by cosmiconfig)"
+      },
+      "ledger": {
+        "addedDate": "2026-08-11T08:35:35.242Z"
+      }
+    },
+    "picomatch@^2.0.0@2.3.2": {
+      "dependents": {
+        "shave": "picomatch@^2.0.0 (required by micromatch, tinyglobby, vite)"
+      },
+      "ledger": {
+        "addedDate": "2026-08-11T08:35:35.242Z"
+      }
+    },
+    "picomatch@^4.0.0@4.0.4": {
+      "dependents": {
+        "shave": "picomatch@^4.0.0 (required by micromatch, tinyglobby, vite)"
+      },
+      "ledger": {
+        "addedDate": "2026-08-11T08:35:35.242Z"
+      }
+    },
+    "tmp@0.2.7": {
+      "dependents": {
+        "shave": "tmp (required by external-editor)"
+      },
+      "ledger": {
+        "addedDate": "2026-08-11T08:35:35.242Z"
+      }
+    }
+  }
+}

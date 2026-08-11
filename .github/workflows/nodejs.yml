@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18.x, 20.x, 24.x]
+        node-version: [22.x, 24.x, 26.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 8
+          version: 11.18.0
           run_install: false
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -59,7 +59,8 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
       - run: pnpm run build
-      - run: pnpm run eslint:ci
+      - run: pnpm run lint
+      - run: pnpm run format:check
       - run: pnpm run test
         env:
           CI: true

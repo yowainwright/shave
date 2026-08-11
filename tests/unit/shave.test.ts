@@ -87,7 +87,7 @@ describe('shave function', () => {
       }
 
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
-      vi.spyOn(document, 'createElement').mockImplementation((tag) => {
+      vi.spyOn(document, 'createElement').mockImplementation((_tag) => {
         const mockCreatedElement: Partial<MockElement> = {
           classList: { add: vi.fn() },
           style: { display: '', height: '', maxHeight: '' },
@@ -139,7 +139,7 @@ describe('shave function', () => {
       }
 
       vi.spyOn(document, 'querySelectorAll').mockReturnValue([mockElement] as unknown as NodeListOf<Element>)
-      vi.spyOn(document, 'createElement').mockImplementation((tag) => {
+      vi.spyOn(document, 'createElement').mockImplementation((_tag) => {
         const mockCreatedElement: Partial<MockElement> = {
           classList: { add: vi.fn() },
           style: { display: '', height: '', maxHeight: '' },

@@ -1,5 +1,6 @@
 bower_components/*
 node_modules/*
+.pnpm-store/
 .tags
 .tags1
 package-lock.json
