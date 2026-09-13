@@ -55,7 +55,7 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
           restore-keys: |
             ${{ runner.os }}-playwright-
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
       - run: pnpm run build
@@ -80,7 +80,7 @@ jobs:
         with:
           version: 12.3.4
           run_install: false
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm run test:unit:coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
