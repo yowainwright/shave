@@ -1,0 +1,15 @@
+services:
+  shave-tests:
+    build:
+      context: ../..
+      dockerfile: tests/e2e/Dockerfile
+    container_name: shave-tests
+    volumes:
+      - ../../src:/app/src
+      - ../../tests:/app/tests
+      - ../../dist:/app/dist
+    ports:
+      - "8080:8080"
+    environment:
+      - CI=false
+    command: pnpm test:e2e

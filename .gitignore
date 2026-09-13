@@ -1,18 +1,9 @@
-bower_components/*
 node_modules/*
 .pnpm-store/
-.tags
-.tags1
-package-lock.json
 .DS_Store
 .dccache
 dist
 types
-.cursonindexingignore
-.specstory
-# SpecStory project identity file
-.specstory/.project.json
-# SpecStory explanation file
-.specstory/.what-is-this.md
 playwright-report
 test-results
+coverage

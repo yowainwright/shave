@@ -1,5 +1,13 @@
-import { describe, it, expect, vi } from 'vitest'
+import { afterEach, describe, it, expect, vi } from 'vitest'
 import shave, { updateTextProp } from '../../src/shave'
+
+function createMeasuredElement(text: string, offsetHeight = 100): HTMLElement {
+  const element = document.createElement('div')
+  element.textContent = text
+  Object.defineProperty(element, 'offsetHeight', { configurable: true, value: offsetHeight })
+  document.body.appendChild(element)
+  return element
+}
 
 interface MockElement {
   style: {
@@ -124,6 +132,81 @@ describe('shave function', () => {
 
     it('should accept delimiter option', () => {
       expect(() => shave('.test', 50, { delimiter: '\n' })).not.toThrow()
+    })
+  })
+
+  describe('DOM behavior', () => {
+    afterEach(() => {
+      document.body.replaceChildren()
+    })
+
+    it('creates a link marker and assigns its attributes', () => {
+      const element = createMeasuredElement('one two three')
+
+      shave(element, 50, {
+        charclassname: 'custom-char',
+        link: { href: 'https://example.com', target: '_blank', textContent: 'read more' },
+      })
+
+      const marker = element.querySelector('.custom-char')
+      expect(marker?.tagName).toBe('A')
+      expect(marker?.textContent).toBe('read more')
+      expect(marker?.getAttribute('href')).toBe('https://example.com')
+      expect(marker?.getAttribute('target')).toBe('_blank')
+    })
+
+    it('supports character-based shaving when spaces are false', () => {
+      const element = createMeasuredElement('abcdef')
+      Object.defineProperty(element, 'offsetHeight', {
+        configurable: true,
+        get: () => (element.textContent && element.textContent.length <= 5 ? 10 : 100),
+      })
+
+      shave(element, 50, { spaces: false })
+
+      expect(element.querySelector('.js-shave-char')?.textContent).toBe('…')
+      expect(element.querySelector('.js-shave')?.textContent).toBe('ef')
+    })
+
+    it('defaults non-boolean spaces to true', () => {
+      const element = createMeasuredElement('one two three')
+
+      shave(element, 50, { spaces: 'false' as unknown as boolean })
+
+      expect(element.querySelector('.js-shave-char')).not.toBeNull()
+    })
+
+    it('removes a previous shaved marker before shaving again', () => {
+      const element = createMeasuredElement('one two three')
+
+      shave(element, 50)
+      shave(element, 50)
+
+      expect(element.querySelectorAll('.js-shave-char')).toHaveLength(1)
+      expect(element.querySelectorAll('.js-shave')).toHaveLength(1)
+    })
+
+    it('handles a previous shave marker without a character', () => {
+      const element = createMeasuredElement('one two three')
+      const previousMarker = document.createElement('span')
+      previousMarker.className = 'js-shave'
+      element.appendChild(previousMarker)
+
+      expect(() => shave(element, 50)).not.toThrow()
+    })
+
+    it('uses innerText when textContent is unavailable', () => {
+      const element = {
+        style: { height: '', maxHeight: '' },
+        offsetHeight: 10,
+        textContent: undefined,
+        innerText: 'one two',
+        querySelector: vi.fn().mockReturnValue(null),
+        removeChild: vi.fn(),
+        insertAdjacentElement: vi.fn(),
+      } as unknown as Node
+
+      expect(() => shave(element, 50)).not.toThrow()
     })
   })
 

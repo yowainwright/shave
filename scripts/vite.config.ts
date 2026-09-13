@@ -66,6 +66,7 @@ export default defineConfig(({ mode }) => {
           footer({ fileName }) {
             return getFooter(fileName, isJqueryBuild)
           },
+          minify: true,
         },
       },
       sourcemap: true,
