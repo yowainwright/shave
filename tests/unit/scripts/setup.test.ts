@@ -13,11 +13,17 @@ function createRepository(): string {
   return repositoryPath
 }
 
+function createTestEnvironment(overrides: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const environment = { ...process.env }
+  delete environment.CI
+  return { ...environment, ...overrides }
+}
+
 function runSetup(repositoryPath: string, env: NodeJS.ProcessEnv = {}) {
   return spawnSync(setupPath, ['--hooks-only'], {
     cwd: repositoryPath,
     encoding: 'utf8',
-    env: { ...process.env, ...env },
+    env: createTestEnvironment(env),
   })
 }
 
