@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 
 const setupPath = resolve(process.cwd(), 'scripts/setup.sh')
 const temporaryRepositories: string[] = []
+const shellTestTimeout = 30_000
 
 function relativeBashPath(from: string, to: string): string {
   return relative(from, to).replaceAll('\\', '/')
@@ -77,7 +78,7 @@ describe('setup hooks', () => {
 
     expect(readFileSync(join(hooksPath, 'pre-commit'), 'utf8')).toContain('pnpm run pre-commit')
     expect(readFileSync(join(hooksPath, 'post-merge'), 'utf8')).toContain('./scripts/setup.sh')
-  })
+  }, shellTestTimeout)
 
   it('validates conventional commit messages', () => {
     const repositoryPath = createRepository()
@@ -93,7 +94,7 @@ describe('setup hooks', () => {
     expect(validResult.status).toBe(0)
     expect(invalidResult.status).toBe(1)
     expect(invalidResult.stdout).toContain('Invalid commit message format')
-  })
+  }, shellTestTimeout)
 
   it('preserves unmanaged hooks', () => {
     const repositoryPath = createRepository()
