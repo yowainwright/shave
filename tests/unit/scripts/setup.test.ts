@@ -1,10 +1,14 @@
 import { execFileSync, spawnSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { join, relative, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
 const setupPath = resolve(process.cwd(), 'scripts/setup.sh')
 const temporaryRepositories: string[] = []
+
+function relativeBashPath(from: string, to: string): string {
+  return relative(from, to).replaceAll('\\', '/')
+}
 
 function createRepository(): string {
   const repositoryPath = mkdtempSync(join(process.cwd(), 'node_modules', '.shave-setup-'))
@@ -20,7 +24,7 @@ function createTestEnvironment(overrides: NodeJS.ProcessEnv): NodeJS.ProcessEnv 
 }
 
 function runSetup(repositoryPath: string, env: NodeJS.ProcessEnv = {}) {
-  return spawnSync(setupPath, ['--hooks-only'], {
+  return spawnSync('bash', [relativeBashPath(repositoryPath, setupPath), '--hooks-only'], {
     cwd: repositoryPath,
     encoding: 'utf8',
     env: createTestEnvironment(env),
@@ -32,6 +36,17 @@ function getHooksPath(repositoryPath: string): string {
     cwd: repositoryPath,
     encoding: 'utf8',
   }).trim()
+}
+
+function runCommitMessageHook(repositoryPath: string, messagePath: string) {
+  const hookPath = join(repositoryPath, '.git', 'hooks', 'commit-msg')
+  const relativeHookPath = relativeBashPath(repositoryPath, hookPath)
+  const relativeMessagePath = relativeBashPath(repositoryPath, messagePath)
+
+  return spawnSync('bash', [relativeHookPath, relativeMessagePath], {
+    cwd: repositoryPath,
+    encoding: 'utf8',
+  })
 }
 
 afterEach(() => {
@@ -64,13 +79,12 @@ describe('setup hooks', () => {
     const repositoryPath = createRepository()
     runSetup(repositoryPath)
     const messagePath = join(repositoryPath, 'COMMIT_EDITMSG')
-    const hookPath = join(repositoryPath, '.git', 'hooks', 'commit-msg')
 
     writeFileSync(messagePath, 'feat: add setup tests\n')
-    const validResult = spawnSync(hookPath, [messagePath], { encoding: 'utf8' })
+    const validResult = runCommitMessageHook(repositoryPath, messagePath)
 
     writeFileSync(messagePath, 'add setup tests\n')
-    const invalidResult = spawnSync(hookPath, [messagePath], { encoding: 'utf8' })
+    const invalidResult = runCommitMessageHook(repositoryPath, messagePath)
 
     expect(validResult.status).toBe(0)
     expect(invalidResult.status).toBe(1)
