@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "node": true,
+    "vitest": true
+  },
+  "ignorePatterns": [
+    "dist/**",
+    "tests/performance/**"
+  ]
+}

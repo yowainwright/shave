@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:26-slim
 
 # Install dependencies for Playwright
 RUN apt-get update && apt-get install -y \
@@ -41,7 +41,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@12.3.4
 
 WORKDIR /app
 
@@ -49,7 +49,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Install Playwright browsers
 RUN pnpm playwright install chromium firefox webkit

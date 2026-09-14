@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18.x, 20.x, 24.x]
+        node-version: [20.x, 22.x, 24.x, 26.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 8
+          version: 12.3.4
           run_install: false
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -55,11 +55,36 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
           restore-keys: |
             ${{ runner.os }}-playwright-
-      - run: pnpm i --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
       - run: pnpm run build
-      - run: pnpm run eslint:ci
+      - run: pnpm run test:size
+      - run: pnpm run lint
+      - run: pnpm run format:check
       - run: pnpm run test
         env:
           CI: true
+
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26.x
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.3.4
+          run_install: false
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm run test:unit:coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage/lcov.info
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -6,6 +6,18 @@
   "module": "dist/shave.mjs",
   "type": "module",
   "unpkg": "dist/shave.global.js",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": ">=20.19.0",
+    "pnpm": ">=12.0.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^26.0.0",
+      "onFail": "warn"
+    }
+  },
   "files": [
     "dist",
     "src",
@@ -23,34 +35,34 @@
     "./src/*": "./src/*"
   },
   "scripts": {
-    "build": "pnpm clean && pnpm build:dist",
-    "build:dist": "tsup",
-    "clean": "rimraf dist types",
-    "commit": "git-cz",
-    "commit-msg": "commitlint --edit $1",
-    "eslint": "eslint . --fix",
-    "eslint:ci": "eslint .",
-    "format": "prettier --write src/*.ts rollup.config.js tests/*.js scripts/*.js",
-    "husky-setup": "(path-exists .husky/commit-msg) || (husky install && pnpm husky-setup:commit-msg && pnpm husky-setup:post-merge && pnpm husky-setup:pre-commit)",
-    "husky-setup:commit-msg": "npx husky add .husky/commit-msg 'pnpm run commit-msg'",
-    "husky-setup:post-merge": "npx husky add .husky/post-merge 'pnpm run setup'",
-    "husky-setup:pre-commit": "npx husky add .husky/pre-commit 'pnpm run pre-commit'",
-    "pre-commit": "pnpm run build && pnpm run test && eslint",
-    "prepare": "is-ci || pnpm husky-setup",
-    "prepublishOnly": "pnpm build && pnpm run test",
-    "setup": "pnpm install --reporter=silent && pnpm build",
+    "build": "pnpm clean && pnpm build:dist && pnpm build:types",
+    "build:dist": "vite build --config scripts/vite.config.ts --mode shave && vite build --config scripts/vite.config.ts --mode jquery",
+    "build:types": "tsc",
+    "clean": "rm -rf dist types",
+    "deps:check": "codependence --dryRun && pastoralist doctor",
+    "deps:update": "codependence --update",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "pre-commit": "pnpm run build && pnpm run test && pnpm run test:size && pnpm run lint && pnpm run format:check",
+    "prepare": "bash scripts/setup.sh --hooks-only",
+    "prepublishOnly": "pnpm build && pnpm run test && pnpm run test:size",
+    "setup": "bash scripts/setup.sh",
     "test": "pnpm run test:unit && pnpm run test:e2e && pnpm run test:imports",
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest",
-    "test:unit:ui": "vitest --ui",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:es-check": "es-check es5 dist/shave.global.js dist/jquery.shave.global.js",
+    "test:unit": "vitest run --config scripts/vitest.config.ts",
+    "test:unit:coverage": "vitest run --config scripts/vitest.config.ts --coverage",
+    "test:unit:watch": "vitest --config scripts/vitest.config.ts",
+    "test:unit:ui": "vitest --config scripts/vitest.config.ts --ui",
+    "test:e2e": "playwright test --config scripts/playwright.config.ts",
+    "test:e2e:ui": "playwright test --config scripts/playwright.config.ts --ui",
+    "test:es-check": "es-check es2015 dist/shave.global.js dist/jquery.shave.global.js",
     "test:perf": "node tests/performance/perf-node.test.js",
     "test:imports": "pnpm run test:imports:esm && pnpm run test:imports:cjs && pnpm run test:imports:iife",
     "test:imports:esm": "node tests/imports/test-esm.mjs",
     "test:imports:cjs": "node tests/imports/test-cjs.cjs",
     "test:imports:iife": "node tests/imports/test-iife.cjs",
+    "test:size": "node scripts/check-dist-size.mjs",
     "release": "release-it"
   },
   "repository": {
@@ -78,54 +90,54 @@
   },
   "homepage": "https://github.com/yowainwright/shave#readme",
   "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "@commitlint/prompt-cli": "^19.8.0",
-    "@eslint/js": "^9.25.0",
-    "@playwright/test": "^1.54.1",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "@swc/core": "^1.11.22",
-    "@types/jquery": "^3.5.32",
-    "@types/node": "^24.2.1",
-    "@types/rollup": "^0.54.0",
+    "@playwright/test": "^1.62.1",
+    "@types/jquery": "^4.0.1",
+    "@types/node": "^26.2.0",
     "@types/zepto": "^1.0.36",
-    "@typescript-eslint/eslint-plugin": "^8.30.1",
-    "@typescript-eslint/parser": "^8.30.1",
-    "@vitest/ui": "^3.2.4",
-    "es-check": "9.3.1",
-    "eslint": "8.57.0",
-    "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-prettier": "^5.2.6",
-    "happy-dom": "^20.0.0",
-    "http-server": "^14.1.1",
-    "husky": "^9.1.7",
-    "is-ci": "^4.1.0",
-    "jquery": "^3.7.1",
-    "jsdom": "^27.1.0",
-    "path-exists-cli": "^2.0.0",
-    "playwright": "^1.54.1",
-    "prettier": "^3.5.3",
-    "release-it": "^19.0.1",
-    "rimraf": "^6.0.1",
-    "rollup": "^4.40.0",
-    "rollup-plugin-uglify": "^6.0.4",
-    "tslib": "^2.8.1",
-    "tsup": "^7.1.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/ui": "^4.1.11",
+    "codependence": "^1.0.8",
+    "es-check": "9.6.4",
+    "happy-dom": "^20.11.2",
+    "jquery": "^4.0.0",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
+    "pastoralist": "^1.13.0",
+    "release-it": "^21.0.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^4.1.11"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "header-max-length": [
-        2,
-        "always",
-        120
-      ]
+  "codependence": {
+    "lockfile": true,
+    "mode": "precise"
+  },
+  "pastoralist": {
+    "appendix": {
+      "ip-address@10.3.1": {
+        "dependents": {
+          "shave": "ip-address (required by socks)"
+        },
+        "ledger": {
+          "addedDate": "2026-08-11T08:35:35.242Z"
+        }
+      },
+      "picomatch@^2.0.0@2.3.2": {
+        "dependents": {
+          "shave": "picomatch@^2.0.0 (required by micromatch, tinyglobby, vite)"
+        },
+        "ledger": {
+          "addedDate": "2026-08-11T08:35:35.242Z"
+        }
+      },
+      "picomatch@^4.0.0@4.0.4": {
+        "dependents": {
+          "shave": "picomatch@^4.0.0 (required by micromatch, tinyglobby, vite)"
+        },
+        "ledger": {
+          "addedDate": "2026-08-11T08:35:35.242Z"
+        }
+      }
     }
   },
   "release-it": {

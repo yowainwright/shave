@@ -7,15 +7,9 @@ export default defineConfig({
     exclude: ['**/node_modules/**', '**/dist/**', '.git/**', '**/e2e/**', '**/performance/**'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html'],
-      exclude: [
-        'node_modules/**',
-        'dist/**',
-        'tests/**',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/mockData.ts',
-      ],
+      reporter: ['text', 'html', 'lcov'],
+      include: ['src/**/*.ts'],
+      exclude: ['node_modules/**', 'dist/**', 'tests/**', '**/*.d.ts', '**/*.config.*', '**/mockData.ts'],
     },
   },
 })

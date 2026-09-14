@@ -1,8 +1,8 @@
 /**
- * Node.js performance test using JSDOM
+ * Node.js performance test using Happy DOM
  */
 
-import { JSDOM } from 'jsdom';
+import { Window } from 'happy-dom';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
 import path from 'path';
@@ -10,16 +10,12 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-  url: 'http://localhost',
-  pretendToBeVisual: true,
-  resources: 'usable'
-});
+const window = new Window({ url: 'http://localhost' });
 
-global.window = dom.window;
-global.document = dom.window.document;
+global.window = window;
+global.document = window.document;
 global.performance = performance;
-Object.defineProperty(dom.window.HTMLElement.prototype, 'offsetHeight', {
+Object.defineProperty(window.HTMLElement.prototype, 'offsetHeight', {
   get: function() {
     const textLength = this.textContent?.length || 0;
     const wordsCount = (this.textContent?.split(' ').length || 1);

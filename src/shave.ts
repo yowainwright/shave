@@ -11,17 +11,27 @@ export type Opts = {
   delimiter?: string
 }
 
-function generateArrayOfNodes(target: string | NodeList | Node): Array<Node> {
+type ShaveTarget = string | ArrayLike<Node> | Node
+
+function generateArrayOfNodes(target: ShaveTarget): Array<Node> {
   if (typeof target === 'string') {
     return [...document.querySelectorAll(target)]
-  } else if ('length' in target) {
-    return [...target]
-  } else {
-    return [target]
   }
+  if ('length' in target) return Array.from(target)
+  return [target]
 }
 
-export default function shave(target: string | NodeList | Node, maxHeight: number, opts: Opts = {}): void {
+function assignLinkAttributes(element: HTMLElement, link: Link): void {
+  Object.entries(link).forEach(([property, value]) => {
+    if (property === 'textContent') {
+      element.textContent = String(value)
+      return
+    }
+    element.setAttribute(property, String(value))
+  })
+}
+
+export default function shave(target: ShaveTarget, maxHeight: number, opts: Opts = {}): void {
   if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
     throw Error('maxHeight is required')
   }
@@ -64,11 +74,12 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     const span = el.querySelector('.' + classname)
     const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
     if (span) {
-      el.removeChild(el.querySelector('.' + charclassname))
+      const shavedCharacter = el.querySelector('.' + charclassname)
+      if (shavedCharacter) el.removeChild(shavedCharacter)
       el[textProp] = el[textProp] // eslint-disable-line
     }
 
-    const fullText = el[textProp]
+    const fullText = el[textProp] || ''
     let words: string | string[]
 
     if (!delimiter) words = spaces ? fullText.split(' ') : fullText
@@ -89,28 +100,17 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
 
     const textContent = isLink && link.textContent ? link.textContent : character
     const shavedTextEl = document.createElement(shavedTextElType)
-    const shavedTextElAttributes = {
-      className: charclassname,
-      textContent,
-    }
+    shavedTextEl.className = charclassname
+    shavedTextEl.textContent = String(textContent)
 
-    for (const property in shavedTextElAttributes) {
-      shavedTextEl[property] = shavedTextElAttributes[property]
-      shavedTextEl.textContent = character;
-    }
-
-    if (isLink) {
-      for (const linkProperty in link) {
-        shavedTextEl[linkProperty] = link[linkProperty]
-      }
-    }
+    if (isLink) assignLinkAttributes(shavedTextEl, link)
 
     let max = words.length - 1
     let min = 0
     let pivot
     while (min < max) {
       pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
-      const wordItems = words.slice(0, pivot);
+      const wordItems = words.slice(0, pivot)
       el[textProp] = updateTextProp(delimiter, spaces, wordItems)
       el.insertAdjacentElement('beforeend', shavedTextEl)
       if (el.offsetHeight > maxHeight) {
@@ -122,9 +122,9 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
     const wordeItems = words.slice(0, max)
     el[textProp] = updateTextProp(delimiter, spaces, wordeItems)
     el.insertAdjacentElement('beforeend', shavedTextEl)
-    const diffItems = words.slice(max);
+    const diffItems = words.slice(max)
     const isArray = Array.isArray(diffItems)
-    let diff = '';
+    let diff = ''
     if (delimiter && isArray) diff = delimiter + diffItems.join(delimiter)
     else if (spaces && isArray) diff = ' ' + diffItems.join(' ')
     else if (isArray) diff = diffItems.join('')
@@ -140,10 +140,10 @@ export default function shave(target: string | NodeList | Node, maxHeight: numbe
   }
 }
 
-export function updateTextProp (delimiter: string, spaces: boolean, wordItems: string | string[]): string {
+export function updateTextProp(delimiter: string | undefined, spaces: boolean, wordItems: string | string[]): string {
   const isArray = Array.isArray(wordItems)
-  if (delimiter && isArray) return (wordItems).join(delimiter)
-  if (spaces && isArray) return (wordItems).join(' ')
+  if (delimiter && isArray) return wordItems.join(delimiter)
+  if (spaces && isArray) return wordItems.join(' ')
   if (isArray) return wordItems.join('')
   return wordItems
 }
