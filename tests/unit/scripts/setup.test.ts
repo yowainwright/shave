@@ -67,7 +67,11 @@ describe('setup hooks', () => {
     for (const hookName of ['pre-commit', 'commit-msg', 'post-merge']) {
       const hookPath = join(hooksPath, hookName)
       expect(existsSync(hookPath)).toBe(true)
-      expect(statSync(hookPath).mode & 0o111).not.toBe(0)
+
+      if (process.platform !== 'win32') {
+        expect(statSync(hookPath).mode & 0o111).not.toBe(0)
+      }
+
       expect(readFileSync(hookPath, 'utf8')).toContain('shave-managed-hook')
     }
 
