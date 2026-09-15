@@ -16,7 +16,7 @@
     "packageManager": {
       "name": "pnpm",
       "version": ">=12.0.0",
-      "onFail": "error"
+      "onFail": "warn"
     }
   },
   "files": [

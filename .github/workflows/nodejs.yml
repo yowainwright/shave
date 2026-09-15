@@ -34,7 +34,7 @@ jobs:
         id: pnpm-cache
         shell: bash
         run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+          echo "pnpm_cache_dir=$(pnpm store path)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         name: Setup pnpm cache
         with:
@@ -47,7 +47,7 @@ jobs:
         shell: bash
         run: |
           PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
-          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
+          echo "version=$PLAYWRIGHT_VERSION" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         name: Setup Playwright cache
         with:
@@ -83,6 +83,8 @@ jobs:
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm run test:unit:coverage
       - name: Upload coverage to Codecov
+        # Dependabot cannot access repository secrets on pull_request workflows.
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]' }}
         uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
         with:
           files: coverage/lcov.info
