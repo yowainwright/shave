@@ -1,0 +1,41 @@
+name: Update dependencies
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dependency-updates
+  cancel-in-progress: false
+
+jobs:
+  codependence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Update package dependencies
+        uses: yowainwright/codependence@794ecc90f9dc614a2ddc478e1851a97b87259485 # v1.0.15
+        with:
+          targets: pnpm
+          pull-request: true
+          token: ${{ secrets.CODEPENDENCE_TOKEN }}
+          post-update-command: pnpm install --no-frozen-lockfile --lockfile-only --ignore-scripts
+
+  pastoralist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Update dependency overrides
+        uses: yowainwright/pastoralist@c60888162dd3d42b03daab32680b16637e3678ed # v1.13.2
+        with:
+          mode: pr
+          check-security: true
+          fail-on-security: true
+          github-token: ${{ secrets.CODEPENDENCE_TOKEN }}
