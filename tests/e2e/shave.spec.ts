@@ -43,6 +43,21 @@ test.describe('Shave DOM tests', () => {
 
   test('should preserve link attributes', async ({ page }) => {
     await page.evaluate(() => {
+      const options = {
+        link: {
+          href: 'https://example.com/read-more',
+          target: '_blank',
+          className: 'custom-link',
+          'data-kind': 'more',
+          textContent: 'Read more',
+        },
+      }
+      window.shave('#test', 70, options)
+    })
+
+    const firstHiddenText = await page.locator('#test .js-shave').textContent()
+
+    await page.evaluate(() => {
       window.shave('#test', 70, {
         link: {
           href: 'https://example.com/read-more',
@@ -56,6 +71,8 @@ test.describe('Shave DOM tests', () => {
 
     const link = page.locator('a.custom-link')
     await expect(link).toHaveCount(1)
+    await expect(page.locator('#test .js-shave')).toHaveCount(1)
+    await expect(page.locator('#test .js-shave')).toHaveText(firstHiddenText ?? '')
     await expect(link).toHaveAttribute('href', 'https://example.com/read-more')
     await expect(link).toHaveAttribute('target', '_blank')
     await expect(link).toHaveAttribute('data-kind', 'more')

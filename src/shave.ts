@@ -107,7 +107,10 @@ export default function shave(target: ShaveTarget, maxHeight: number, opts: Opts
     shavedTextEl.className = charclassname
     shavedTextEl.textContent = String(textContent)
 
-    if (isLink) assignLinkAttributes(shavedTextEl, link)
+    if (isLink) {
+      assignLinkAttributes(shavedTextEl, link)
+      shavedTextEl.classList.add(charclassname)
+    }
 
     let max = words.length - 1
     let min = 0
