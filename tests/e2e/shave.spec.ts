@@ -41,6 +41,27 @@ test.describe('Shave DOM tests', () => {
     expect(text).toBe('🐔')
   })
 
+  test('should preserve link attributes', async ({ page }) => {
+    await page.evaluate(() => {
+      window.shave('#test', 70, {
+        link: {
+          href: 'https://example.com/read-more',
+          target: '_blank',
+          className: 'custom-link',
+          'data-kind': 'more',
+          textContent: 'Read more',
+        },
+      })
+    })
+
+    const link = page.locator('a.custom-link')
+    await expect(link).toHaveCount(1)
+    await expect(link).toHaveAttribute('href', 'https://example.com/read-more')
+    await expect(link).toHaveAttribute('target', '_blank')
+    await expect(link).toHaveAttribute('data-kind', 'more')
+    await expect(link).toHaveText('Read more')
+  })
+
   test('should handle multiple elements with same class', async ({ page }) => {
     await page.evaluate(() => {
       window.shave('.test-2', 30, { character: '🙌', classname: 'js-iteration-works' })

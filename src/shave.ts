@@ -23,6 +23,10 @@ function generateArrayOfNodes(target: ShaveTarget): Array<Node> {
 
 function assignLinkAttributes(element: HTMLElement, link: Link): void {
   Object.entries(link).forEach(([property, value]) => {
+    if (property === 'className') {
+      element.className = String(value)
+      return
+    }
     if (property === 'textContent') {
       element.textContent = String(value)
       return

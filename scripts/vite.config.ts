@@ -62,7 +62,7 @@ export default defineConfig(({ mode }) => {
       minify: 'oxc',
       rolldownOptions: {
         output: {
-          banner,
+          postBanner: banner,
           footer({ fileName }) {
             return getFooter(fileName, isJqueryBuild)
           },
