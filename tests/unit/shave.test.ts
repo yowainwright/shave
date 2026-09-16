@@ -145,10 +145,15 @@ describe('shave function', () => {
 
       shave(element, 50, {
         charclassname: 'custom-char',
-        link: { href: 'https://example.com', target: '_blank', textContent: 'read more' },
+        link: {
+          href: 'https://example.com',
+          target: '_blank',
+          className: 'custom-link',
+          textContent: 'read more'
+        },
       })
 
-      const marker = element.querySelector('.custom-char')
+      const marker = element.querySelector('.custom-link')
       expect(marker?.tagName).toBe('A')
       expect(marker?.textContent).toBe('read more')
       expect(marker?.getAttribute('href')).toBe('https://example.com')

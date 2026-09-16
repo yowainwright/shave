@@ -23,6 +23,10 @@ function generateArrayOfNodes(target: ShaveTarget): Array<Node> {
 
 function assignLinkAttributes(element: HTMLElement, link: Link): void {
   Object.entries(link).forEach(([property, value]) => {
+    if (property === 'className') {
+      element.className = String(value)
+      return
+    }
     if (property === 'textContent') {
       element.textContent = String(value)
       return
@@ -103,7 +107,10 @@ export default function shave(target: ShaveTarget, maxHeight: number, opts: Opts
     shavedTextEl.className = charclassname
     shavedTextEl.textContent = String(textContent)
 
-    if (isLink) assignLinkAttributes(shavedTextEl, link)
+    if (isLink) {
+      assignLinkAttributes(shavedTextEl, link)
+      shavedTextEl.classList.add(charclassname)
+    }
 
     let max = words.length - 1
     let min = 0
