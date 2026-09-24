@@ -152,7 +152,7 @@ importers:
         version: 1.82.0
       pastoralist:
         specifier: ^1.13.2
-        version: 1.13.2
+        version: 1.13.5
       release-it:
         specifier: ^21.0.2
         version: 21.0.2(@types/node@26.5.1)(magicast@0.5.5)
@@ -1527,8 +1527,8 @@ packages:
     resolution: {integrity: sha512-bCgsFI+GeGWPAvAiUv63ZorMeif3/U0zaXABGJbOWt5OH2KCaPHF6S+0ok4aqM9RuIPGyZdx9tR9l13PsW4AYQ==}
     engines: {node: '>=14.13.0'}
 
-  pastoralist@1.13.2:
-    resolution: {integrity: sha512-3Xdd1GEmCtKv4dMwWUhl2XvJjRII2yLxkSfZoIhVAxNtgLP2u5lAZxXxKejITb4soNV5Z8vVhL0KoeuJGymcpQ==}
+  pastoralist@1.13.5:
+    resolution: {integrity: sha512-qkbeXDQ/Xu53cd680QGz/ffRgJ6OEZN4tbscZTl/QHjq00nihfPOSvMVk9eqLqKV1B8Z1JanSeYqi5bZY5kTbg==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -2933,7 +2933,7 @@ snapshots:
       '@types/parse-path': 7.1.0
       parse-path: 7.1.0
 
-  pastoralist@1.13.2: {}
+  pastoralist@1.13.5: {}
 
   pathe@2.0.3: {}
 
