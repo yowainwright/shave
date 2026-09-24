@@ -102,7 +102,7 @@
     "es-check": "9.7.1",
     "happy-dom": "^20.14.5",
     "jquery": "^4.0.0",
-    "oxfmt": "^0.67.0",
+    "oxfmt": "^0.69.0",
     "oxlint": "^1.82.0",
     "pastoralist": "^1.13.2",
     "release-it": "^21.0.2",
