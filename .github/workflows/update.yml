@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Update dependency overrides
-        uses: yowainwright/pastoralist@c60888162dd3d42b03daab32680b16637e3678ed # v1.13.2
+        uses: yowainwright/pastoralist@1f4288c3c5c9d940a2a72d073e4057e1fe1037cb # v1.13.5
         with:
           mode: pr
           check-security: true
