@@ -139,6 +139,129 @@
         "ledger": {
           "addedDate": "2026-08-11T08:35:35.242Z"
         }
+      },
+      "happy-dom@21.0.4": {
+        "dependents": {
+          "shave": "happy-dom@^20.14.5"
+        },
+        "ledger": {
+          "addedDate": "2026-10-26T09:22:47.244Z",
+          "reason": "Security fix: Happy DOM: Incomplete fix for CVE-2026-33943: unsanitized import alias leads to host code execution (high)",
+          "source": "security",
+          "securityChecked": true,
+          "securityCheckDate": "2026-10-26T09:22:47.249Z",
+          "securityProvider": "osv",
+          "cves": [
+            "CVE-2026-115895"
+          ],
+          "cveDetails": [
+            {
+              "cve": "CVE-2026-115895",
+              "severity": "high",
+              "patchedVersion": "21.0.4"
+            }
+          ],
+          "severity": "high",
+          "url": "https://github.com/capricorn86/happy-dom/security/advisories/GHSA-834v-8h66-3h79",
+          "vulnerableRange": ">= 17.0.0 < 21.0.4",
+          "patchedVersion": "21.0.4",
+          "sources": [
+            "osv"
+          ],
+          "confidence": "possible"
+        }
+      },
+      "vite@8.3.5": {
+        "dependents": {
+          "shave": "vite@^8.3.0"
+        },
+        "ledger": {
+          "addedDate": "2026-10-26T09:22:47.244Z",
+          "reason": "Security fix: launch-editor: `fs.existsSync()` existence check can be bypassed on Windows (high)",
+          "source": "security",
+          "securityChecked": true,
+          "securityCheckDate": "2026-10-26T09:22:47.250Z",
+          "securityProvider": "osv",
+          "cves": [
+            "CVE-2026-112942",
+            "CVE-2026-112943",
+            "CVE-2026-112944",
+            "CVE-2026-112946",
+            "CVE-2026-112947",
+            "CVE-2026-112945"
+          ],
+          "cveDetails": [
+            {
+              "cve": "CVE-2026-112942",
+              "severity": "high",
+              "patchedVersion": "8.3.3"
+            },
+            {
+              "cve": "CVE-2026-112943",
+              "severity": "medium",
+              "patchedVersion": "8.3.3"
+            },
+            {
+              "cve": "CVE-2026-112944",
+              "severity": "medium",
+              "patchedVersion": "8.3.3"
+            },
+            {
+              "cve": "CVE-2026-112946",
+              "severity": "medium",
+              "patchedVersion": "8.3.3"
+            },
+            {
+              "cve": "CVE-2026-112947",
+              "severity": "medium",
+              "patchedVersion": "8.3.3"
+            },
+            {
+              "cve": "CVE-2026-112945",
+              "severity": "low",
+              "patchedVersion": "8.3.3"
+            }
+          ],
+          "severity": "high",
+          "url": "https://github.com/vitejs/launch-editor/security/advisories/GHSA-587h-7wmj-h5pm",
+          "vulnerableRange": ">= 8.3.0 < 8.3.3",
+          "patchedVersion": "8.3.3",
+          "sources": [
+            "osv"
+          ],
+          "confidence": "possible"
+        }
+      },
+      "@vitest/ui@5.0.5": {
+        "dependents": {
+          "shave": "@vitest/ui@^5.0.0"
+        },
+        "ledger": {
+          "addedDate": "2026-10-26T09:22:47.244Z",
+          "reason": "Security fix: Vitest: Servers misapply `server.fs.deny`, serving `.env`, private keys, `.git`, and the API token file (medium)",
+          "source": "security",
+          "securityChecked": true,
+          "securityCheckDate": "2026-10-26T09:22:47.250Z",
+          "securityProvider": "osv",
+          "cves": [
+            "CVE-2026-112948"
+          ],
+          "cveDetails": [
+            {
+              "cve": "CVE-2026-112948",
+              "severity": "medium",
+              "patchedVersion": "5.0.5"
+            }
+          ],
+          "severity": "medium",
+          "url": "https://github.com/vitest-dev/vitest/security/advisories/GHSA-p458-7748-mcp3",
+          "vulnerableRange": ">= 5.0.0-beta.6 < 5.0.5",
+          "patchedVersion": "5.0.5",
+          "sources": [
+            "osv"
+          ],
+          "confidence": "possible"
+        }
       }
     }
   },
