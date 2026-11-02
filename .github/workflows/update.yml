@@ -17,11 +17,11 @@ jobs:
   codependence:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Update package dependencies
-        uses: yowainwright/codependence@794ecc90f9dc614a2ddc478e1851a97b87259485 # v1.0.15
+        uses: yowainwright/codependence@58d3c029ea39bc30b8ca9f1262ac3f4d2cb189d1 # v1.0.16
         with:
           targets: pnpm
           pull-request: true
@@ -31,9 +31,9 @@ jobs:
   pastoralist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Update dependency overrides
-        uses: yowainwright/pastoralist@c60888162dd3d42b03daab32680b16637e3678ed # v1.13.2
+        uses: yowainwright/pastoralist@bdc2ec5ae8f68536a8589c756f5691d7bba4add4 # v1.14.0
         with:
           mode: pr
           check-security: true

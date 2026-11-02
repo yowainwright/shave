@@ -22,9 +22,9 @@
     "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "esnext"
+    "target": "esnext",
+    "types": ["node"]
   },
   "include": ["src"],
-  "exclude": ["dist/**", "*.js"],
-  "types": ["jquery", "node", "zepto"]
+  "exclude": ["dist/**", "*.js"]
 }
