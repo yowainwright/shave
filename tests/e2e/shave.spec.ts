@@ -1,16 +1,9 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
+
+type PageContext = { page: Page }
 
 test.describe('Shave DOM tests', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/tests/e2e/simple-test.html')
-    await page.waitForTimeout(500)
-    await page.evaluate(() => {
-      if (window.shave && typeof window.shave.default === 'function') {
-        window.shave = window.shave.default
-      }
-    })
-    await page.waitForFunction(() => typeof window.shave === 'function', { timeout: 5000 })
-  })
+  test.beforeEach(prepareDOMFixture)
 
   test('should truncate text on a paragraph with a class', async ({ page }) => {
     await page.evaluate(() => {
@@ -41,43 +34,7 @@ test.describe('Shave DOM tests', () => {
     expect(text).toBe('🐔')
   })
 
-  test('should preserve link attributes', async ({ page }) => {
-    await page.evaluate(() => {
-      const options = {
-        link: {
-          href: 'https://example.com/read-more',
-          target: '_blank',
-          className: 'custom-link',
-          'data-kind': 'more',
-          textContent: 'Read more',
-        },
-      }
-      window.shave('#test', 70, options)
-    })
-
-    const firstHiddenText = await page.locator('#test .js-shave').textContent()
-
-    await page.evaluate(() => {
-      window.shave('#test', 70, {
-        link: {
-          href: 'https://example.com/read-more',
-          target: '_blank',
-          className: 'custom-link',
-          'data-kind': 'more',
-          textContent: 'Read more',
-        },
-      })
-    })
-
-    const link = page.locator('a.custom-link')
-    await expect(link).toHaveCount(1)
-    await expect(page.locator('#test .js-shave')).toHaveCount(1)
-    await expect(page.locator('#test .js-shave')).toHaveText(firstHiddenText ?? '')
-    await expect(link).toHaveAttribute('href', 'https://example.com/read-more')
-    await expect(link).toHaveAttribute('target', '_blank')
-    await expect(link).toHaveAttribute('data-kind', 'more')
-    await expect(link).toHaveText('Read more')
-  })
+  test('should preserve link attributes', verifyShouldPreserveLinkAttributes)
 
   test('should handle multiple elements with same class', async ({ page }) => {
     await page.evaluate(() => {
@@ -90,8 +47,143 @@ test.describe('Shave DOM tests', () => {
 })
 
 test.describe('Delimiter functionality tests', () => {
+  test.beforeEach(prepareDelimiterFixture)
+
+  test('should split text by newline delimiter', verifyShouldSplitTextByNewlineDelimiter)
+
+  test('should split text by pipe delimiter', verifyShouldSplitTextByPipeDelimiter)
+
+  test('should maintain backwards compatibility with default space splitting', async ({ page }) => {
+    await page.evaluate(() => {
+      window.shave('.test-no-delimiter', 25, { classname: 'js-default-shave' })
+    })
+
+    const shavedElements = await page.locator('.js-default-shave').count()
+    expect(shavedElements).toBe(1)
+    const ellipsisElements = await page.locator('.js-shave-char').count()
+    expect(ellipsisElements).toBe(1)
+  })
+
+  test('should handle delimiter with custom character', verifyShouldHandleDelimiterWithCustomCharacter)
+
+  test('should not shave when content fits with delimiter', async ({ page }) => {
+    await page.evaluate(() => {
+      window.shave('.test-delimiter', 200, {
+        delimiter: '\n',
+        classname: 'js-no-shave-needed',
+      })
+    })
+    const shavedElements = await page.locator('.js-no-shave-needed').count()
+    expect(shavedElements).toBe(0)
+
+    const ellipsisElements = await page.locator('.js-shave-char').count()
+    expect(ellipsisElements).toBe(0)
+  })
+
+  test('should handle empty delimiter gracefully', async ({ page }) => {
+    await page.evaluate(() => {
+      window.shave('.test-no-delimiter', 25, {
+        delimiter: '',
+        classname: 'js-empty-delimiter',
+      })
+    })
+
+    const shavedElements = await page.locator('.js-empty-delimiter').count()
+    expect(shavedElements).toBe(1)
+  })
+})
+
+test.describe('jQuery shave plugin', () => {
   test.beforeEach(async ({ page }) => {
-    await page.setContent(`
+    await page.goto('/tests/e2e/simple-test.html')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => {
+      const hasDefaultExport = window.shave && typeof window.shave.default === 'function'
+      if (hasDefaultExport) {
+        window.shave = window.shave.default
+      }
+    })
+    await page.waitForFunction(() => typeof window.shave === 'function' && typeof window.$ === 'function', {
+      timeout: 5000,
+    })
+  })
+
+  test('should work with jQuery plugin', async ({ page }) => {
+    await page.evaluate(() => {
+      $('#test-4').shave(50, { classname: 'js-jquery-shave' })
+    })
+
+    const jqueryElements = await page.locator('.js-jquery-shave').count()
+    expect(jqueryElements).toBe(1)
+  })
+})
+
+async function verifyShouldPreserveLinkAttributes({ page }: PageContext) {
+  const attributes = {
+    href: 'https://example.com/read-more',
+    target: '_blank',
+    className: 'custom-link',
+    'data-kind': 'more',
+    textContent: 'Read more',
+  }
+  await page.evaluate((link) => {
+    const options = { link }
+    window.shave('#test', 70, options)
+  }, attributes)
+  const firstHiddenText = await page.locator('#test .js-shave').textContent()
+  await page.evaluate((link) => {
+    const options = { link }
+    window.shave('#test', 70, options)
+  }, attributes)
+  const link = page.locator('a.custom-link')
+  await expect(link).toHaveCount(1)
+  await expect(page.locator('#test .js-shave')).toHaveCount(1)
+  await expect(page.locator('#test .js-shave')).toHaveText(firstHiddenText ?? '')
+  await expect(link).toHaveAttribute('href', 'https://example.com/read-more')
+  await expect(link).toHaveAttribute('target', '_blank')
+  await expect(link).toHaveAttribute('data-kind', 'more')
+  await expect(link).toHaveText('Read more')
+}
+
+async function verifyShouldSplitTextByNewlineDelimiter({ page }: PageContext) {
+  await page.evaluate(() => {
+    window.shave('.test-delimiter', 25, { delimiter: '\n', classname: 'js-newline-shave' })
+  })
+
+  const shavedElements = await page.locator('.js-newline-shave').count()
+  expect(shavedElements).toBe(1)
+  const ellipsisElements = await page.locator('.js-shave-char').count()
+  expect(ellipsisElements).toBe(1)
+}
+
+async function verifyShouldSplitTextByPipeDelimiter({ page }: PageContext) {
+  await page.evaluate(() => {
+    window.shave('.test-pipe', 15, { delimiter: '|', classname: 'js-pipe-shave' })
+  })
+
+  const shavedElements = await page.locator('.js-pipe-shave').count()
+  expect(shavedElements).toBe(1)
+  const ellipsisElements = await page.locator('.js-shave-char').count()
+  expect(ellipsisElements).toBe(1)
+}
+
+async function verifyShouldHandleDelimiterWithCustomCharacter({ page }: PageContext) {
+  await page.evaluate(() => {
+    window.shave('.test-delimiter', 25, {
+      delimiter: '\n',
+      character: '...',
+      classname: 'js-custom-char-delimiter',
+    })
+  })
+
+  const shavedElements = await page.locator('.js-custom-char-delimiter').count()
+  expect(shavedElements).toBe(1)
+  const customChar = await page.locator('.js-shave-char').textContent()
+  expect(customChar).toBe('...')
+}
+
+async function prepareDelimiterFixture({ page }: PageContext) {
+  await page.setContent(`
       <!DOCTYPE html>
       <html>
       <head>
@@ -124,103 +216,18 @@ What you do.</div>
       </body>
       </html>
     `)
-    await page.addScriptTag({ path: './dist/shave.global.js' })
-    await page.waitForFunction(() => typeof window.shave === 'function', { timeout: 5000 })
+  await page.addScriptTag({ path: './dist/shave.global.js' })
+  await page.waitForFunction(() => typeof window.shave === 'function', { timeout: 5000 })
+}
+
+async function prepareDOMFixture({ page }: PageContext) {
+  await page.goto('/tests/e2e/simple-test.html')
+  await page.waitForTimeout(500)
+  await page.evaluate(() => {
+    const hasDefaultExport = window.shave && typeof window.shave.default === 'function'
+    if (hasDefaultExport) {
+      window.shave = window.shave.default
+    }
   })
-
-  test('should split text by newline delimiter', async ({ page }) => {
-    await page.evaluate(() => {
-      window.shave('.test-delimiter', 25, { delimiter: '\n', classname: 'js-newline-shave' })
-    })
-
-    const shavedElements = await page.locator('.js-newline-shave').count()
-    expect(shavedElements).toBe(1)
-    const ellipsisElements = await page.locator('.js-shave-char').count()
-    expect(ellipsisElements).toBe(1)
-  })
-
-  test('should split text by pipe delimiter', async ({ page }) => {
-    await page.evaluate(() => {
-      window.shave('.test-pipe', 15, { delimiter: '|', classname: 'js-pipe-shave' })
-    })
-
-    const shavedElements = await page.locator('.js-pipe-shave').count()
-    expect(shavedElements).toBe(1)
-    const ellipsisElements = await page.locator('.js-shave-char').count()
-    expect(ellipsisElements).toBe(1)
-  })
-
-  test('should maintain backwards compatibility with default space splitting', async ({ page }) => {
-    await page.evaluate(() => {
-      window.shave('.test-no-delimiter', 25, { classname: 'js-default-shave' })
-    })
-
-    const shavedElements = await page.locator('.js-default-shave').count()
-    expect(shavedElements).toBe(1)
-    const ellipsisElements = await page.locator('.js-shave-char').count()
-    expect(ellipsisElements).toBe(1)
-  })
-
-  test('should handle delimiter with custom character', async ({ page }) => {
-    await page.evaluate(() => {
-      window.shave('.test-delimiter', 25, {
-        delimiter: '\n',
-        character: '...',
-        classname: 'js-custom-char-delimiter'
-      })
-    })
-
-    const shavedElements = await page.locator('.js-custom-char-delimiter').count()
-    expect(shavedElements).toBe(1)
-    const customChar = await page.locator('.js-shave-char').textContent()
-    expect(customChar).toBe('...')
-  })
-
-  test('should not shave when content fits with delimiter', async ({ page }) => {
-    await page.evaluate(() => {
-      window.shave('.test-delimiter', 200, {
-        delimiter: '\n',
-        classname: 'js-no-shave-needed'
-      })
-    })
-    const shavedElements = await page.locator('.js-no-shave-needed').count()
-    expect(shavedElements).toBe(0)
-
-    const ellipsisElements = await page.locator('.js-shave-char').count()
-    expect(ellipsisElements).toBe(0)
-  })
-
-  test('should handle empty delimiter gracefully', async ({ page }) => {
-    await page.evaluate(() => {
-      window.shave('.test-no-delimiter', 25, {
-        delimiter: '',
-        classname: 'js-empty-delimiter'
-      })
-    })
-
-    const shavedElements = await page.locator('.js-empty-delimiter').count()
-    expect(shavedElements).toBe(1)
-  })
-})
-
-test.describe('jQuery shave plugin', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/tests/e2e/simple-test.html')
-    await page.waitForTimeout(100)
-    await page.evaluate(() => {
-      if (window.shave && typeof window.shave.default === 'function') {
-        window.shave = window.shave.default
-      }
-    })
-    await page.waitForFunction(() => typeof window.shave === 'function' && typeof window.$ === 'function', { timeout: 5000 })
-  })
-
-  test('should work with jQuery plugin', async ({ page }) => {
-    await page.evaluate(() => {
-      $('#test-4').shave(50, { classname: 'js-jquery-shave' })
-    })
-
-    const jqueryElements = await page.locator('.js-jquery-shave').count()
-    expect(jqueryElements).toBe(1)
-  })
-})
+  await page.waitForFunction(() => typeof window.shave === 'function', { timeout: 5000 })
+}

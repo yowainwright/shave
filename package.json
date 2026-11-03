@@ -6,17 +6,12 @@
   "module": "dist/shave.mjs",
   "type": "module",
   "unpkg": "dist/shave.global.js",
-  "packageManager": "pnpm@12.3.4",
+  "packageManager": "pnpm@12.16.1",
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "^22.12.0 || ^24.0.0 || >=26.0.0",
-      "onFail": "warn"
-    },
-    "packageManager": {
-      "name": "pnpm",
-      "version": ">=12.0.0",
-      "onFail": "warn"
+      "version": "^26.0.0",
+      "onFail": "download"
     }
   },
   "files": [
@@ -37,7 +32,7 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm build:dist && pnpm build:types",
-    "build:dist": "vite build --config scripts/vite.config.ts --mode shave && vite build --config scripts/vite.config.ts --mode jquery",
+    "build:dist": "rolldown --config scripts/rolldown.config.ts",
     "build:types": "tsc",
     "clean": "rm -rf dist types",
     "deps:check": "codependence --dryRun && pastoralist doctor",
@@ -54,7 +49,6 @@
     "test:unit": "vitest run --config scripts/vitest.config.ts",
     "test:unit:coverage": "vitest run --config scripts/vitest.config.ts --coverage",
     "test:unit:watch": "vitest --config scripts/vitest.config.ts",
-    "test:unit:ui": "vitest --config scripts/vitest.config.ts --ui",
     "test:e2e": "pnpm run test:e2e:install && playwright test --config scripts/playwright.config.ts",
     "test:e2e:install": "playwright install chromium firefox webkit",
     "test:e2e:ui": "pnpm run test:e2e:install && playwright test --config scripts/playwright.config.ts --ui",
@@ -92,59 +86,65 @@
   },
   "homepage": "https://github.com/yowainwright/shave#readme",
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
-    "@types/jquery": "^4.0.1",
-    "@types/node": "^26.5.1",
-    "@types/zepto": "^1.0.36",
-    "@vitest/coverage-v8": "^5.0.0",
-    "@vitest/ui": "^5.0.0",
-    "codependence": "^1.0.15",
-    "es-check": "9.7.1",
-    "happy-dom": "^20.14.5",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.0.5",
+    "codependence": "^1.0.16",
+    "es-check": "9.8.1",
+    "happy-dom": "^21.0.4",
     "jquery": "^4.0.0",
-    "oxfmt": "^0.67.0",
-    "oxlint": "^1.82.0",
-    "pastoralist": "^1.13.2",
-    "release-it": "^21.0.2",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "oxlint-plugin-legibility": "^0.0.5",
+    "pastoralist": "^1.14.0",
+    "release-it": "^21.1.2",
+    "rolldown": "^1.2.16",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0",
-    "vitest": "^5.0.0"
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   },
   "codependence": {
     "lockfile": true,
     "mode": "precise"
   },
-  "pastoralist": {
-    "appendix": {
-      "ip-address@10.3.1": {
-        "dependents": {
-          "shave": "ip-address (required by socks)"
-        },
-        "ledger": {
-          "addedDate": "2026-08-11T08:35:35.242Z"
-        }
-      },
-      "picomatch@^2.0.0@2.3.2": {
-        "dependents": {
-          "shave": "picomatch@^2.0.0 (required by micromatch, tinyglobby, vite)"
-        },
-        "ledger": {
-          "addedDate": "2026-08-11T08:35:35.242Z"
-        }
-      },
-      "picomatch@^4.0.0@4.0.4": {
-        "dependents": {
-          "shave": "picomatch@^4.0.0 (required by micromatch, tinyglobby, vite)"
-        },
-        "ledger": {
-          "addedDate": "2026-08-11T08:35:35.242Z"
-        }
-      }
-    }
-  },
   "release-it": {
     "git": {
       "commitMessage": "chore: release-it commit"
+    }
+  },
+  "pastoralist": {
+    "appendix": {
+      "basic-ftp@6.2.5": {
+        "dependents": {
+          "shave": "basic-ftp (required by release-it)"
+        },
+        "ledger": {
+          "addedDate": "2026-11-01T22:58:00.126Z",
+          "reason": "Security fix: basic-ftp: Quadratic-time CPU denial of service in Client.list() Unix directory-listing parser (RE_LINE backtracking) (high)",
+          "source": "security",
+          "securityChecked": true,
+          "securityCheckDate": "2026-11-01T22:58:00.146Z",
+          "securityProvider": "osv",
+          "cves": [
+            "CVE-2026-102990"
+          ],
+          "cveDetails": [
+            {
+              "cve": "CVE-2026-102990",
+              "severity": "high",
+              "patchedVersion": "6.2.1"
+            }
+          ],
+          "severity": "high",
+          "url": "https://github.com/patrickjuchli/basic-ftp/security/advisories/GHSA-c475-qrg2-pj4r",
+          "vulnerableRange": ">= 0 < 6.2.1",
+          "patchedVersion": "6.2.1",
+          "sources": [
+            "osv"
+          ],
+          "confidence": "possible"
+        }
+      }
     }
   }
 }

@@ -12,22 +12,6 @@ interface MockjQuery {
   fn: Record<string, unknown>
 }
 
-function getWindow(): MockWindow {
-  return (globalThis as unknown as { window: MockWindow }).window
-}
-
-function createMockLibrary(): MockjQuery {
-  return { fn: {} }
-}
-
-async function loadPlugin(library?: LibraryName): Promise<MockjQuery | undefined> {
-  const mockLibrary = library ? createMockLibrary() : undefined
-  if (library) getWindow()[library] = mockLibrary
-  vi.resetModules()
-  await import('../../src/jquery.shave')
-  return mockLibrary
-}
-
 describe('jQuery shave plugin', () => {
   beforeEach(() => {
     ;(globalThis as unknown as { window: MockWindow }).window = {
@@ -72,3 +56,22 @@ describe('jQuery shave plugin', () => {
     await import('../../src/jquery.shave')
   })
 })
+
+async function loadPlugin(library?: LibraryName): Promise<MockjQuery | undefined> {
+  const mockLibrary = library ? createMockLibrary() : undefined
+  if (library) getWindow()[library] = mockLibrary
+  vi.resetModules()
+  await import('../../src/jquery.shave')
+  return mockLibrary
+}
+
+function getWindow(): MockWindow {
+  const { window } = globalThis as unknown as { window: MockWindow }
+  return window
+}
+
+function createMockLibrary(): MockjQuery {
+  const fn = {}
+  const library = { fn }
+  return library
+}

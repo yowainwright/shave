@@ -12,47 +12,14 @@ export type Opts = {
 }
 
 type ShaveTarget = string | ArrayLike<Node> | Node
-
-function generateArrayOfNodes(target: ShaveTarget): Array<Node> {
-  if (typeof target === 'string') {
-    return [...document.querySelectorAll(target)]
-  }
-  if ('length' in target) return Array.from(target)
-  return [target]
-}
-
-function assignLinkAttributes(element: HTMLElement, link: Link): void {
-  Object.entries(link).forEach(([property, value]) => {
-    if (property === 'className') {
-      element.className = String(value)
-      return
-    }
-    if (property === 'textContent') {
-      element.textContent = String(value)
-      return
-    }
-    element.setAttribute(property, String(value))
-  })
-}
+type Search = Generator<HTMLElement, void, number>
 
 export default function shave(target: ShaveTarget, maxHeight: number, opts: Opts = {}): void {
-  if (typeof maxHeight === 'undefined' || isNaN(maxHeight)) {
-    throw Error('maxHeight is required')
-  }
+  if (isNaN(maxHeight)) throw Error('maxHeight is required')
   const els = generateArrayOfNodes(target)
-
-  if (!els.length) {
-    return
-  }
-
-  const {
-    character = '…',
-    classname = 'js-shave',
-    spaces: initialSpaces = true,
-    charclassname = 'js-shave-char',
-    link = {},
-    delimiter,
-  } = opts
+  if (!els.length) return
+  const { character = '…', classname = 'js-shave', spaces: initialSpaces = true } = opts
+  const { charclassname = 'js-shave-char', link = {}, delimiter } = opts
 
   /**
    * @notes
@@ -61,7 +28,8 @@ export default function shave(target: ShaveTarget, maxHeight: number, opts: Opts
    * meaning people were using (a string, in example—which is truthy)
    * hence, doing it this way is a non-breaking change
    */
-  const spaces = typeof initialSpaces === 'boolean' ? initialSpaces : true
+  const spaces = initialSpaces !== false
+  const separator = delimiter || (spaces ? ' ' : '')
 
   /**
    * @notes
@@ -70,87 +38,171 @@ export default function shave(target: ShaveTarget, maxHeight: number, opts: Opts
    * - if link.href is not provided, link object properties are ignored
    */
   const isLink = link && JSON.stringify(link) !== '{}' && link.href
-  const shavedTextElType = isLink ? 'a' : 'span'
 
-  for (let i = 0; i < els.length; i += 1) {
-    const el = els[i] as HTMLElement
-    const styles = el.style
-    const span = el.querySelector('.' + classname)
-    const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
-    if (span) {
-      const shavedCharacter = el.querySelector('.' + charclassname)
-      if (shavedCharacter) el.removeChild(shavedCharacter)
-      el[textProp] = el[textProp] // eslint-disable-line
-    }
+  const groups = canBatch(els) ? els.map((el) => [el]) : [els]
+  const searches = groups.map((group) => truncate(group))
+  runSearches(searches)
+  function* truncate(els: Node[]): Search {
+    for (const el of els as HTMLElement[]) {
+      const textProp = restoreText(el, classname, charclassname)
+      const words = (el[textProp] || '').split(separator)
 
-    const fullText = el[textProp] || ''
-    let words: string | string[]
+      if (words.length < 2) continue
 
-    if (!delimiter) words = spaces ? fullText.split(' ') : fullText
-    else words = fullText.split(delimiter)
-
-    if (words.length < 2) continue
-
-    const heightStyle = styles.height
-    styles.height = 'auto'
-    const maxHeightStyle = styles.maxHeight
-    styles.maxHeight = 'none'
-
-    if (el.offsetHeight <= maxHeight) {
+      const styles = el.style
+      const { height: heightStyle } = styles
+      styles.height = 'auto'
+      const { maxHeight: maxHeightStyle } = styles
+      styles.maxHeight = 'none'
+      if ((yield el) > maxHeight) {
+        const shavedTextEl = createMarker(character, charclassname, link, isLink)
+        const writeCandidate = (count: number): void => {
+          el[textProp] = words.slice(0, count).join(separator)
+          el.insertAdjacentElement('beforeend', shavedTextEl)
+        }
+        const max = yield* findCutoff(el, maxHeight, words.length, writeCandidate)
+        const diff = separator + words.slice(max).join(separator)
+        hideRemainder(el, classname, diff)
+      }
       styles.height = heightStyle
       styles.maxHeight = maxHeightStyle
-      continue
     }
-
-    const textContent = isLink && link.textContent ? link.textContent : character
-    const shavedTextEl = document.createElement(shavedTextElType)
-    shavedTextEl.className = charclassname
-    shavedTextEl.textContent = String(textContent)
-
-    if (isLink) {
-      assignLinkAttributes(shavedTextEl, link)
-      shavedTextEl.classList.add(charclassname)
-    }
-
-    let max = words.length - 1
-    let min = 0
-    let pivot
-    while (min < max) {
-      pivot = (min + max + 1) >> 1 // eslint-disable-line no-bitwise
-      const wordItems = words.slice(0, pivot)
-      el[textProp] = updateTextProp(delimiter, spaces, wordItems)
-      el.insertAdjacentElement('beforeend', shavedTextEl)
-      if (el.offsetHeight > maxHeight) {
-        max = pivot - 1
-      } else {
-        min = pivot
-      }
-    }
-    const wordeItems = words.slice(0, max)
-    el[textProp] = updateTextProp(delimiter, spaces, wordeItems)
-    el.insertAdjacentElement('beforeend', shavedTextEl)
-    const diffItems = words.slice(max)
-    const isArray = Array.isArray(diffItems)
-    let diff = ''
-    if (delimiter && isArray) diff = delimiter + diffItems.join(delimiter)
-    else if (spaces && isArray) diff = ' ' + diffItems.join(' ')
-    else if (isArray) diff = diffItems.join('')
-    else diff = diffItems
-    const shavedText = document.createTextNode(diff)
-    const elWithShavedText = document.createElement('span')
-    elWithShavedText.classList.add(classname)
-    elWithShavedText.style.display = 'none'
-    elWithShavedText.appendChild(shavedText)
-    el.insertAdjacentElement('beforeend', elWithShavedText)
-    styles.height = heightStyle
-    styles.maxHeight = maxHeightStyle
   }
 }
 
 export function updateTextProp(delimiter: string | undefined, spaces: boolean, wordItems: string | string[]): string {
-  const isArray = Array.isArray(wordItems)
-  if (delimiter && isArray) return wordItems.join(delimiter)
-  if (spaces && isArray) return wordItems.join(' ')
-  if (isArray) return wordItems.join('')
+  const separator = delimiter || (spaces ? ' ' : '')
+  if (Array.isArray(wordItems)) {
+    const text = wordItems.join(separator)
+    return text
+  }
   return wordItems
+}
+
+function runSearches(searches: Search[]): void {
+  const steps = searches.map((search) => search.next())
+  let running = steps.length
+  while (running) {
+    const heights = steps.map((step) => (step.done ? 0 : step.value.offsetHeight))
+    running = 0
+    searches.forEach((search, index) => {
+      const step = search.next(heights[index])
+      steps[index] = step
+      if (!step.done) running += 1
+    })
+  }
+}
+
+function restoreText(el: HTMLElement, classname: string, charclassname: string): 'innerText' | 'textContent' {
+  const span = el.querySelector('.' + classname)
+  const textProp = el.textContent === undefined ? 'innerText' : 'textContent'
+  if (span) {
+    const shavedCharacter = el.querySelector('.' + charclassname)
+    if (shavedCharacter) el.removeChild(shavedCharacter)
+    el[textProp] = el[textProp] // eslint-disable-line
+  }
+  return textProp
+}
+
+function createMarker(character: string, charclassname: string, link: Link, isLink: Link[string]): HTMLElement {
+  const textContent = isLink && link.textContent ? link.textContent : character
+  const marker = document.createElement(isLink ? 'a' : 'span')
+  marker.className = charclassname
+  marker.textContent = String(textContent)
+  if (isLink) {
+    assignLinkAttributes(marker, link)
+    marker.classList.add(charclassname)
+  }
+  return marker
+}
+
+function* findCutoff(
+  el: HTMLElement,
+  maxHeight: number,
+  length: number,
+  writeCandidate: (count: number) => void,
+): Generator<HTMLElement, number, number> {
+  let max = length
+  let min = 0
+  while (min + 1 < max) {
+    const pivot = (min + max) >> 1 // eslint-disable-line no-bitwise
+    writeCandidate(pivot)
+    if ((yield el) > maxHeight) {
+      max = pivot
+    } else {
+      min = pivot
+    }
+  }
+  writeCandidate(min)
+  return min
+}
+
+function canBatch(els: Node[]): boolean {
+  const tooFewTargets = els.length < 2
+  if (tooFewTargets) return false
+  const repeatedTargets = new Set(els).size !== els.length
+  if (repeatedTargets) return false
+  const parent = els[0].parentElement
+  if (!parent) return false
+  const fixedParentWidth = parent.style.width.endsWith('px')
+  if (!fixedParentWidth) return false
+  const siblings = els.every((el) => {
+    const width = (el as HTMLElement).style?.width || ''
+    const sameContainer = el.parentElement === parent
+    if (!sameContainer) return false
+    const fixedWidth = width === '100%' || width.endsWith('px')
+    if (!fixedWidth) return false
+    const block = isBlock(el as HTMLElement, 'flow-root')
+    return block
+  })
+  if (!siblings) return false
+  for (let ancestor: HTMLElement | null = parent; ancestor; ancestor = ancestor.parentElement) {
+    if (!isBlock(ancestor)) return false
+  }
+  return true
+}
+
+function isBlock(el: HTMLElement, display = 'block'): boolean {
+  const view = el.ownerDocument.defaultView || window
+  const styles = view.getComputedStyle(el)
+  const positioned = styles.position === 'absolute' || styles.position === 'fixed'
+  const normalFlow = styles.display === display && styles.cssFloat === 'none'
+  if (!normalFlow) return false
+  if (positioned) return false
+  const automaticColumns = styles.columnCount === 'auto' && styles.columnWidth === 'auto'
+  if (!automaticColumns) return false
+  const horizontal = styles.writingMode === 'horizontal-tb'
+  return horizontal
+}
+
+function generateArrayOfNodes(target: ShaveTarget): Array<Node> {
+  if (typeof target === 'string') {
+    const nodes = [...document.querySelectorAll(target)]
+    return nodes
+  }
+  if ('length' in target) {
+    const nodes = Array.from(target)
+    return nodes
+  }
+  const nodes = [target]
+  return nodes
+}
+
+function assignLinkAttributes(element: HTMLElement, link: Link): void {
+  Object.entries(link).forEach(([property, value]) => {
+    const text = String(value)
+    if (property === 'textContent') {
+      element.textContent = text
+      return
+    }
+    element.setAttribute(property === 'className' ? 'class' : property, text)
+  })
+}
+
+function hideRemainder(el: HTMLElement, classname: string, diff: string): void {
+  const hidden = document.createElement('span')
+  hidden.classList.add(classname)
+  hidden.style.display = 'none'
+  hidden.textContent = diff
+  el.appendChild(hidden)
 }

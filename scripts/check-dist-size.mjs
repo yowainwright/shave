@@ -13,9 +13,11 @@ const bundleBaselines = new Map([
 const totalBaseline = [...bundleBaselines.values()].reduce((total, size) => total + size, 0)
 const perFileGrowthLimit = 1.35
 
-function getFileSize(file) {
-  return statSync(file).size
-}
+const bundlesAreWithinLimit = [...bundleBaselines].every(([file, baseline]) => checkBundleSize(file, baseline))
+const totalIsWithinLimit = checkTotalSize()
+
+const exceedsLimit = !bundlesAreWithinLimit || !totalIsWithinLimit
+if (exceedsLimit) process.exitCode = 1
 
 function checkBundleSize(file, baseline) {
   const actual = getFileSize(file)
@@ -34,7 +36,7 @@ function checkTotalSize() {
   return isWithinLimit
 }
 
-const bundlesAreWithinLimit = [...bundleBaselines].every(([file, baseline]) => checkBundleSize(file, baseline))
-const totalIsWithinLimit = checkTotalSize()
-
-if (!bundlesAreWithinLimit || !totalIsWithinLimit) process.exitCode = 1
+function getFileSize(file) {
+  const { size } = statSync(file)
+  return size
+}

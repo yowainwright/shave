@@ -1,39 +1,43 @@
-import { defineConfig, devices } from '@playwright/test'
+import { defineConfig, devices, type PlaywrightTestConfig } from '@playwright/test'
+
+const forbidOnly = Boolean(process.env.CI)
+const retries = forbidOnly ? 2 : 0
+const workers = forbidOnly ? 1 : undefined
+const trace = 'on-first-retry' as const
+const use = { baseURL: 'http://localhost:8080', trace }
+const reuseExistingServer = !forbidOnly
+const stdout = 'ignore' as const
+const stderr = 'ignore' as const
+const webServer = {
+  command: 'pnpm exec vite --host 127.0.0.1 --port 8080',
+  cwd: '..',
+  port: 8080,
+  reuseExistingServer,
+  timeout: 30_000,
+  stdout,
+  stderr,
+}
+const projects = ['chromium', 'firefox', 'webkit'].map(createProject)
 
 export default defineConfig({
   testDir: '../tests/e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  forbidOnly,
+  retries,
+  workers,
   reporter: 'html',
-  use: {
-    baseURL: 'http://localhost:8080',
-    trace: 'on-first-retry',
-  },
-
-  webServer: {
-    command: 'pnpm exec vite --host 127.0.0.1 --port 8080',
-    cwd: '..',
-    port: 8080,
-    reuseExistingServer: !process.env.CI,
-    timeout: 30 * 1000,
-    stdout: 'ignore',
-    stderr: 'ignore',
-  },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-  ],
+  use,
+  webServer,
+  projects,
 })
+
+function createProject(name: string): NonNullable<PlaywrightTestConfig['projects']>[number] {
+  const deviceNames: Record<string, string> = {
+    chromium: 'Desktop Chrome',
+    firefox: 'Desktop Firefox',
+    webkit: 'Desktop Safari',
+  }
+  const use = { ...devices[deviceNames[name]] }
+  const project = { name, use }
+  return project
+}
