@@ -152,7 +152,7 @@ function canBatch(els: Node[]): boolean {
     if (!sameContainer) return false
     const fixedWidth = width === '100%' || width.endsWith('px')
     if (!fixedWidth) return false
-    const block = isBlock(el as HTMLElement)
+    const block = isBlock(el as HTMLElement, 'flow-root')
     return block
   })
   if (!siblings) return false
@@ -162,11 +162,11 @@ function canBatch(els: Node[]): boolean {
   return true
 }
 
-function isBlock(el: HTMLElement): boolean {
+function isBlock(el: HTMLElement, display = 'block'): boolean {
   const view = el.ownerDocument.defaultView || window
   const styles = view.getComputedStyle(el)
   const positioned = styles.position === 'absolute' || styles.position === 'fixed'
-  const normalFlow = styles.display === 'block' && styles.cssFloat === 'none'
+  const normalFlow = styles.display === display && styles.cssFloat === 'none'
   if (!normalFlow) return false
   if (positioned) return false
   const automaticColumns = styles.columnCount === 'auto' && styles.columnWidth === 'auto'
@@ -204,5 +204,5 @@ function hideRemainder(el: HTMLElement, classname: string, diff: string): void {
   hidden.classList.add(classname)
   hidden.style.display = 'none'
   hidden.textContent = diff
-  el.insertAdjacentElement('beforeend', hidden)
+  el.appendChild(hidden)
 }

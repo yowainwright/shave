@@ -43,6 +43,68 @@ export async function benchmarkBatching() {
   return results
 }
 
+export async function compareFloatingLayouts() {
+  const baselinePath = '/tests/performance/shave-baseline.ts'
+  const currentPath = '/dist/shave.mjs'
+  const { default: baseline } = await import(baselinePath)
+  const { default: current } = await import(currentPath)
+  const cases = [
+    ['auto', false, 'block'],
+    ['20px', false, 'block'],
+    ['90px', false, 'block'],
+    ['auto', true, 'block'],
+    ['20px', true, 'block'],
+    ['90px', true, 'block'],
+    ['auto', false, 'flow-root'],
+    ['auto', true, 'flow-root'],
+  ] as const
+  const results = cases.map(([height, outside, display]) => {
+    const before = captureFloatingLayout(baseline, height, outside, display)
+    const after = captureFloatingLayout(current, height, outside, display)
+    const result = { height, outside, before, after }
+    return result
+  })
+  return results
+}
+
+function captureFloatingLayout(implementation: Implementation, height: string, outside: boolean, display: string) {
+  const { container, elements } = floatingFixture(height, outside, display)
+  implementation(elements, 60)
+  const nodes = snapshot(elements)
+  const range = document.createRange()
+  range.selectNodeContents(elements[1])
+  const textHeight = range.getBoundingClientRect().height
+  container.remove()
+  const result = { nodes, textHeight }
+  return result
+}
+
+function floatingFixture(height: string, outside: boolean, display: string): Fixture {
+  const container = document.createElement('div')
+  const parent = document.createElement('div')
+  container.style.cssText = 'width:240px;font:16px/20px Arial'
+  parent.style.width = '240px'
+  const floating = document.createElement('div')
+  floating.style.cssText = 'float:left;width:120px;height:120px'
+  const floatParent = outside ? container : parent
+  floatParent.appendChild(floating)
+  const text =
+    'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty '.repeat(
+      4,
+    )
+  const elements = Array.from({ length: 2 }, () => {
+    const element = document.createElement('div')
+    element.style.cssText = `width:100%;height:${height};max-height:100px;display:${display}`
+    element.textContent = text
+    parent.appendChild(element)
+    return element
+  })
+  container.appendChild(parent)
+  document.body.appendChild(container)
+  const fixture = { container, elements }
+  return fixture
+}
+
 function comparisonOptions(): Parameters<Implementation>[2][] {
   const link = { href: '/more', textContent: 'Read more', className: 'more' }
   const options = [
@@ -91,6 +153,7 @@ function regressionFixture(layout: string) {
     const element = document.createElement('div')
     element.textContent = index === 1 ? 'single' : regressionText.slice(index * 3)
     element.style.cssText = layout === 'flex' ? flexStyle : elementStyle
+    if (layout === 'isolated-block') element.style.display = 'flow-root'
     parent.appendChild(element)
     return element
   })
@@ -194,6 +257,7 @@ function benchmarkFixture(count: number, coupled = false): Fixture {
     const element = document.createElement('div')
     element.textContent = benchmarkText.slice(0, benchmarkText.length - index * 3).replaceAll(' ', '| ')
     element.style.cssText = coupled ? flexStyle : elementStyle
+    if (!coupled) element.style.display = 'flow-root'
     container.appendChild(element)
     return element
   })

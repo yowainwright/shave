@@ -7,3 +7,6 @@ types
 playwright-report
 test-results
 coverage
+.env
+.env.*
+!.env.example

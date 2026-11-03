@@ -472,7 +472,8 @@ function createMockElement(textContent: string, offsetHeight: number): MockEleme
   const querySelector = vi.fn().mockReturnValue(null)
   const removeChild = vi.fn()
   const insertAdjacentElement = vi.fn()
-  const element = { style, offsetHeight, textContent, querySelector, removeChild, insertAdjacentElement }
+  const appendChild = vi.fn()
+  const element = { style, offsetHeight, textContent, querySelector, removeChild, insertAdjacentElement, appendChild }
   return element
 }
 
