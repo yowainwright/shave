@@ -9,6 +9,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -20,6 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -56,6 +61,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-playwright-
       - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm run deps:security
+        if: matrix.os == 'ubuntu-latest'
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
       - run: pnpm run build
@@ -73,6 +80,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 2
+          persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 26.x
@@ -90,3 +98,24 @@ jobs:
           files: coverage/lcov.info
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  filesystem:
+    name: File and folder policy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.x
+      - name: Install fs-lint v0.4.0
+        env:
+          FS_LINT_SHA256: b521d1e595fde41aa11d06c0f306c12f9bec809e4365b7ca4f97e01b0e3e6095
+        run: |
+          curl --fail --location --silent --show-error https://github.com/yowainwright/fs-lint/releases/download/v0.4.0/fs-lint-linux-amd64 --output "$RUNNER_TEMP/fs-lint"
+          echo "$FS_LINT_SHA256  $RUNNER_TEMP/fs-lint" | sha256sum --check --strict
+          chmod +x "$RUNNER_TEMP/fs-lint"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - run: node scripts/check-paths.ts

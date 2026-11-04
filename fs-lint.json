@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "newFiles": {
+    "default": "deny",
+    "allow": [
+      "*.md",
+      "LICENSE",
+      ".gitattributes",
+      ".gitignore",
+      ".dockerignore",
+      ".oxfmtrc.json",
+      "oxlint.config.ts",
+      "fs-lint.json",
+      "package.json",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "tsconfig*.json",
+      ".github/*.md",
+      ".github/CODEOWNERS",
+      ".github/dependabot.yml",
+      ".github/workflows/*.{yml,yaml}",
+      "src/**/*.ts",
+      "scripts/*.ts",
+      "scripts/setup.sh",
+      "tests/unit/**/*.test.ts",
+      "tests/e2e/*.spec.ts",
+      "tests/e2e/*-fixtures.ts",
+      "tests/e2e/fixtures.ts",
+      "tests/e2e/simple-test.html",
+      "tests/e2e/Dockerfile",
+      "tests/e2e/compose.yml",
+      "tests/imports/*.{ts,mts,cts}",
+      "tests/performance/shave-baseline.ts",
+      "!**/.env",
+      "!**/.env.*",
+      ".env.example"
+    ]
+  }
+}

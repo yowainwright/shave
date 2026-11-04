@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test'
+import { openFixture } from './fixtures.ts'
 
 test.skip(process.env.SHAVE_BATCHING_EXPERIMENT !== '1', 'Opt-in browser performance experiment')
 
 test('compares production Shave with the sequential baseline in a real browser', async ({ page }, testInfo) => {
   test.setTimeout(180_000)
-  await page.goto('/tests/e2e/simple-test.html')
+  await openFixture(page)
   const results = await page.evaluate(async () => {
     const fixturePath = '/tests/e2e/batching-fixtures.ts'
     const { benchmarkBatching } = await import(fixturePath)
