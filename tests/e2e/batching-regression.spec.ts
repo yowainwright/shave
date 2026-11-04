@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openFixture } from './fixtures.ts'
 
 const layouts = [
   'block',
@@ -15,7 +16,7 @@ const layouts = [
 ]
 
 test('preserves sequential truncation across layouts and repeated calls', async ({ page }) => {
-  await page.goto('/tests/e2e/simple-test.html')
+  await openFixture(page)
   const results = await page.evaluate(async (layouts) => {
     const fixturePath = '/tests/e2e/batching-fixtures.ts'
     const { compareLayouts } = await import(fixturePath)
@@ -26,7 +27,7 @@ test('preserves sequential truncation across layouts and repeated calls', async 
 })
 
 test('preserves wrapping around floats inside and outside the parent', async ({ page }) => {
-  await page.goto('/tests/e2e/simple-test.html')
+  await openFixture(page)
   const results = await page.evaluate(async () => {
     const fixturePath = '/tests/e2e/batching-fixtures.ts'
     const { compareFloatingLayouts } = await import(fixturePath)

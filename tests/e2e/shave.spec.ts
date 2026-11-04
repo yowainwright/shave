@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { openFixture } from './fixtures.ts'
 
 type PageContext = { page: Page }
 
@@ -94,19 +95,7 @@ test.describe('Delimiter functionality tests', () => {
 })
 
 test.describe('jQuery shave plugin', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/tests/e2e/simple-test.html')
-    await page.waitForTimeout(100)
-    await page.evaluate(() => {
-      const hasDefaultExport = window.shave && typeof window.shave.default === 'function'
-      if (hasDefaultExport) {
-        window.shave = window.shave.default
-      }
-    })
-    await page.waitForFunction(() => typeof window.shave === 'function' && typeof window.$ === 'function', {
-      timeout: 5000,
-    })
-  })
+  test.beforeEach(prepareDOMFixture)
 
   test('should work with jQuery plugin', async ({ page }) => {
     await page.evaluate(() => {
@@ -183,51 +172,9 @@ async function verifyShouldHandleDelimiterWithCustomCharacter({ page }: PageCont
 }
 
 async function prepareDelimiterFixture({ page }: PageContext) {
-  await page.setContent(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          .test-delimiter {
-            width: 100px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            line-height: 1.4;
-          }
-          .test-pipe {
-            width: 80px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-          }
-          .test-no-delimiter {
-            width: 100px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="test-delimiter">I am a cow.
-Hear me moo!
-I don't care.
-What you do.</div>
-        <div class="test-pipe">item1|item2|item3|item4|item5</div>
-        <div class="test-no-delimiter">Regular text with spaces that should work normally</div>
-      </body>
-      </html>
-    `)
-  await page.addScriptTag({ path: './dist/shave.global.js' })
-  await page.waitForFunction(() => typeof window.shave === 'function', { timeout: 5000 })
+  await openFixture(page, 'delimiter')
 }
 
 async function prepareDOMFixture({ page }: PageContext) {
-  await page.goto('/tests/e2e/simple-test.html')
-  await page.waitForTimeout(500)
-  await page.evaluate(() => {
-    const hasDefaultExport = window.shave && typeof window.shave.default === 'function'
-    if (hasDefaultExport) {
-      window.shave = window.shave.default
-    }
-  })
-  await page.waitForFunction(() => typeof window.shave === 'function', { timeout: 5000 })
+  await openFixture(page)
 }

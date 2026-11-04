@@ -19,7 +19,7 @@ const totalIsWithinLimit = checkTotalSize()
 const exceedsLimit = !bundlesAreWithinLimit || !totalIsWithinLimit
 if (exceedsLimit) process.exitCode = 1
 
-function checkBundleSize(file, baseline) {
+function checkBundleSize(file: string, baseline: number): boolean {
   const actual = getFileSize(file)
   const limit = Math.ceil(baseline * perFileGrowthLimit)
   const isWithinLimit = actual <= limit
@@ -28,7 +28,7 @@ function checkBundleSize(file, baseline) {
   return isWithinLimit
 }
 
-function checkTotalSize() {
+function checkTotalSize(): boolean {
   const actual = [...bundleBaselines.keys()].reduce((total, file) => total + getFileSize(file), 0)
   const isWithinLimit = actual <= totalBaseline
   const status = isWithinLimit ? 'ok' : 'too large'
@@ -36,7 +36,7 @@ function checkTotalSize() {
   return isWithinLimit
 }
 
-function getFileSize(file) {
+function getFileSize(file: string): number {
   const { size } = statSync(file)
   return size
 }

@@ -121,6 +121,8 @@ function registerDOMBehaviorTests() {
   })
 
   it('creates a link marker and assigns its attributes', verifyCreatesALinkMarkerAndAssignsItsAttributes)
+  it('keeps marker and hidden text from being parsed as HTML', verifyLiteralText)
+  it('keeps link labels and quoted attribute values from injecting HTML', verifyLiteralLink)
 
   it('supports character-based shaving when spaces are false', verifySupportsCharacterBasedShavingWhenSpacesAreFalse)
 
@@ -429,6 +431,31 @@ function verifySupportsCharacterBasedShavingWhenSpacesAreFalse() {
 
   expect(element.querySelector('.js-shave-char')?.textContent).toBe('…')
   expect(element.querySelector('.js-shave')?.textContent).toBe('ef')
+}
+
+function verifyLiteralText() {
+  const text = '<img src=x onerror=alert(1)> one two three'
+  const element = createMeasuredElement(text)
+  const character = '<svg onload=alert(1)>'
+  shave(element, 50, { character })
+
+  expect(element.querySelectorAll('img, svg, script')).toHaveLength(0)
+  expect(element.querySelector('.js-shave-char')?.textContent).toBe(character)
+  expect(element.querySelector('.js-shave')?.textContent).toContain(text)
+}
+
+function verifyLiteralLink() {
+  const element = createMeasuredElement('one two three')
+  const textContent = '<script>alert(1)</script>'
+  const label = '" onmouseover="alert(1)'
+  const link = { href: '/more', textContent, 'data-label': label }
+  shave(element, 50, { link })
+
+  const marker = element.querySelector('a.js-shave-char')
+  expect(marker?.textContent).toBe(textContent)
+  expect(marker?.getAttribute('data-label')).toBe(label)
+  expect(marker?.getAttribute('onmouseover')).toBeNull()
+  expect(element.querySelector('script')).toBeNull()
 }
 
 function createMeasuredElement(text: string, offsetHeight = 100): HTMLElement {
