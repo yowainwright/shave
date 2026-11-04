@@ -15,9 +15,16 @@ test('compares production Shave with the sequential baseline in a real browser',
   const { name: browser } = testInfo.project
   const body = JSON.stringify({ browser, ...results }, null, 2)
   await testInfo.attach('batching-results', { body, contentType: 'application/json' })
-  process.stdout.write(`${body}\n`)
   const { initial, resize } = results
   const timings = { initial, resize }
+  const rows = Object.entries(timings).map(([phase, timing]) => {
+    const baselineMs = timing.baselineMs.toFixed(2)
+    const currentMs = timing.currentMs.toFixed(2)
+    const speedup = `${timing.speedup.toFixed(2)}x`
+    const row = { browser, phase, 'baseline (ms)': baselineMs, 'current (ms)': currentMs, speedup }
+    return row
+  })
+  console.table(rows)
   Object.entries(timings).forEach(([phase, timing]) => {
     const limitMs = timing.baselineMs * 1.2
     expect(timing.baselineMs, `${phase} baseline must be measurable`).toBeGreaterThan(0)

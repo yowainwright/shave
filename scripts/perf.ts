@@ -9,7 +9,7 @@ const args = [
   '--config',
   'scripts/playwright.config.ts',
   '--workers=1',
-  '--reporter=line',
+  '--reporter=list',
 ]
 const env = { ...process.env, SHAVE_BATCHING_EXPERIMENT: '1' }
 const result = spawnSync(process.execPath, args, { env, stdio: 'inherit' })

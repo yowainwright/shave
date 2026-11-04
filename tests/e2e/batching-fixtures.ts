@@ -31,7 +31,7 @@ export async function compareLayouts(layouts: string[]) {
 
 export async function benchmarkBatching() {
   const baselinePath = '/tests/performance/shave-baseline.ts'
-  const currentPath = '/src/shave.ts'
+  const currentPath = '/dist/shave.mjs'
   const { default: baseline } = await import(baselinePath)
   const { default: current } = await import(currentPath)
   const options = comparisonOptions()

@@ -72,6 +72,11 @@ jobs:
       - run: pnpm run test
         env:
           CI: true
+      - name: Browser performance comparison
+        if: matrix.os == 'ubuntu-latest'
+        run: pnpm run test:perf
+        env:
+          CI: true
 
   coverage:
     runs-on: ubuntu-latest
